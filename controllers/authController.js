@@ -1,7 +1,8 @@
-const db = require("../config/db");
+const db = require("../models");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = db.User;
+
 
 
 
@@ -16,7 +17,7 @@ exports.register = async (req, res) => {
         // Check if email exists
         const existingUser = await User.findOne({ where: { email } });
         if (existingUser) {
-            return res.status(400).json({ error: "Email already registered" });
+            return res.status(400).json({ message: "Email already registered", error: false });
         }
 
         // Hash password
@@ -36,10 +37,10 @@ exports.register = async (req, res) => {
 
         res.status(201).json({
             message: "✅ User registered successfully",
-            user: userData
+            data: userData, error: true
         });
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        res.status(500).json({ message: err.message, error: false });
     }
 };
 
@@ -53,34 +54,35 @@ exports.login = async (req, res) => {
         // find user by email
         const user = await User.findOne({ where: { email } });
         if (!user) {
-            return res.status(401).json({ error: "Invalid email or password" });
+            return res.status(401).json({ message: "Invalid email or password", error: false });
         }
 
         // compare password with hash
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            return res.status(401).json({ error: "Invalid email or password" });
+            return res.status(401).json({ message: "Invalid email or password", error: false });
         }
 
         // generate JWT token
         const token = jwt.sign(
-            { id: user._id, email: user.email },
+            { _id: user._id, email: user.email },
             process.env.JWT_SECRET || "mysecretkey",
             { expiresIn: "1h" }
         );
 
         res.json({
             message: "✅ Login successful",
-            user: {
+            data: {
                 _id: user._id,
                 full_name: user.full_name,
                 email: user.email
             },
-            token
+            token,
+            error: true
         });
     } catch (err) {
         console.error("❌ Login error:", err);
-        res.status(500).json({ error: "Internal server error" });
+        res.status(500).json({ message: "Internal server error", error: false });
     }
 };
 

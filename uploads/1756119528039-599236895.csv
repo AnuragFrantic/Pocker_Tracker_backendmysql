@@ -1,0 +1,429 @@
+id,name,address,latitude,longitude,poker_atlas_links
+1,7 Cedars Casino,"270756 U.S. 101, Sequim, WA 98382",48.02117,-123.00951,www.pokeratlas.com/poker-room/7-cedars-sequim
+2,Caribbean Cardroom Kirkland,"12530 NE 144th St, Kirkland, WA 98034",47.73212,-122.17311,www.pokeratlas.com/poker-room/caribbean-kirkland
+3,Crazy Moose Casino Pasco,"510 S 20th Ave, Pasco, WA 99301",46.22836,-119.11836,www.pokeratlas.com/poker-room/crazy-moose-pasco
+4,Fortune Poker Room,"3650 E Valley Rd, Renton, WA 98057",47.44704,-122.21689,www.pokeratlas.com/poker-room/fortune-poker-room-renton
+5,Aces Poker Carribbean Casino Yakima,"1901 Boggess St. Yakima, WA 98901",46.58465,-120.47615,www.pokeratlas.com/poker-room/aces-poker-yakima
+6,Fortun Casino Lacey,"8318 Quinault Dr NE, Lacey, WA 98516",47.06337,-122.762475,www.pokeratlas.com/poker-room/fortune-lacey-olympia
+7,Aces Poker Mountlake,"7004 220th St. SW, Mountlake Terrace, WA 98043",47.79977,-122.32792,www.pokeratlas.com/poker-room/aces-mt-mountlake-terrace
+8,Ace's Poker Lakewood,"10117 S Tacoma Way, Lakewood, WA 98499",47.1649,-122.48299,www.pokeratlas.com/poker-room/aces-poker-lakewood
+9,Palace Casino Lakewood,"8200 Tacoma Mall Boulevard, Lakewood, WA 98499",47.18284,-122.46654,www.pokeratlas.com/poker-room/palacelakewood
+10,Little Creek Casino,"91 West State Route 108, Shelton, WA 98584",47.12915,-123.1012,www.pokeratlas.com/poker-room/little-creek-casino-shelton
+11,Clearwater Saloon & Casino,"838 Valley Mall Parkway, East Wenatchee, WA 98802",47.41509,-120.29324,www.pokeratlas.com/poker-room/clearwater-saloon-casino-east-wenatchee
+12,Black Pearl Casino,"2104 N Pines, Spokane, WA 99216",47.67692,-117.23917,www.pokeratlas.com/poker-room/black-pearl-spokane
+13,Northern Quest Casino,"100 North Hayford Road, Airway Heights, WA 99001",47.65982,-117.56268,www.pokeratlas.com/poker-room/northern-quest-airway-heights
+14,Desert Bluffs Poker,"5215 W Clearwater Ave, Kennewick, WA 99336",46.21217,-119.19304,www.pokeratlas.com/poker-room/desert-bluffs-poker-room-kennewick
+15,The Last Frontier,"105 W 4th St, La Center, WA 98629",45.86282,-122.67183,www.pokeratlas.com/poker-room/the-last-frontier-la-center
+16,Portland Meadows,"8102 NE Lombard St, Portland, OR 97218",45.56302,-122.57938,www.pokeratlas.com/poker-room/portland-meadows
+17,Aces Poker Room Medford,"2555 W Main St.,Medford, OR 97501",42.32327,-122.90356,www.pokeratlas.com/poker-room/
+18,Grants Pass Poker Room,"120 SW J Street,Grants Pass, OR 97526",42.43776,-123.32901,www.pokeratlas.com/poker-room/grants-pass
+19,Final Table Poker Club,"7901 SE Powell Blvd, Portland, OR 97206",45.49862,-122.58127,www.pokeratlas.com/poker-room/final-table-portland
+20,The Game,"9220 SW Barbur Blvd, Portland, OR 97219",45.45871,-122.70879,www.pokeratlas.com/poker-room/the-game-portland
+21,The Diamond Poker Club,"3297 Southeast Salem Avenue, Albany, OR",44.64491,-123.06463,www.pokeratlas.com/poker-room/the-diamond-poker-club-albany
+22,Bend Poker Room,"917 NE Greenwood Ave, Bend, OR 97701",44.06037,-121.29206,www.pokeratlas.com/poker-room/bend-poker-room
+23,No Look Poker Club,"2990 N Pacific Hwy, Medford, OR 97501",42.35243,-122.896891,www.pokeratlas.com/poker-room/no-look-poker-club-medford
+24,Full House Poker,"808 Olive St, Eugene, OR 97401",44.05146,-123.09449,www.pokeratlas.com/poker-room/no-look-poker-club-medford
+25,High Mountain Poker,"1020 Green Acres Rd, Suite 13, Eugene, OR 97408",44.09301,-123.09713,www.pokeratlas.com/poker-room/high-mountain-eugene
+26,Oregon Poker Club Stadiums Sports Bar,"16065 SE Mcgloughlin Blvd., Milwaukie, OR",45.406894,-122.625296,www.pokeratlas.com/poker-room/oregon-poker-club-stadiums-sports-bar-portland
+27,Oregon Poker Club Rialto Pool Room,"529 SW 4th Ave, Portland, OR 97204",45.519572,-122.67629,www.pokeratlas.com/poker-room/oregon-poker-club-rialto-pool-room-portland
+28,The Club House,"1244 Walnut St, Roseburg, OR 97470",43.22492,-123.35137,www.pokeratlas.com/poker-room/the-club-house-roseburg
+29,Oregon Poker Club Kit Kat,"231 Ankeny, Portland, OR 97294",45.523342,-122.672892,www.pokeratlas.com/poker-room/oregon-poker-club-kit-kat-club-portland
+30,Medford Social Club Poker Room,"322 E Main St, Medford, OR 97501",42.32764,-122.87078,www.pokeratlas.com/poker-room/medford-social
+31,Win-River Resort and Casino,"2100 Redding Rancheria Rd, Redding, CA 96001",40.50745,-122.3828,www.pokeratlas.com/poker-room/win-river-casino-redding
+32,Towers Casino,"115 Bank Street, Grass Valley, CA 95945",39.21801,-121.06074,www.pokeratlas.com/poker-room/towers-casino-grass-valley
+33,Thunder Valley Casino,"1200 Athens Avenue, Lincoln, CA 95648",38.84045,-121.31364,www.pokeratlas.com/poker-room/thunder-valley-lincoln
+34,Stones Gambling Hall,"6510 Antelope Road, Citrus Heights, CA 95621",38.70636,-121.31234,www.pokeratlas.com/poker-room/stones-gambling-hall-citrus-heights
+35,Capitol Casino,"411 North 16th Street, Sacramento, CA 95811",38.59169,-122.47901,www.pokeratlas.com/poker-room/capitol-casino-sacramento
+36,Graton Resort & Casino,"288 Golf Course Drive West, Rohnert Park, CA 94928",38.36094,-122.72332,www.pokeratlas.com/poker-room/graton-casino-rohnert-park
+37,Ace & Vine,"505 Lincoln Ave, Napa, CA 94558",38.30927,-122.27957,www.pokeratlas.com/poker-room/ace-vine-napa
+38,Parkwest Casino Manteca,"1355 N Main St, Manteca, CA 95336",37.81717,-121.21833,www.pokeratlas.com/poker-room/parkwest-manteca
+39,California Grand Casino,"5988 Pacheco Boulevard, Martinez, CA 94553",37.98213,-122.06748,www.pokeratlas.com/poker-room/california-grand-pacheco
+40,Oaks Card Club,"4097 San Pablo Avenue, Emeryville, CA 94608",37.83224,-122.28045,www.pokeratlas.com/poker-room/oaks-card-club-emeryville
+41,Livermore Casino,"3571 First Street, Livermore, CA 94551",37.68844,-121.75712,www.pokeratlas.com/poker-room/livermore-casino
+42,Lucky Chances Casino,"1700 Hillside Boulevard, Colma, CA 94014",37.68002,-122.45261,www.pokeratlas.com/poker-room/lucky-chances-colma
+43,Artichoke Joe's Casino,"659 Huntington Avenue, San Bruno, CA 94066",37.62794,-122.41082,www.pokeratlas.com/poker-room/artichoke-joes-san-bruno
+44,Casino M8trix,"1887 Matrix Blvd, San Jose, CA 95110",37.37143,-121.91942,www.pokeratlas.com/poker-room/casino-m8trix-san-jose
+45,Bay 101 Casino,"1788 North First Street, San Jose, CA 95112",37.36981,-121.91332,www.pokeratlas.com/poker-room/bay-101-san-jose
+46,Turlock Poker Room,"2321 W Main St, Turlock, CA 95380",37.49436,-120.87496,www.pokeratlas.com/poker-room/turlock-poker-room
+47,Garlic City Casino,"8630 San Ysidro Ave, Gilroy, CA",37.02701,-121.56479,www.pokeratlas.com/poker-room/garlic-city-casino-gilroy
+48,Bankers Casino,"111 Monterey St, Salinas, CA 93901",36.67722,-121.65411,www.pokeratlas.com/poker-room/bankers-casino-salinas
+49,500 Club Casino,"771 W Shaw Avenue, Clovis, CA 93612",36.8097,-119.72666,www.pokeratlas.com/poker-room/500-club-clovis
+50,Club One Casino,"3950 N Cedar Ave, Fresno, CA 93726",36.78963,-119.75178,www.pokeratlas.com/poker-room/500-club-clovis
+51,Golden West Casino,"1001 South Union Avenue, Bakersfield, CA 93307",35.34527,-119.00351,www.pokeratlas.com/poker-room/golden-west-casino-bakersfield
+52,Diamond Jim's Casino,"118 20th Street West, Rosamond, CA 93560",34.82244,-118.1665,www.pokeratlas.com/poker-room/diamond-jims-rosamond
+53,Players Casino,"10 W Harbor Blvd, 2nd Floor, Ventura, CA 93001",34.27537,-119.30036,www.pokeratlas.com/poker-room/players-casino-ventura
+54,Morongo Casino,"49500 Seminole Dr, Cabazon, CA 92230",33.92203,-116.80044,www.pokeratlas.com/poker-room/morongo-cabazon
+55,Agua Caliente Casino,"32-250 Bob Hope Drive, Rancho Mirage, CA 92270",33.81412,-116.4093,www.pokeratlas.com/poker-room/agua-caliente-rancho-mirage
+56,Lake Elsinore Casino,"20930 Malaga Road, Lake Elsinore, CA 92530",33.65408,-117.29446,www.pokeratlas.com/poker-room/lake-elsinore
+57,Ocean's 11 Casino,"121 Brooks Street, Oceanside, CA 92054",33.20024,-117.36926,www.pokeratlas.com/poker-room/oceans-11-oceanside
+58,The Gardens Casino,"11871 Carson Street, Hawaiian Gardens, CA 90716",33.83253,-118.08015,www.pokeratlas.com/poker-room/the-gardens-hawaiian-gardens
+59,Hollywood Park Casino,"3883 W Century Blvd., Inglewood, CA 90303",33.94653,-118.33885,www.pokeratlas.com/poker-room/the-gardens-hawaiian-gardens
+60,Larry Flynt's Lucky Lady Casino,"1045 W Rosecrans Ave., Gardena, CA 90247",33.90269,-118.29304,www.pokeratlas.com/poker-room/lucky-lady-gardena
+61,Hustler Casino,"1000 W Redondo Beach Blvd, Gardena, CA 90247",33.89223,-118.29236,www.pokeratlas.com/poker-room/hustler-casino-gardena
+62,Parkwest Bicycle Casino,"888 Bicycle Casino Drive, Bell Gardens, CA 90201",33.96661,-118.16562,www.pokeratlas.com/poker-room/bicycle-casino-bell-gardens
+63,Commerce Casino,"6131 East Telegraph Rd., Los Angeles, CA 90040",33.99929,-118.14501,www.pokeratlas.com/poker-room/commerce-casino-los-angeles
+64,Seven Mile Casino,"285 Bay Blvd, Chula Vista, CA 91910",32.63682,-117.09979,www.pokeratlas.com/poker-room/seven-mile-casino-chula-vista
+65,Jamul Casino,"14145 Campo Road, Jamul, CA 91935",32.70364,-116.86859,www.pokeratlas.com/poker-room/jamul-casino
+66,Sycuan Casino,"5469 Casino Way, El Cajon, CA 92019",32.78646,-116.83123,www.pokeratlas.com/poker-room/sycuan-casino-el-cajon
+67,Harveys Lake Tahoe,"Hwy 50 at Stateline Ave., Stateline, NV 89449",38.96002,-119.94221,www.pokeratlas.com/poker-room/harveys-lake-tahoe-stateline
+68,Silver Legacy Casino,"407 N. Virginia Street, Reno, NV 89501",39.53068,-119.81497,www.pokeratlas.com/poker-room/silver-legacy-reno
+69,Grand Sierra Resort Casino,"2500 E 2nd St, Reno, NV 89595",39.52322,-119.78122,www.pokeratlas.com/poker-room/grand-sierra-reno
+70,Peppermill Casino,"2707 South Virginia St., Reno, NV 89502",39.49788,-119.80113,www.pokeratlas.com/poker-room/peppermill-reno
+71,Atlantis Casino,"3800 S Virginia St, Reno, NV 89502",39.4891,-119.79368,www.pokeratlas.com/poker-room/atlantis-casino-reno
+72,Maverick Hotel and Casino,"2065 Idaho Street, Elko, NV 89801",40.84981,-115.74698,www.pokeratlas.com/poker-room/maverick-elko
+73,Peppermill Wendover,"680 Wendover Blvd, West Wendover, NV 89883",40.73819,-114.05648,www.pokeratlas.com/poker-room/peppermill-west-wendover
+74,Wendover Nugget Casino,"101 Wendover Blvd, West Wendover, NV 89883",40.73522,-114.04416,www.pokeratlas.com/poker-room/wendover-nugget-west-wendover
+75,Santa Fe Station,"4949 N Rancho Drive, Las Vegas, NV 89130",36.25075,-115.24498,www.pokeratlas.com/poker-room/santa-fe-station-las-vegas
+76,Poker Palace Casino,"2757 Las Vegas Blvd N, North Las Vegas, NV 89030",36.21011,-115.10755,www.pokeratlas.com/poker-room/poker-palace-casino-north-las-vegas
+77,Red Rock Casino,"11011 W. Charleston Blvd., Las Vegas, NV 89135",36.15709,-115.33357,www.pokeratlas.com/poker-room/red-rock-las-vegas
+78,Boulder Station,"4111 Boulder Highway, Las Vegas, NV 89121",36.13305,-115.0847,www.pokeratlas.com/poker-room/boulder-station-las-vegas
+79,South Point Casino,"9777 Las Vegas Blvd South, Las Vegas, NV 89183",36.0117,-115.17456,www.pokeratlas.com/poker-room/south-point-las-vegas
+80,Golden Nugget Las Vegas,"129 E. Fremont Street, Las Vegas, NV 89101",36.17017,-115.14482,www.pokeratlas.com/poker-room/golden-nugget-lv-las-vegas
+81,Sahara Las Vegas,"2535 S Las Vegas Blvd, Las Vegas, NV 89109",36.14272,-115.15677,www.pokeratlas.com/poker-room/
+82,Westgate Las Vegas Resort & Casino,"3000 Paradise Rd, Las Vegas, NV 89109",36.13596,-115.15216,www.pokeratlas.com/poker-room/westgate-las-vegas
+83,Resorts World Las Vegas,"3000 S Las Vegas Blvd, Las Vegas, NV 89109",36.13432,-115.16768,www.pokeratlas.com/poker-room/resorts-world-las-vegas
+84,Horseshoe Las Vegas,"3645 Las Vegas Blvd. S, Las Vegas, NV 89109",36.11408,-115.16781,www.pokeratlas.com/poker-room/horseshoe-las-vegas
+85,Wynn Casino Las Vegas,"3131 S. Las Vegas Blvd., Las Vegas, NV 89109",36.12915,-115.16555,www.pokeratlas.com/poker-room/wynn-las-vegas
+86,Venetian Casino,"3355 Las Vegas Blvd. South, Las Vegas, NV 89109",36.12409,-115.16824,www.pokeratlas.com/poker-room/venetian-las-vegas
+87,Caesars Palace,"3570 Las Vegas Boulevard, Las Vegas, NV 89109",36.11734,-115.17613,www.pokeratlas.com/poker-room/caesars-palace-las-vegas
+88,Bellagio Casino,"3600 S. Las Vegas Blvd., Las Vegas, NV 89109",36.1139,-115.17597,www.pokeratlas.com/poker-room/bellagio-las-vegas
+89,Aria Casino,"3730 Las Vegas Blvd., Las Vegas, NV 89109",36.10735,-115.17683,www.pokeratlas.com/poker-room/aria-las-vegas
+90,MGM Grand,"3799 Las Vegas Boulevard South, Las Vegas, NV 89109",36.10151,-115.17107,www.pokeratlas.com/poker-room/mgm-grand-las-vegas
+91,The Orleans Casino,"4500 W. Tropicana Ave., Las Vegas, NV 89103",36.10376,-115.20286,www.pokeratlas.com/poker-room/the-orleans-las-vegas
+92,Mandalay Bay,"3950 South Las Vegas Boulevard, Las Vegas, NV 89119",36.09284,-115.17507,www.pokeratlas.com/poker-room/mandalay-bay-las-vegas
+93,Harrah's Laughlin,"2900 S Casino Dr, Laughlin, NV 89029",35.14427,-114.57654,www.pokeratlas.com/poker-room/harrahs-laughlin
+94,Riverside Resort & Casino,"1650 South Casino Drive, Laughlin, NV 89029",35.16739,-114.57158,www.pokeratlas.com/poker-room/riverside-resort-laughlin
+95,Desert Diamond Casino West Valley,"9431 W Northern Ave, Glendale, AZ 85305",33.54871,-111.26188,www.pokeratlas.com/poker-room/desert-diamond-casino-west-valley-glendale
+96,Talking Stick Arena Poker,"9800 E Talking Stick Way, Scottsdale, AZ 85256",34.54032,-111.86967,www.pokeratlas.com/poker-room/talking-stick-resort-scottsdale
+97,Gila River Casino - Lone Butte,"1077 S Kyrene Rd, Chandler, AZ 85226",33.28962,-111.94302,www.pokeratlas.com/poker-room/lone-butte-chandler
+98,Casino Del Sol Resort,"5655 West Valencia Rd, Tucson, AZ 85757",32.13164,-111.08659,www.pokeratlas.com/poker-room/casino-del-sol-tucson
+99,Desert Diamond Casino Tucson,"7350 South Nogales Highway, Tucson, AZ 85756",32.11825,-110.96414,www.pokeratlas.com/poker-room/desert-diamond-tucson
+100,4 Bears Casino & Lodge,"202 Frontage Road, New Town, ND 58763",47.97981,-102.57518,www.pokeratlas.com/poker-room/4-bears-new-town
+101,Cadillac Jack's Gaming Resort,"360 Main Street, Deadwood, SD 57732",44.3851,-103.72154,www.pokeratlas.com/poker-room/cadillac-jacks-deadwood
+102,Saloon #10,"657 Main Street, Deadwood, SD 57732",44.37726,-103.72966,www.pokeratlas.com/poker-room/saloon-no-10-deadwood
+103,Silverado Franklin Casino,"709 Main Street, Deadwood, SD 57732",44.37517,-103.73113,www.pokeratlas.com/poker-room/silverado-casino-deadwood
+104,Lucky J Social Club,"111 Richman Street, Black Hawk, CO 80422",39.80033,-105.4894,www.pokeratlas.com/poker-room/ameristar-black-hawk
+105,Bally's Black Hawk,"261 Main Street, Black Hawk, CO 80422",39.79893,-105.48898,www.pokeratlas.com/poker-room/ballys-black-hawk
+106,Monarch Black Hawk Casino,"488 Main Street, Black Hawk, CO 80422",39.79877,-105.48351,www.pokeratlas.com/poker-room/monarch-black-hawk
+107,Horseshoe Black Hawk,"401 Main St., Black Hawk, CO 80422",39.79838,-105.48345,www.pokeratlas.com/poker-room/horseshoe-black-hawk
+108,Midnight Rose Poker Room,"256 East Bennett Avenue, Cripple Creek, CO 80813",38.74667,-105.17708,www.pokeratlas.com/poker-room/midnight-rose-cripple-creek
+109,Sandia Resort & Casino,"30 Rainbow Road, Albuquerque, NM",35.20652,-106.56753,www.pokeratlas.com/poker-room/sandia-poker-room-albuquerque
+110,Isleta Casino,"11000 Broadway Blvd SE, Albuquerque, NM 87105",34.9379,-106.66175,www.pokeratlas.com/poker-room/isleta-casino-albuquerque
+111,Inn of the Mountain Gods Resort & Casino,"287 Carrizo Canyon Road, Mescalero, NM 88340",33.29563,-105.6902,www.pokeratlas.com/poker-room/inn-of-mountain-gods-mescalero
+112,House of Kings Card Room,"10705 Gateway Blvd. West, Suite E, El Paso, TX 79935",31.75181,-106.34222,www.pokeratlas.com/poker-room/house-of-kings-card-club-el-paso
+113,Amarillo Social Club,"1619 S Kentucky Street, Suite D1330, Amarillo, TX 79102",35.19674,-101.86757,www.pokeratlas.com/poker-room/amarillo-social-club
+114,The River League,"3284 Sherwood Way, San Angelo, TX 76901",31.44663,-100.48094,www.pokeratlas.com/poker-room/the-river-league-san-angelo
+115,Celebrity Card Club Odessa,"4803 Plaza Blvd., Suite 202, Odessa, TX 79762",31.9011,-102.33762,www.pokeratlas.com/poker-room/celebrity-card-club-odessa
+116,KoJack's Poker Club,"3205 West Cuthbert Ave, Suite B-9, Midland, TX 79701",31.99905,-102.11592,www.pokeratlas.com/poker-room/kojacks-midland
+117,Kickapoo Lucky Eagle Casino,"794 Lucky Eagle Drive, Eagle Pass, TX 78852",28.61091,-100.44159,www.pokeratlas.com/poker-room/kickapoo-lucky-eagle-eagle-pass
+118,Four Kings Card Club,"4100 San Bernardo Avenue, Suites 2 & 3, Laredo, TX 78041",27.53698,-99.50563,www.pokeratlas.com/poker-room/four-kings-card-club-laredo
+119,The Fort Card Room,"8450 I-20, Aledo, TX 76008",32.72519,-97.58552,www.pokeratlas.com/poker-room/the-fort-card-room-aledo
+120,Peaks Dallas,"1231 Wycliff Avenue suite 100, Dallas, TX 75207",32.80065,-96.83867,www.pokeratlas.com/poker-room/peaks-dallas
+121,Shuffle 214,"11411 East Northwest Highway, Dallas, TX 75218",32.86587,-96.68245,www.pokeratlas.com/poker-room/shuffle-214-dallas
+122,Texas Card House,"11834 Harry Hines Blvd Suite 135, Dallas, TX 75234",32.9108,-96.89392,www.pokeratlas.com/poker-room/texas-card-house-dallas
+123,Texas Card House Las Colinas,"955 W John Carpenter Fwy #110, Irving, TX 75039",32.89394,-96.95887,www.pokeratlas.com/poker-room/tch-social-las-colinas-irving
+124,5220 Social,"3509 SW Wilshire Blvd Suite 102, Burleson, TX 76028",32.48349,-97.3775,www.pokeratlas.com/poker-room/5220-social-burleson
+125,Poker House Fort Worth,"1055 SW Wilshire Blvd, Burleson, TX 76028",32.52671,-97.33988,www.pokeratlas.com/poker-room/poker-house-fort-worth-burleson
+126,Texas Double Deuce Social Club,"309 W Hidden Creek Pkwy, Burleson, TX 76028",32.52455,-97.32492,www.pokeratlas.com/poker-room/texas-double-deuce-social-club-burleson
+127,Lucky J Social Club,"9371 Richmond Ave., Houston, TX 77063",29.72844,-95.53012,www.pokeratlas.com/poker-room/lucky-j-social-club-houston
+128,Georgetown Poker Club,"3010 Williams Drive suite 206, Georgetown, TX 78628",30.66389,-97.69339,www.pokeratlas.com/poker-room/georgetown-poker-club
+129,Lone Star Social,"1525 Cypress Creek Road l, Cedar Park, TX 78613",30.48148,-97.83439,www.pokeratlas.com/poker-room/lone-star-social-cedar-park
+131,Red Star Social,"9070 Research Blvd., Suite 105, Austin, TX 78758",30.37301,-97.72813,www.pokeratlas.com/poker-room/red-star-social-austin
+132,The Lodge Card Club,"1401 South Interstate 35 Frontage Road, Round Rock, TX 78664",30.49657,-97.67772,www.pokeratlas.com/poker-room/lodge-card-club-austin-round-rock
+134,Shuffle 512,"6501 S Congress Ave, Austin, TX 78745",30.19523,-97.77745,www.pokeratlas.com/poker-room/shuffle-512-austin
+135,The Royal Card House of San Antonio,"7616 Culebra Rd, San Antonio, TX 78251",29.45952,-98.64039,www.pokeratlas.com/poker-room/the-royal-card-house-of-san-antonio
+136,The Lodge Card Club San Antonio,"3723 Colony Drive, San Antonio, TX 78230",29.53304,-98.55951,www.pokeratlas.com/poker-room/lodge-card-club-san-antonio
+137,Alamo Card House,"9323 Perrin Beitel Unit 103, San Antonio, TX",29.52557,-98.41225,www.pokeratlas.com/poker-room/alamo-card-house-2-san-antonio
+138,The Big Blind,"19314 U.S. Hwy 281 N, San Antonio, TX 78258",29.62175,-98.46251,www.pokeratlas.com/poker-room/the-big-blind-san-antonio
+139,SA Card House,"13400 San Pedro Ave, San Antonio, TX 78216",29.56133,-98.48251,www.pokeratlas.com/poker-room/sa-card-house-san-antonio
+140,Texas Card House Rio Grande Valley,"403 W Trenton Rd, Edinburg, TX 78539",26.26295,-98.17448,www.pokeratlas.com/poker-room/texas-card-house-rio-grande-valley-edinburg
+141,Texas Card House Spring,"1411 Spring Cypress Rd, Spring, TX 77373",30.07485,-95.43374,www.pokeratlas.com/poker-room/texas-card-house-spring
+142,4 Suits Social,"20022 U.S. 59, Humble, TX 77338",30.00595,-95.26657,www.pokeratlas.com/poker-room/4-suits-social-humble
+143,Doghouse Poker Club,"27118 Hwy 290, Suite D, Cypress, TX 77433",29.98115,-95.71936,www.pokeratlas.com/poker-room/doghouse-poker-club-cypress
+144,Cypress Poker Club,"12810 Telge Rd, Cypress, TX 77429",29.96253,-95.64946,www.pokeratlas.com/poker-room/cypress-poker-club
+145,Star's Poker Club,"11078 Veterans Memorial Drive, Houston, TX 77067",29.94317,-95.46305,www.pokeratlas.com/poker-room/stars-poker-club-houston
+146,Paramount Social Club,"13153 Northwest Freeway, Houston, TX 77040",29.84603,-95.50413,www.pokeratlas.com/poker-room/paramount-social-club-houston
+147,Spades Poker House Baytown,"6952 Garth Rd, Baytown, TX 77521",29.80321,-94.98004,www.pokeratlas.com/poker-room/spades-poker-house-baytown
+148,Clifton Card House,"135 Grand Ave, Bacliff, TX 77518",29.50978,-94.97871,www.pokeratlas.com/poker-room/clifton-card-house-bacliff
+149,Spades Poker House,"20798 Gulf Fwy, Webster, TX 77598",29.52556,-95.1288,www.pokeratlas.com/poker-room/spades-poker-house-webster
+150,Capri Poker Room,"155 W Bay Area Blvd, Webster, TX 77598",29.54736,-95.12964,www.pokeratlas.com/poker-room/capri-poker-room-webster
+151,Champions Club Poker,"6440 W Sam Houston Pkwy S, Houston, TX",29.70751,-95.55923,www.pokeratlas.com/poker-room/champions-club-houston
+152,Empire Poker Club Katy,"22233 Katy Fwy, Katy, TX 77450",29.78707,-95.8016,www.pokeratlas.com/poker-room/
+153,101 Poker Club,"20900 Katy Fwy, Katy, TX 77449",29.78707,-95.73378,www.pokeratlas.com/poker-room/101-poker-club-katy
+154,Empire Poker Club,"9296 Westheimer Rd, Houston, TX 77063",29.73812,-95.52609,www.pokeratlas.com/poker-room/empire-poker-club-houston
+155,Prime Social Poker Club,"7801 Westheimer Road, Houston, TX 77063",29.73751,-95.50539,www.pokeratlas.com/poker-room/prime-social-houston
+156,Texas Card House Houston,"6100 Westheimer Road suite 142, Houston, TX 77057",29.73913,-95.49092,www.pokeratlas.com/poker-room/texas-card-house-houston
+158,Legends Poker Room,"9275 Richmond Ave. suite 101, Houston, TX 77063",29.72797,-95.52749,www.pokeratlas.com/poker-room/legends-poker-room-houston
+159,Alpha Social Card Club,"105 E Scott Ave, Wichita Falls, TX 76301",33.90429,-98.48525,www.pokeratlas.com/poker-room/alpha-social-card-club-wichita-falls
+160,Texline Card House,"4218 Gibson Lane, Texarkana, TX 75503",33.45967,-94.09487,www.pokeratlas.com/poker-room/texline-card-house-texarkana
+161,St. Croix Casino Turtle Lake,"777 Highway 8/63, Turtle Lake, WI 54889",45.39714,-92.14975,www.pokeratlas.com/poker-room/st-croix-casino-turtle-lake
+162,Oneida Casino,"2020 Airport Dr, Green Bay, WI 54313",44.49729,-88.12144,www.pokeratlas.com/poker-room/oneida-casino-green-bay
+163,Island Casino,"W399 US Highway 2 and US Highway 41, Harris, MI 49845",45.70238,-87.33971,www.pokeratlas.com/poker-room/island-casino-harris
+164,Odawa Casino,"1760 Lears Rd, Petoskey, MI 49770",45.35304,-84.97818,www.pokeratlas.com/poker-room/odawa-casino-petoskey
+165,Huron Poker Room,"240 Chrysler Rd, Oscoda, MI 48750",44.42108,-83.34276,www.pokeratlas.com/poker-room/huron-poker-room-oscoda
+166,Soaring Eagle Casino,"6800 E, Soaring Eagle Boulevard, Mount Pleasant, MI",43.60904,-84.71353,www.pokeratlas.com/poker-room/soaring-eagle-mt-pleasant
+167,Muskegon Poker Room,"1751 Evanston Ave, Muskegon, MI 49442",43.221959,-86.201195,www.pokeratlas.com/poker-room/muskegon-poker-room
+168,The Saginaw Poker Room,"7212 Gratiot Rd, Saginaw, MI 48609",43.41596,-84.05631,www.pokeratlas.com/poker-room/the-saginaw-poker-room
+169,Rounders Poker Room Saginaw,"3325 Davenport Ave, Saginaw, MI 48602",43.437251,-83.988275,www.pokeratlas.com/poker-room/
+170,The Event Spot Poker Room,"5601 West Saginaw Highway, Lansing, MI 48917",42.74043,-84.62849,www.pokeratlas.com/poker-room/event-spot-clawson
+171,FireKeepers Casino,"11177 E. Michigan Ave., Battle Creek, MI 49014",42.29702,-85.07547,www.pokeratlas.com/poker-room/firekeepers-battle-creek
+172,Burton Eagle's Poker Room,"3317 E Bristol Rd, Burton, MI 48529",42.975763,-83.641967,www.pokeratlas.com/poker-room/burton-eagles
+173,Legends Poker Place of Metamora,"3546 S Lapeer Rd, Metamora, MI 48455",42.95509,-83.31306,www.pokeratlas.com/poker-room/legends-poker-place-metamora
+174,Waterford Card Room at 300 Bowl,"100 S Cass Lake Rd, Waterford, MI 48328",42.63757,-83.35656,www.pokeratlas.com/poker-room/300-bowl-waterford
+175,Langan's All Star Poker Room,"257 Ladd Road, Walled Lake, MI 48390",42.53076,-83.49288,www.pokeratlas.com/poker-room/all-star-walled-lake
+176,Krazy Kopz at Vision Lanes,"38250 Ford Rd, Westland, MI 48185",42.3247,-83.41683,www.pokeratlas.com/poker-room/krazy-kopz-westland
+177,Rosemack Poker Room,"20791 East 13 Mile Road, Roseville, MI 48066",42.52607,-82.90738,www.pokeratlas.com/poker-room/rosemack-roseville
+178,DiCicco's Poker Room,"52963 Van Dyke Avenue, Shelby Township, MI 48316",42.68387,-83.0348,www.pokeratlas.com/poker-room/diciccos-poker-room-shelby-township
+179,One Eyed Jacks/G's Charity Poker,"56129 Van Dyke Ave, Shelby Township, MI 48316",42.65445,-83.0313,www.pokeratlas.com/poker-room/gs-charity-poker-shelby-township
+180,Paradise Poker,"13461 Hall Rd, Utica, MI 48315",42.62828,-82.9913,www.pokeratlas.com/poker-room/paradise-poker-utica
+181,Motor City Casino,"2901 Grand River Avenue, Detroit, MI 48201",42.33907,-83.06779,www.pokeratlas.com/poker-room/
+182,MGM Grand Detroit,"1777 Third St., Detroit, MI 48226",42.33365,-83.06019,www.pokeratlas.com/poker-room/mgm-grand-detroit
+183,Hollywood Casino at Greektown,"1200 St Antoine, Detroit, MI 48226",42.33615,-83.04095,www.pokeratlas.com/poker-room/
+184,Running Aces,"15201 Zurich Street NE, Forest Lake, MN 55025",45.24489,-93.03391,www.pokeratlas.com/poker-room/running-aces-forest-lake
+185,Canterbury Park,"1100 Canterbury Road, Shakopee, MN 55379",44.79055,-93.48373,www.pokeratlas.com/poker-room/canterbury-park-shakopee
+186,Horseshoe Casino Hammond,"777 Casino Center Drive, Hammond, IN 46320",41.69467,-87.50698,www.pokeratlas.com/poker-room/horseshoe-hammond
+187,Four Winds South Bend,"3000 Prairie Ave, South Bend, IN 46614",41.64097,-86.29266,www.pokeratlas.com/poker-room/four-winds-s-bend-south-bend
+188,Horseshoe Indianapolis,"4300 North Michigan Road, Shelbyville, IN 46176",39.5891,-85.82527,www.pokeratlas.com/poker-room/horseshoe-indy-shelbyville
+189,Caesars Southern Indiana,"11999 Casino Center Dr. SE, Elizabeth, IN 47117",38.17971,-85.90542,www.pokeratlas.com/poker-room/caesars-s-indiana-elizabeth
+190,Club JAQK,"65 Outer Loop, Louisville, KY 40214",38.12915,-85.78132,www.pokeratlas.com/poker-room/club-jaqk-louisville/review/club-jaqk-louisville-club-jaqk
+191,Grand Falls Casino & Golf Resort,"1415 Grand Falls Blvd, Larchwood, IA 51241",43.49868,-96.50313,www.pokeratlas.com/poker-room/grand-falls-larchwood
+192,Prairie Meadows Racetrack & Casino,"1 Prairie Meadows Drive, Altoona, IA 50009",41.65451,-93.48972,www.pokeratlas.com/poker-room/prairie-meadows-altoona
+193,Riverside Casino,"3184 Highway 22, Riverside, IA 52327",41.49985,-91.52865,www.pokeratlas.com/poker-room/riverside-casino
+194,Horseshoe Casino Council Bluffs,"2701 23rd Avenue, Council Bluffs, IA 51501",41.23688,-95.88666,www.pokeratlas.com/poker-room/horseshoe-casino-council-bluffs
+195,Reserve Poker,"5105 Glendale Avenue, Toledo, OH 43614",41.60286,-83.66265,www.pokeratlas.com/poker-room/
+196,Hollywood Casino Toledo,"777 Hollywood Blvd., Toledo, OH 43605",41.62084,-83.54501,www.pokeratlas.com/poker-room/hollywood-toledo
+197,Mad River Poker Club,"2023 Harshman Road, Dayton, OH 45424",39.79894,-84.13051,www.pokeratlas.com/poker-room/mad-river-poker-club-dayton
+198,PokerHub,"5520 Burkhardt Rd, Riverside, OH 45431",39.75699,-84.108816,www.pokeratlas.com/poker-room/pokerhub-riverside
+199,JACK Cleveland Casino,"100 Public Square, Cleveland, OH 44113",41.49894,-81.69312,www.pokeratlas.com/poker-room/jack-cleveland
+200,Viking Social Poker Club,"211 North 4th Street, Steubenville, OH",40.36222,-80.614072,www.pokeratlas.com/poker-room/viking-social-poker-club-steubenville
+201,Mansfield Gemini Poker Club,"2069 West 4th Street, Ontario, OH 44906",40.77178,-82.58878,www.pokeratlas.com/poker-room/mansfieldgemini
+202,Tri-State Social,"1900 Highway 41N,Henderson, KY 42420",37.86213,-87.57247,www.pokeratlas.com/poker-room/tri-state-social-henderson
+203,The Royal Social Club,"124 Black Road, London, KY 40741",37.15122,-84.12203,www.pokeratlas.com/poker-room/the-royal-social-club-london
+204,Hollywood Casino at Kansas City Speedway,"777 Hollywood Casino Blvd, Kansas City, KS 66111",39.1115,-94.82752,www.pokeratlas.com/poker-room/hollywood-kansas-kansas-city
+205,Harrah's Kansas City,"1 Riverboat Drive, Kansas City, MO 64116",39.14257,-94.54393,www.pokeratlas.com/poker-room/harrahs-kc-kansas-city
+206,Downstream Casino,"69300 East Nee Road, Quapaw, OK 74363",36.99804,-94.62646,www.pokeratlas.com/poker-room/downstream-casino-quapaw
+207,Indigo Sky Casino,"70220 East U.S. Highway 60, Wyandotte, OK 74370",36.82516,-94.62599,www.pokeratlas.com/poker-room/indigo-sky-casino-wyandotte
+208,Cherokee Casino West Siloam Springs,"2416 U.S. 412, Colcord, OK 74338",36.17793,-94.56782,www.pokeratlas.com/poker-room/cherokee-west-siloam-watts
+209,Hard Rock Tulsa,"777 West Cherokee Street, Catoosa, OK 74015",36.16529,-95.76527,www.pokeratlas.com/poker-room/hard-rock-tulsa-catoosa
+210,River Spirit Casino,"8330 Riverside Pkwy., Tulsa, OK 74136",36.04211,-95.96391,www.pokeratlas.com/poker-room/river-spirit-casino-tulsa
+211,Choctaw Pocola,"3400 Choctaw Rd, Pocola, OK 74902",35.29065,-94.43657,www.pokeratlas.com/poker-room/choctaw-pocola
+212,Grand Casino,"777 Grand Casino Blvd., Shawnee, OK 74804",35.38092,-97.05918,www.pokeratlas.com/poker-room/grand-casino-shawnee
+213,Riverwind Casino,"1544 Oklahoma Hwy 9, Norman, OK 73072",35.18129,-97.50052,www.pokeratlas.com/poker-room/riverwind-casino-norman
+214,WinStar World Casino,"777 Casino Avenue, Thackerville, OK 73459",33.75923,-97.13034,www.pokeratlas.com/poker-room/winstar-casino-thackerville
+215,Choctaw Casino Durant,"3735 Choctaw Rd, Durant, OK 74701",33.95178,-96.41413,www.pokeratlas.com/poker-room/choctaw-durant
+216,Bally's Quad Cities,"777 Rock Island Avenue, Rock Island, IL 61201",41.45932,-90.61357,www.pokeratlas.com/poker-room/quad-cities-rock-island
+217,Grand Victoria Casino,"250 South Grove Avenue, Elgin, IL 60120",42.03155,-88.27968,www.pokeratlas.com/poker-room/grand-victoria-elgin
+218,Hollywood Casino Aurora,"1 New York Street Bridge, Aurora, IL 60506",41.75967,-88.3134,www.pokeratlas.com/poker-room/hollywood-aurora
+219,Rivers Casino Des Plaines,"3000 S River Rd, Des Plaines, IL 60018",41.99766,-87.86452,www.pokeratlas.com/poker-room/rivers-casino-des-plaines
+220,Horseshoe St. Louis,"999 N 2nd St, St. Louis, MO 63102",38.63244,-90.18445,www.pokeratlas.com/poker-room/horseshoe-st-louis
+221,Ameristar Casino St. Charles,"1 Ameristar Blvd, St. Charles, MO 63301",38.76701,-90.48397,www.pokeratlas.com/poker-room/ameristar-st-charles-st-charles
+222,Hollywood Casino St. Louis,"777 Casino Center Drive, Maryland Heights, MO 63043",38.75423,-90.48158,www.pokeratlas.com/poker-room/hollywood-st-louis-maryland-heights
+223,Saracen Casino Resort,"1 Saracen Resort Drive, Pine Bluff, AR 71601",34.21012,-91.96292,www.pokeratlas.com/poker-room/saracen-casino-resort-pine-bluff
+224,Horseshoe Casino Bossier City,"711 Horseshoe Boulevard, Bossier City, LA 71111",32.51562,-93.73823,www.pokeratlas.com/poker-room/horseshoe-bossier-bossier-city
+225,Paragon Casino,"711 Paragon Place, Marksville, LA 71351",31.10646,-92.06071,www.pokeratlas.com/poker-room/paragon-casino-marksville
+226,Jena Choctaw Pines Casino,"21160 US Highway 167, Dry Prong, LA 71423",31.43927,-92.49409,www.pokeratlas.com/poker-room/jena-choctaw-pines-dry-prong
+227,Coushatta Casino,"777 Coushatta Drive, Kinder, LA 70648",30.54612,-92.81439,www.pokeratlas.com/poker-room/poker-room/coushatta-casino-kinder
+228,L'Auberge Casino Baton Rouge,"777 LâAuberge Avenue, Baton Rouge, LA",30.34687,-91.15094,www.pokeratlas.com/poker-room/lauberge-casino-baton-rouge
+229,Caesars New Orleans,"8 Canal St, New Orleans, LA 70130",29.95007,-90.06521,www.pokeratlas.com/poker-room/lauberge-casino-baton-rouge
+230,Boomtown Casino New Orleans,"4132 Peters Road, Harvey, LA 70058",29.84882,-90.06008,www.pokeratlas.com/poker-room/boomtown-new-orleans-harvey
+231,Horseshoe Casino Tunica,"1021 Casino Center Drive, Robinsonville, MS 38664",34.84819,-90.33107,www.pokeratlas.com/poker-room/horseshoe-tunica-robinsonville
+232,Pearl River Resort,"13541 Highway 16 West, Philadelphia, MS 39350",32.77249,-89.20544,www.pokeratlas.com/poker-room/pearl-river-resort-philadelphia
+233,Ameristar Casino Vicksburg,"4116 Washington St., Vicksburg, MS 39180",32.31542,-90.90051,www.pokeratlas.com/poker-room/ameristar-vicksburg
+234,Hollywood Casino Gulf Coast,"711 Hollywood Blvd, Bay St. Louis, MS 39520",30.33501,-89.35375,www.pokeratlas.com/poker-room/hollywood-gulf-coast-bay-st-louis
+235,Boomtown Casino Biloxi,"676 Bayview Avenue, Biloxi, MS 39530",30.41293,-88.88514,www.pokeratlas.com/poker-room/boomtown-biloxi
+236,IP Casino Biloxi,"850 Bayview Ave., Biloxi, MS 39530",30.41307,-88.890201,www.pokeratlas.com/poker-room/ip-casino-biloxi
+237,Beau Rivage Resort & Casino,"875 Beach Blvd., Biloxi, MS 39530",30.39263,-88.89155,www.pokeratlas.com/poker-room/beau-rivage-biloxi
+238,Hard Rock Hotel & Casino Biloxi,"777 Beach Blvd Biloxi, MS 39530",30.39268,-88.88797,www.pokeratlas.com/poker-room/
+239,Harrah's Cherokee Casino,"777 Casino Drive, Cherokee, NC 28719",35.47039,-83.30031,www.pokeratlas.com/poker-room/harrahs-cherokee
+240,Ebro Poker Room,"6558 Dog Track Road, Ebro, FL 32437",30.44597,-85.87532,www.pokeratlas.com/poker-room/
+241,Creek Entertainment Gretna,"501 Race Track Road, Gretna, FL 32332",30.58702,-84.70349,www.pokeratlas.com/poker-room/ebro-poker-room
+242,Bestbet Jacksonville,"201 Monument Road, Jacksonville, FL 32225",30.32541,-81.54439,www.pokeratlas.com/poker-room/bestbet-jacksonville
+243,Bestbet Orange Park,"455 Park Avenue, Orange Park, FL 32073",30.18437,-81.70026,www.pokeratlas.com/poker-room/bestbet-orange-park
+244,Bestbet St. Augustine,"800 Marketplace Drive, St. Augustine, FL 32084",29.83673,-81.38252,www.pokeratlas.com/poker-room/bestbet-st-augustine
+245,OcalaBets,"1781 SW 60th Ave, Ocala, FL 34474",29.17232,-82.21511,www.pokeratlas.com/poker-room/ocalabets
+246,Oxford Downs Poker Room,"17996 S. US Hwy 301, Summerfield, FL 34491",28.96154,-82.04715,www.pokeratlas.com/poker-room/oxford-downs-summerfield
+247,Daytona Beach Poker Room,"960 S. Williamson Boulevard, Daytona Beach, FL 32114",29.16673,-81.07994,www.pokeratlas.com/poker-room/daytona-beach
+248,Orange City Racing & Card Club,"822-4 Saxon Blvd, Orange City, FL 32763",28.90951,-81.29582,www.pokeratlas.com/poker-room/orange-city
+249,Club 52 Melbourne Greyhound Park,"1100 North Wickham Rd., Melbourne, FL 32935",28.12488,-80.67768,www.pokeratlas.com/poker-room/melbourne
+250,Silks @ Tampa Bay Downs,"11225 Race Track Road, Tampa, FL 33626",28.04992,-82.64801,www.pokeratlas.com/poker-room/the-silks-poker-room-tampa
+251,Win! Derby Poker Room,"10490 Gandy Boulevard, St. Petersburg, FL 33702",27.86653,-82.62843,www.pokeratlas.com/poker-room/derby-lane-st-petersburg
+252,One-Eyed Jack's,"4404 Bee Ridge Rd, Sarasota, FL 34233",27.29752,-82.48017,www.pokeratlas.com/poker-room/one-eyed-jacks-sarasota
+253,Seminole Hard Rock Tampa,"5223 North Orient Road, Tampa, FL 33610",27.99191,-83.36112,www.pokeratlas.com/poker-room/hard-rock-tampa
+254,TGT Poker & Racebook,"755 E Waters Ave, Tampa, FL 33604",28.0242,-82.45341,www.pokeratlas.com/poker-room/tgt-poker-tampa
+255,Card House Port St. Lucie,"6666 S U.S. Hwy 1, Port St. Lucie, FL 34952",27.34368,-80.32442,www.pokeratlas.com/poker-room/card-house-port-st-lucie
+256,Palm Beach Kennel Club,"1111 N. Congress Ave., West Palm Beach, FL 33409",26.69298,-80.08845,www.pokeratlas.com/poker-room/
+257,Bonita Springs Poker Room,"28010 Race Track Rd, Bonita Springs, FL 34135",26.33071,-81.77594,www.pokeratlas.com/poker-room/palm-beach-kc-west-palm-beach
+258,Miccosukee Casino and Resort,"500 Southwest 177th Avenue, Miami, FL 33194",25.76383,-80.48452,www.pokeratlas.com/poker-room/miccosukee-resort-miami
+259,Seminole Coconut Creek,"5550 Northwest 40th Street, Coconut Creek, FL 33073",26.27787,-80.19983,www.pokeratlas.com/poker-room/seminole-coconut-crk-coconut-creek
+260,Harrah's Pompano Beach,"777 Isle of Capri Circle, Pompano Beach, FL 33069",26.22356,-80.15188,www.pokeratlas.com/poker-room/harrahs-pompano-pompano-beach
+261,Seminole Hard Rock Hollywood,"1 Seminole Way, Ft. Lauderdale, FL 33314",26.05337,-80.21029,www.pokeratlas.com/poker-room/hard-rock-hollywood-ft-lauderdale
+262,The Casino @ Dania Beach,"301 E. Dania Beach Blvd., Dania, FL 33004",26.05348,-80.13711,www.pokeratlas.com/poker-room/casino-dania-beach
+263,Big Easy Casino,"831 North Federal Highway, Hallandale, FL 33009",25.99503,-80.14616,www.pokeratlas.com/poker-room/big-easy-casino-hallandale
+264,Hialeah Park Casino,"100 E 32nd St, Hialeah, FL 33013",25.84629,-80.27911,www.pokeratlas.com/poker-room/hialeah-park
+265,Magic City Casino,"450 NW 37th Avenue, Miami, FL 33125",25.77701,-80.25692,www.pokeratlas.com/poker-room/magic-city-casino-miami
+266,Casino Miami,"3500 NW 37th Ave, Miami, FL",25.80754,-80.25719,www.pokeratlas.com/poker-room/casino-miami
+267,Rivers Casino Portsmouth,"3630 Victory Blvd, Portsmouth, VA 23701",36.80687,-76.35294,www.pokeratlas.com/poker-room/rivers-casino-portsmouth
+268,Pop's Poker,"210 Giant Dr, Richmond, VA 23224",37.50117,-77.50279,www.pokeratlas.com/poker-room/pops-poker-richmond
+269,Mardi Gras Casino West Virginia,"1 Greyhound Drive, Nitro, WV 25313",38.42098,-81.81055,www.pokeratlas.com/poker-room/mardi-gras-casino-nitro
+270,Hollywood Casino at Charles Town Races,"750 Hollywood Drive, Charles Town, WV 25414",39.2974,-77.85112,www.pokeratlas.com/poker-room/hwood-charles-town
+271,Wheeling Island Casino,"1 South Stone Street, Wheeling, WV 26003",40.06291,-80.73226,www.pokeratlas.com/poker-room/wheeling-island
+272,MGM National Harbor,"7100 Oxon Hill Rd, Oxon Hill, MD 20745",38.79542,-77.00896,www.pokeratlas.com/poker-room/mgm-national-oxon-hill
+274,Horseshoe Baltimore,"1525 Russell Street, Baltimore, MD 21230",39.27382,-76.62735,www.pokeratlas.com/poker-room/horseshoe-baltimore
+275,Hollywood Casino Perryville,"1201 Chesapeake Road, Perryville, MD 21903",39.59591,-76.07434,www.pokeratlas.com/poker-room/hollywood-perryville
+276,Delaware Park,"777 Delaware Park Blvd, Wilmington, DE 19804",39.7052,-75.66873,www.pokeratlas.com/poker-room/delaware-park-wilmington
+277,Live! Casino Philadelphia,"900 Packer Ave, Philadelphia, PA 19148",39.90926,-75.16466,www.pokeratlas.com/poker-room/live-casino-philadelphia
+278,Parx Casino,"2999 E Street Rd, Bensalem, PA 19020",40.11873,-74.95302,www.pokeratlas.com/poker-room/parx-casino-bensalem
+279,Wind Creek Casino Bethlehem,"77 Wind Creek Blvd, Bethlehem, PA 18015",40.61463,-75.35655,www.pokeratlas.com/poker-room/wind-creek-bethlehem
+280,Mohegan Pennsylvania Casino Resort,"1280 Highway 315, Wilkes-Barre, PA 18702",41.2695,-75.82221,www.pokeratlas.com/poker-room/mohegan-pa-wilkes-barre
+281,Mount Airy Casino,"44 Woodland Rd, Mt Pocono, PA 18344",41.11368,-75.32169,www.pokeratlas.com/poker-room/mount-airy-casino-mt-pocono
+282,Rivers Casino Pittsburgh,"777 Casino Dr., Pittsburgh, PA 15212",40.44816,-80.02318,www.pokeratlas.com/poker-room/rivers-casino-pittsburgh
+283,Hollywood Casino at The Meadows,"210 Racetrack Road, Washington, PA 15301",40.22077,-80.20201,www.pokeratlas.com/poker-room/hollywood-meadows-washington
+284,Resorts World Catskills,"888 Resorts World Drive, Monticello, NY 12701",41.65925,-74.64907,www.pokeratlas.com/poker-room/resorts-world-catski-monticello
+285,Tioga Downs Poker,"2384 W. River Road, Nichols, NY 13812",42.02413,-76.41305,www.pokeratlas.com/poker-room/tioga-downs-nichols
+287,Turning Stone,"5218 Patrick Rd, Verona, NY 13478",43.11535,-75.58918,www.pokeratlas.com/poker-room/turning-stone-verona
+288,del Lago Resort & Casino,"1133 New York 414, Waterloo, NY 13165",42.97015,-76.84358,www.pokeratlas.com/poker-room/del-lago-waterloo
+289,MGM Springfield,"One MGM Way, Springfield, MA 01103",42.09907,-72.58764,www.pokeratlas.com/poker-room/mgm-springfield
+290,Encore Boston Harbor,"One Broadway, Everett, MA 02149",42.39558,-71.06952,www.pokeratlas.com/poker-room/encore-boston-harbor-everett
+291,Gate City Casino,"55 Northeastern Blvd, Nashua, NH 03062",42.73736,-71.48315,www.pokeratlas.com/poker-room/gate-city-nashua
+292,Chasers Poker Room,"7 Veterans Memorial Pkwy, Salem, NH 03079",42.76992,-71.21857,www.pokeratlas.com/poker-room/chasers-salem
+293,The Brook,"319 New Zealand Rd, Seabrook, NH 03874",42.89553,-70.90268,www.pokeratlas.com/poker-room/chasers-salem
+295,Dover Poker Room,"887b Central Avenue, Dover, NH 03820",43.22079,-70.88207,www.pokeratlas.com/poker-room/
+296,Lakes Region Casino,"1265 Laconia Rd., Belmont, NH 03220",43.43161,-71.45751,www.pokeratlas.com/poker-room/lakes-region-casino-belmont
+297,Bally's Twin River Casino,"100 Twin River Road, Lincoln, RI 02865",41.88832,-71.44854,www.pokeratlas.com/poker-room/ballys-twin-river-lincoln
+298,Playground Poker Club,"1500 QC-138 C, Kahnawake, QC J0L 1B0, Canada",45.37706,-73.70612,www.pokeratlas.com/poker-room/playground-poker-kahnawake
+299,Casino Montreal,"1 Avenue Du Casino, Montreal, QC H3C4W7, Canada",45.50563,-73.52564,www.pokeratlas.com/poker-room/casino-de-montreal
+300,Silver Dollar Casino Renton (Closed),"3100 E Valley Road, Renton, WA 98057",47.45178,-122.21627,www.pokeratlas.com/poker-room/
+301,Aces and Eights Casino (Closed?),"2 Evergreen Way, Everett, MA 01880",42.4053,-71.0356,www.pokeratlas.com/poker-room/buzz-inn-steakhouse-evergreen-way-everett
+302,Buzz Inn Steakhouse Evergreen (Closed),"1121 SE Evergreen Way, Everett, WA 98204",47.9492,-122.2095,www.pokeratlas.com/poker-room/
+303,Buzz Inn Steakhouse Lake Stevens,"9223 State Route 204, Lake Stevens, WA 98258",48.01411,-122.06373,www.pokeratlas.com/poker-room/buzz-inn-steakhouse-lake-stevens
+304,Buzz Inn Steakhouse Smokey Point,"5200 172nd St NE, Arlington, WA 98223",48.15186,-122.15946,www.pokeratlas.com/poker-room/buzz-inn-steakhouse-smokey-point-arlington
+305,Chinook Winds Casino,"1777 NW 44th St, Lincoln City, OR 97367",44.99837,-124.00883,www.pokeratlas.com/poker-room/chinook-winds-lincoln-city
+306,Club 48 Poker Room,"430 S 48th Ave, Yakima, WA 98908",46.59343,-120.57324,www.pokeratlas.com/poker-room/
+307,Doc & Eddy's Poker Room,"171 E Broadway, Butte, MT 59701",46.0135,-112.5347,www.pokeratlas.com/poker-room/club-48-poker-room-yakima
+308,Elite Poker Lounge,"4037 W Expy 83 Suite 100, 105, 110, McAllen, TX 78503",26.19367,-98.26731,www.pokeratlas.com/poker-room/elite-poker-lounge-mcallen
+309,Fernley Nugget,"1190 E Main St, Fernley, NV 89408",39.60522,-119.23141,www.pokeratlas.com/poker-room/fernley-nugget
+310,Paragon Casino Resort,"711 Paragon Pl, Marksville, LA 71351",31.1275,-92.0651,www.pokeratlas.com/poker-room/paragon-casino-marksville
+311,Creek Entertainment Gretna,"501 Race Track Rd, Gretna, FL 32332",30.584737,-84.70342,www.pokeratlas.com/poker-room/creek-entertainment-gretna
+312,The Barrel Social Club,"765 Industrial Bypass N, Franklin, KY 42134",36.74685,-86.56497,www.pokeratlas.com/poker-room/the-barrel-social-club-franklin
+313,Cascades Casino,"20393 Fraser Hwy, Langley, BC V3A 7N2, Canada",49.10612,-122.65684,www.pokeratlas.com/poker-room/cascades-casino-langley
+314,River Rock Casino Resort,"8811 River Rd, Richmond, BC V6X 3P8, Canada",49.19637,-123.12755,www.pokeratlas.com/poker-room/river-rock-casino-richmond
+315,Casino Rama,"5899 Rama Rd, Rama, ON L3V 6H6, Canada",44.64886,-79.34487,www.pokeratlas.com/poker-room/casino-rama-cumberland-beach
+316,Casino Niagara,"5705 Falls Ave, Niagara Falls, ON L2E 6T3, Canada",43.09288,-79.07273,www.pokeratlas.com/poker-room/casino-niagara-niagara-falls
+317,Great Canadian Casino Toronto,"555 Rexdale Blvd, Etobicoke, ON M9W 5L1, Canada",43.71527,-79.60379,www.pokeratlas.com/poker-room/great-canadian-casino-resort-toronto
+318,We-Ko-Pa Casino Resort,"10438 Wekopa Way, Fort McDowell, AZ 85264",33.58232,-111.68256,www.pokeratlas.com/poker-room/
+319,Southland Casino Hotel,"1550 N Ingram Blvd, West Memphis, AR 72301",35.16249,-90.15895,www.pokeratlas.com/poker-room/
+320,Pechanga Resort Casino (CLosed?),"45000 Pechanga Pkwy, Temecula, CA 92592",33.45669,-117.10665,www.pokeratlas.com/poker-room/pechanga-temecula
+321,Foxwoods Resort Casino,"350 Trolley Line Blvd, Mashantucket, CT 06338",41.47315,-71.95726,www.pokeratlas.com/poker-room/foxwoods-mashantucket
+322,Mohegan Sun,"1 Mohegan Sun Blvd, Uncasville, CT 06382",41.49189,-72.09038,www.pokeratlas.com/poker-room/mohegan-sun-uncasville
+323,Harrington Raceway & Casino,"18500 Raceway Rd, Harrington, DE 19952",38.91234,-75.57302,www.pokeratlas.com/poker-room/harrington
+324,Bally's Dover Casino Resort,"1131 N Dupont Hwy, Dover, DE 19901",39.18938,-75.53436,www.pokeratlas.com/poker-room/
+325,Ontario Poker Room and Social Club,"287 S Oregon Street, Ontario, OR 97914",44.02436,-116.96391,www.pokeratlas.com/poker-room/ontario-poker-room
+326,Hard Rock Casino Rockford,"7801 E State St, Rockford, IL 61108",42.27041,-88.96226,www.pokeratlas.com/poker-room/hard-rock-casino-rockford
+327,Best Odds Poker,"8321A W Lawrence Ave, Norridge, IL 60706",41.96593,-87.83448,www.pokeratlas.com/poker-room/
+328,Terre Haute Casino Resort,"4500 E Margaret Dr, Terre Haute, IN 47803",39.4358,-87.34747,www.pokeratlas.com/poker-room/terre-haute-casino
+329,Kansas Star Casino (Closed?),"777 Kansas Star Dr, Mulvane, KS 67110",37.46905,-97.32846,www.pokeratlas.com/poker-room/
+330,Ameristar Casino Hotel Kansas City,"3200 N Ameristar Dr, Kansas City, MO 64161",39.15072,-94.48481,www.pokeratlas.com/poker-room/
+331,Kansas Crossing Casino,"1275 S, US-69, Pittsburg, KS 66762",37.34381,-94.70908,www.pokeratlas.com/poker-room/
+332,The OG Clubhouse,"406 Thompsonville Ln, Oak Grove, KY 42262",36.66577,-87.43548,www.pokeratlas.com/poker-room/the-og-clubhouse-social-club-oak-grove
+333,Moneymaker Social Louisville,"6510 Signature Dr, Louisville, KY 40213",38.1558,-85.71567,www.pokeratlas.com/poker-room/moneymaker-social-club-louisville
+334,The Lexington Card Club,"1801 Alexandria Dr suite 190, Lexington, KY 40504",38.03756,-84.55315,www.pokeratlas.com/poker-room/lexington-card-club
+335,Golden Nugget Lake Charles,"2550 Golden Nugget Blvd, Lake Charles, LA 70601",30.20509,-93.26343,www.pokeratlas.com/poker-room/golden-nugget-lc-lake-charles
+336,Bally's Shreveport Casino & Hotel,"451 Clyde Fant Pkwy, Shreveport, LA 71101",32.51711,-93.74434,www.pokeratlas.com/poker-room/ballys-shreveport
+337,Hollywood Casino Bangor,"500 Main St, Bangor, ME 04401",44.78851,-68.77711,www.pokeratlas.com/poker-room/hollywood-bangor
+338,Oxford Casino,"777 Casino Way, Oxford, ME 04270",44.11531,-70.44596,www.pokeratlas.com/poker-room/
+339,Live! Casino & Hotel Maryland,"7002 Arundel Mills Cir, Hanover, MD 21076",39.15794,-76.72668,www.pokeratlas.com/poker-room/maryland-live-hanover
+340,Plainridge Park Casino,"301 Washington St, Plainville, MA 02762",42.03237,-71.30437,www.pokeratlas.com/poker-room/
+341,Treasure Island Resort & Casino,"5734 Sturgeon Lake Rd, Welch, MN 55089",44.63244,-92.64987,www.pokeratlas.com/poker-room/treasure-island-welch
+342,Fortune Bay Resort Casino,"1430 Bois Forte Rd, Tower, MN 55790",47.82176,-92.34356,www.pokeratlas.com/poker-room/fortune-bay-casino-tower
+343,Shooting Star Casino,"777 Casino Rd, Mahnomen, MN 56557",47.30771,-95.96185,www.pokeratlas.com/poker-room/shooting-star-mahnomen
+344,Golden Nugget Biloxi,"151 Beach Blvd, Biloxi, MS 39530",30.39145,-88.86102,www.pokeratlas.com/poker-room/
+345,Century Casino Cape Girardeau,"777 N Main St, Cape Girardeau, MO 63701",37.31336,-89.51705,www.pokeratlas.com/poker-room/century-girardeau-cape-girardeau
+346,River City Casino,"777 River City Casino Blvd, St. Louis, MO 63125",38.53167,-90.26449,www.pokeratlas.com/poker-room/
+347,Montana Nugget Casino,"2150 Grand Ave, Billings, MT 59102",45.78384,-108.57149,www.pokeratlas.com/poker-room/
+348,Montana Nugget Casino,"740 W Idaho St, Kalispell, MT 59901",48.20025,-114.32654,www.pokeratlas.com/poker-room/montana-nugget-kal-kalispell
+349,Montana Nugget Casino,"612 Euclid Avenue, Helena, MT 59601",46.60005,-112.04586,www.pokeratlas.com/poker-room/
+350,Fatt Boys Sports Bar,"1307 U.S. Hwy 2 W, Kalispell, MT 59901",48.19947,-114.33681,www.pokeratlas.com/poker-room/
+351,Happy's Inn,"72576 U.S. Hwy 2 W, Libby, MT 59923",48.08293,-115.14192,www.pokeratlas.com/poker-room/
+352,Glacier Peaks Casino,"46 Museum Lp, Browning, MT 59417",48.55756,-113.02541,www.pokeratlas.com/poker-room/
+353,Hideaway Lounge,"1625 W Main St, Bozeman, MT 59715",45.67999,-111.05947,www.pokeratlas.com/poker-room/
+354,Cats Paw,"721 N 7th Ave, Bozeman, MT 59715",45.68776,-111.04671,www.pokeratlas.com/poker-room/
+355,The Remington Poker Room,"130 Central Ave, Whitefish, MT 59937",48.41106,-114.33728,www.pokeratlas.com/poker-room/
+356,Grand Island Casino Resort,"777 E Fonner Park Rd, Grand Island, NE 68801",40.906162,-98.328986,www.pokeratlas.com/poker-room/grand-island-casino-resort
+357,Tinys Poker Room,"4534 S 84th St, Omaha, NE 68127",41.21454,-96.04377,www.pokeratlas.com/poker-room/
+358,4 Kings Free Poker League,"8919 Grant St, Omaha, NE 68134",41.27951,-96.05178,www.pokeratlas.com/poker-room/
+359,Cactus Petes Resort Casino,"1385 US-93, Jackpot, NV 89825",41.98546,-114.67073,www.pokeratlas.com/poker-room/
+360,Carson Valley Inn,"1627 U.S. Hwy 395 N, Minden, NV 89423",38.95629,-119.76779,www.pokeratlas.com/poker-room/carson-valley-inn-minden
+361,"Revo Casino and Social House, Lebanon","369 Miracle Mile, West Lebanon, NH 03784",43.63597,-72.28746,www.pokeratlas.com/poker-room/lebanon-poker-room
+362,"Revo Casino and Social House, Manchester","1279 S Willow St, Manchester, NH 03103",42.9585,-71.43763,www.pokeratlas.com/poker-room/manchester-poker
+363,Lilac Club Casino,"7 Milton Rd, Rochester, NH 03867",43.3192,-70.97315,www.pokeratlas.com/poker-room/lilac-club-casino-rochester
+364,Borgata Hotel Casino & Spa,"1 Borgata Way, Atlantic City, NJ 08401",39.37937,-74.43368,www.pokeratlas.com/poker-room/borgata-atlantic-city
+365,Tropicana Atlantic City,"2831 Boardwalk, Atlantic City, NJ 08401",39.35256,-74.44456,www.pokeratlas.com/poker-room/tropicana-atlantic-city
+366,Harrah's Resort Atlantic City,"777 Harrah's Blvd, Atlantic City, NJ 08401",39.38453,-74.42768,www.pokeratlas.com/poker-room/harrahs-ac-atlantic-city
+367,Caesars Atlantic City,"2100 Pacific Ave, Atlantic City, NJ 08401",39.35665,-74.43587,www.pokeratlas.com/poker-room/
+368,Resorts Casino Hotel,"1133 Boardwalk, Atlantic City, NJ 08401",39.35979,-74.42225,www.pokeratlas.com/poker-room/
+369,Hard Rock Hotel & Casino Atlantic City,"1000 Boardwalk, Atlantic City, NJ 08401",39.36022,-74.42032,www.pokeratlas.com/poker-room/
+370,Route 66 Casino,"14500 Central Ave SW, Albuquerque, NM 87121",35.02846,-106.95259,www.pokeratlas.com/poker-room/route-66-casino-albuquerque
+371,Santa Ana Star Casino,"54 Jemez Canyon Dam Rd, Bernalillo, NM 87004",35.32891,-106.56449,www.pokeratlas.com/poker-room/
+372,Buffalo Thunder Casino,"30 Buffalo Thunder Trail, Santa Fe, NM 87506",35.86139,-105.99624,www.pokeratlas.com/poker-room/
+373,Rivers Casino & Resort Schenectady,"1 Rush St, Schenectady, NY 12305",42.82341,-73.93721,www.pokeratlas.com/poker-room/rivers-schenectady
+374,Empire City Casino,"810 Yonkers Ave, Yonkers, NY 10704",40.91664,-73.86538,www.pokeratlas.com/poker-room/
+375,Social Poker NYC,"324 7th Ave, New York, NY 10001",40.75465,-73.99438,www.pokeratlas.com/poker-room/
+376,NYC Poker Clubs,"270 W 36th St., New York, NY 10018",40.75362,-73.99225,www.pokeratlas.com/poker-room/
+377,Catawba Two Kings Casino,"538 Kings Mountain Blvd, Kings Mountain, NC 28086",35.20202,-81.37271,www.pokeratlas.com/poker-room/
+378,Harrah's Cherokee Valley River Casino & Hotel,"777 Casino Pkwy, Murphy, NC 28906",35.11515,-83.99256,www.pokeratlas.com/poker-room/harrahs-cherokee-valley-river-murphy
+379,Sky Dancer Casino,"3965 Sky Dancer Way NE, Belcourt, ND 58316",48.81068,-99.84582,www.pokeratlas.com/poker-room/sky-dancer-casino-belcourt
+380,Spirit Lake Casino,"7889 ND-57, St Michael, ND 58370",48.01628,-98.90752,www.pokeratlas.com/poker-room/spirit-lake-casino-st-michael
+381,Hollywood Casino Columbus,"200 Georgesville Rd, Columbus, OH 43228",39.94931,-83.10784,www.pokeratlas.com/poker-room/hollywood-columbus
+382,MGM Northfield Park,"10777 Northfield Rd, Northfield, OH 44067",41.34864,-81.52434,www.pokeratlas.com/poker-room/
+383,JACK Thistledown Racino,"21501 Emery Rd, North Randall, OH 44128",41.43685,-81.53084,www.pokeratlas.com/poker-room/
+384,Three Rivers Casino Resort,"5647 Highway 126, Florence, OR 97439",43.98279,-124.08737,www.pokeratlas.com/poker-room/three-rivers-florence
+385,Actions Card House,"490 East Ln #9, Ontario, OR 97914",44.02179,-116.93933,www.pokeratlas.com/poker-room/actions-card-house-ontario
+387,Rivers Casino Philadelphia,"1001 N. Delaware Ave, Philadelphia, PA 19125",39.96415,-75.13215,www.pokeratlas.com/poker-room/rivers-philadelphia
+388,Hollywood Casino at Penn National Race Course,"777 Hollywood Blvd, Grantville, PA 17028",40.39453,-76.66165,www.pokeratlas.com/poker-room/hollywood-casino-grantville
+389,Valley Forge Casino Resort,"1160 First Ave, King of Prussia, PA 19406",40.09685,-75.41575,www.pokeratlas.com/poker-room/
+390,Dakota Sioux Casino & Hotel,"16415 Sioux Conifer Road, Watertown, SD 57201",45.00405,-97.14815,www.pokeratlas.com/poker-room/dakota-sioux-watertown
+391,The Mint Gaming Hall at Kentucky Downs,"5629 Nashville Road, Franklin, KY 42134",36.64167,-86.56227,www.pokeratlas.com/poker-room/
+392,7 Deuce Social Club,"206 Claire Ave, Oak Grove, KY 42262",36.67002,-87.44276,www.pokeratlas.com/poker-room/
+394,Poker House Dallas (Closed?),"1676 Regal Row, Dallas, TX 75247",32.85306,-96.87175,www.pokeratlas.com/poker-room/poker-house-of-dallas
+395,All Star Poker Silverdale,"10710 Silverdale Way NW, Silverdale, WA 98383",47.66079,-122.68342,www.pokeratlas.com/poker-room/
+396,Goldie's Shoreline Casino,"15030 Aurora Avenue North, Shoreline, WA 98133",47.73869,-122.34456,www.pokeratlas.com/poker-room/
+397,Potawatomi Casino Hotel,"1721 W. Canal Street, Milwaukee, WI 53233",43.03074,-87.93474,www.pokeratlas.com/poker-room/potawatomi-casino-milwaukee
+398,Ho-Chunk Gaming Wisconsin Dells,"S3214 Hwy 12, Baraboo, WI 53913",43.52881,-89.77519,www.pokeratlas.com/poker-room/
+399,Ho-Chunk Gaming Madison,"4002 Evan Acres Rd, Madison, WI 53718",43.03953,-89.27201,www.pokeratlas.com/poker-room/
+400,Ho-Chunk Gaming Nekoosa,"949 County Road G, Nekoosa, WI 54457",44.28021,-89.9641,www.pokeratlas.com/poker-room/
+401,Ho-Chunk Gaming Black River Falls,"W9010 Hwy 54 East, Black River Falls, WI 54615",44.32896,-90.76778,www.pokeratlas.com/poker-room/
+402,Ace High Social Club,"1637 Stillwater Ave, Unit E, Cheyenne, WY 82009",41.15871,-104.80188,www.pokeratlas.com/poker-room/ace-high-social-club-cheyenne
+403,Garth's Poker,"1650 English Ave, Casper, WY 82601",42.857486,-106.343054,www.pokeratlas.com/poker-room/
+404,Wyoming Downs at the Beacon Club,"4100 W Yellowstone Hwy, Casper, WY 82604",42.84946,-106.37666,www.pokeratlas.com/poker-room/garth-katies-casper
+405,Outlaw Saloon Poker,"312 South Greeley Hwy., Cheyenne, WY 82007",41.11499,-104.8026,www.pokeratlas.com/poker-roomoutlaw-poker-cheyenne/
+406,Deerfoot Inn & Casino,"11500 35 Street SE, Calgary, AB T2Z 3W4",50.94932,-113.98274,www.pokeratlas.com/poker-room/deerfoot-casino-calgary
+407,River Cree Resort & Casino,"300 East Lapotac Blvd, Enoch, AB T7X 3Y3",53.51054,-113.69715,www.pokeratlas.com/poker-room/river-cree-casino-spruce-grove
+408,Cowboys Casino,"421 12 Avenue SE, Calgary, AB T2G 1A5",51.04104,-114.05503,www.pokeratlas.com/poker-room/cowboys-casino-calgary
+409,ACE Airport Casino,"40 Aero Crescent NE, Calgary, AB T2E 6W5",51.13882,-114.03179,www.pokeratlas.com/poker-room/ace-casino-calgary
+410,PURE Casino Edmonton,"7055 Argyll Rd NW, Edmonton, AB T6C 4A5",53.51063,-113.43724,www.pokeratlas.com/poker-room/pure-edmonton
+411,Elbow River Casino,"218 18 Avenue SE, Calgary, AB T2G 1L1",51.03779,-114.06078,www.pokeratlas.com/poker-room/elbow-river-casino-calgary
+412,Grey Eagle Resort & Casino,"3777 Grey Eagle Drive, Calgary, AB T3E 3X8",51.00764,-114.14722,www.pokeratlas.com/poker-room/grey-eagle-casino-calgary
+413,Starlight Casino Poker Room,"350 Gifford St, New Westminster, BC V3M 7A3, Canada",49.18599,-122.95628,www.pokeratlas.com/poker-room/starlight-casino-new-westminster
+414,Century Casino Edmonton,"13103 Fort Rd NW, Edmonton, AB T5A 1C3",53.58988,-113.43274,www.pokeratlas.com/poker-room/
+415,Grand Villa Casino Edmonton,"10204 104 Avenue NW, Edmonton, AB T5J 0H6",53.54643,-113.49575,www.pokeratlas.com/poker-room/grand-villa-casino-burnaby
+417,Great Canadian Casino Vancouver,"2080 United Boulevard, Coquitlam, BC V3K 6W3",49.22758,-122.83747,www.pokeratlas.com/poker-room/great-canadian-coquitlam
+418,Parq Casino,"39 Smithe St, Vancouver, BC V6B 0R3",49.27533,-123.11309,www.pokeratlas.com/poker-room/parq-vancouver
+419,Club Regent Casino,"1425 Regent Ave W, Winnipeg, MB R2C 3B2",49.89682,-97.04502,www.pokeratlas.com/poker-room/
+420,McPhillips Station Casino,"484 McPhillips St, Winnipeg, MB R2X 2H2",49.91966,-97.17064,www.pokeratlas.com/poker-room/
+421,Casino New Brunswick,"21 Casino Drive, Moncton, NB E1G 0R7",46.12819,-64.87973,www.pokeratlas.com/poker-room/casino-new-brunswick-moncton
+422,"The Big ""M"" Casino","4491 Mineola Ave, Little River, SC 29566",33.87125,-78.60948,www.pokeratlas.com/poker-room/
+424,TCH Social - Austin,"13376 Research Blvd Suite 605, Austin, TX 78750",30.45047,-97.79231,www.pokeratlas.com/poker-room/
+425,The Outlaw Saloon,"1254 W 2100 S, West Haven, UT",41.23011,-112.01002,www.pokeratlas.com/poker-room/
+426,Funk 'n Dive Bar/Harp And Hound,"2550 Washington Blvd, Ogden, UT",41.21979,-111.96993,www.pokeratlas.com/poker-room/
+427,WSOP Poker Room - Caesars Virginia,"1100 W. Main St, Danville, VA 24541",36.57104,-79.42812,www.pokeratlas.com/poker-room/
+428,Planet Hollywood Casino,"3667 Las Vegas Blvd S, Las Vegas, NV 89109",36.11017,-115.17006,www.pokeratlas.com/poker-room/planet-hollywood-las-vegas
+429,Sams Town Hotel & Gambling Hall,"5111 Boulder Hwy, Las Vegas, NV 89122",36.1128,-115.06233,www.pokeratlas.com/poker-room/
+430,Cannery Casino,"2121 E Craig Rd, North Las Vegas, NV 89030",36.23874,-115.11881,www.pokeratlas.com/poker-room/
+431,Binion's Gambling Hall,"128 Fremont St, Las Vegas, NV 89101",36.17151,-115.14395,www.pokeratlas.com/poker-room/
+432,Green Valley Ranch Resort,"2300 Paseo Verde Pkwy, Henderson, NV 89052",36.02045,-115.08995,www.pokeratlas.com/poker-room/
+433,Rio Hotel & Casion,"3700 W Flamingo Rd, Las Vegas, NV 89103",36.11757,-115.18817,www.pokeratlas.com/poker-room/
+434,Excalibur Hotel & Casino,"3850 S Las Vegas Blvd, Las Vegas, NV 89109",36.09901,-115.17541,www.pokeratlas.com/poker-room/
+435,Harrah's Las Vegas,"3475 Las Vegas Blvd S, Las Vegas, NV 89109",36.11956,-115.17201,www.pokeratlas.com/poker-room/
+436,Golden Nugget Tahoe,"50 Hwy 50, Stateline, NV 89449",38.96311,-119.94183,www.pokeratlas.com/poker-room/
+437,Palace Station Hotel and Casino,"2411 W Sahara Ave, Las Vegas, NV 89102",36.14315,-115.17496,www.pokeratlas.com/poker-room/
+438,Flamingo Las Vegas,"3555 Las Vegas Blvd S, Las Vegas, NV 89109",36.11687,-115.17036,www.pokeratlas.com/poker-room/

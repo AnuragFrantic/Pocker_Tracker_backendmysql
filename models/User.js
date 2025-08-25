@@ -2,12 +2,12 @@ const { DataTypes } = require("sequelize");
 const db = require("../config/db");
 
 const User = db.sequelize.define("User", {
-    _id: {
+    id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true
     },
-    full_name: {
+    first_name: {
         type: DataTypes.STRING,
         allowNull: false
     },
@@ -15,14 +15,14 @@ const User = db.sequelize.define("User", {
         type: DataTypes.STRING,
         allowNull: true
     },
-    subscriptionId: {                   // FK to subscription table
-        type: DataTypes.INTEGER,
-        allowNull: true,
-        references: {
-            model: "Subscriptions",         // should match Subscription model table
-            key: "id"
-        }
-    },
+    // subscriptionId: {                   // FK to subscription table
+    //     type: DataTypes.INTEGER,
+    //     allowNull: true,
+    //     references: {
+    //         model: "Subscriptions",         // should match Subscription model table
+    //         key: "id"
+    //     }
+    // },
     phone: {
         type: DataTypes.STRING,           // phone numbers better as STRING
         allowNull: false
@@ -43,12 +43,13 @@ const User = db.sequelize.define("User", {
         type: DataTypes.STRING,
         allowNull: true
     },
-    free_session: {
+    session_points: {
         type: DataTypes.INTEGER,
         allowNull: true
     },
-    paid_session: {
-        type: DataTypes.INTEGER,
+
+    expire_date: {
+        type: DataTypes.DATE,
         allowNull: true
     },
     email: {

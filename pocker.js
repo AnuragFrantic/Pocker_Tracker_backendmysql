@@ -1,6 +1,8 @@
 const express = require("express");
 const db = require("./config/db");
 const authRoutes = require("./routes/authroutes");
+const masterRoutes = require("./routes/masterRoutes");
+
 
 const app = express();
 app.use(express.json());
@@ -12,6 +14,8 @@ app.get('/', (req, res) => {
 })
 
 app.use("/auth", authRoutes);
+app.use("/master", masterRoutes);
+
 
 
 
