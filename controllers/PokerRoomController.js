@@ -112,7 +112,7 @@ exports.uploadCSV = async (req, res) => {
                             poker_links: row.poker_atlas_links,
                             description: row.description,
                             capacity: row.capacity,
-                            is_active: row.is_active !== "false",
+                            is_active: true,
                         });
                     }
 

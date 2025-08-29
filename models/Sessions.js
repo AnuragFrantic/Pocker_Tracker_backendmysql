@@ -7,6 +7,14 @@ const Sessions = db.sequelize.define("Sessions", {
         autoIncrement: true,
         primaryKey: true,
     },
+    session_type_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: "SessionTypes",
+            key: "id"
+        }
+    },
     room_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -40,7 +48,7 @@ const Sessions = db.sequelize.define("Sessions", {
         allowNull: false,
     },
     add_on_amount: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.DOUBLE,
         allowNull: false,
         defaultValue: 0,
     },
@@ -50,7 +58,7 @@ const Sessions = db.sequelize.define("Sessions", {
         defaultValue: 0,
     },
     total_amount: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.DOUBLE,
         allowNull: false,
         defaultValue: 0,
     },
@@ -62,26 +70,37 @@ const Sessions = db.sequelize.define("Sessions", {
         type: DataTypes.DOUBLE,
         allowNull: true,
     },
+    other_game_type: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    platform_site: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    stakes: {
+        type: DataTypes.DOUBLE,
+        allowNull: true
+    },
+
     long: {
         type: DataTypes.DOUBLE,
         allowNull: true,
     },
     dealer_tips: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
+        defaultValue: 0
     },
     cash_out: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        defaultValue: 0
     },
     session_notes: {
         type: DataTypes.STRING,
         allowNull: false,
     },
-
-
-
-
 }, {
     timestamps: true
 });

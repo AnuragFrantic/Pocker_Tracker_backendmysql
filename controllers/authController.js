@@ -12,7 +12,7 @@ const User = db.User;
 // Register new user
 exports.register = async (req, res) => {
     try {
-        const { full_name, last_name, email, password, phone } = req.body;
+        const { first_name, last_name, email, password, phone, session_points = 10 } = req.body;
 
         // Check if email exists
         const existingUser = await User.findOne({ where: { email } });
@@ -23,13 +23,20 @@ exports.register = async (req, res) => {
         // Hash password
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Create user
+        let imagePath = null;
+        if (req.file) {
+            imagePath = `/uploads/${req.file.filename}`;
+        }
+
+
         const user = await User.create({
-            full_name,
+            first_name,
             last_name,
             email,
             phone,
-            password: hashedPassword
+            password: hashedPassword,
+            session_points,
+            image: imagePath
         });
 
         // Return without password
@@ -65,7 +72,7 @@ exports.login = async (req, res) => {
 
         // generate JWT token
         const token = jwt.sign(
-            { _id: user._id, email: user.email },
+            { id: user.id, email: user.email }, // 👈 keep 'id' (not user_id)
             process.env.JWT_SECRET || "mysecretkey",
             { expiresIn: "1h" }
         );
@@ -74,7 +81,7 @@ exports.login = async (req, res) => {
             message: "✅ Login successful",
             data: {
                 _id: user._id,
-                full_name: user.full_name,
+                first_name: user.first_name,
                 email: user.email
             },
             token,

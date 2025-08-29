@@ -7,6 +7,7 @@ const masterRoutes = require("./routes/masterRoutes");
 const app = express();
 app.use(express.json());
 
+app.use('/uploads', express.static('uploads'));
 // Routes
 
 app.get('/', (req, res) => {

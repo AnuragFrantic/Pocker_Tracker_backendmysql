@@ -65,7 +65,7 @@ const PokerRoom = db.sequelize.define("PokerRoom", {
 
     is_active: {
         type: DataTypes.BOOLEAN,
-        defaultValue: true
+        defaultValue: false
     }
 }, {
     timestamps: true

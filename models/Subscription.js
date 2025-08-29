@@ -7,6 +7,7 @@ const Subscription = db.sequelize.define("Subscription", {
         autoIncrement: true,
         primaryKey: true,
     },
+
     name: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -15,6 +16,11 @@ const Subscription = db.sequelize.define("Subscription", {
     description: {
         type: DataTypes.TEXT,
         allowNull: true,     // e.g. "Best for casual poker players"
+    },
+    mrp: {
+        type: DataTypes.DECIMAL(10, 2),
+        allowNull: false,
+        defaultValue: 0.00,  // free plan default
     },
     price: {
         type: DataTypes.DECIMAL(10, 2),   // store money properly
@@ -34,10 +40,11 @@ const Subscription = db.sequelize.define("Subscription", {
         type: DataTypes.INTEGER,
         allowNull: true,    // how many poker sessions they can track
     },
-    // max_players: {
-    //     type: DataTypes.INTEGER,
-    //     allowNull: true,    // how many players they can add/analyze
-    // },
+
+    image: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
 
 
     is_active: {

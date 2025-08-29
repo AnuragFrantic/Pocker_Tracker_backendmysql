@@ -4,7 +4,11 @@ const { createPokerRoom, getAllPokerRooms, getPokerRoom, updatePokerRoom, delete
 const upload = require("../middleware/upload");
 const { createGameType, getAllGameTypes, updateGameType } = require("../controllers/GameTypesController");
 const { createGame, getAllGames, getGameById, updateGame, deleteGame } = require("../controllers/GameController");
-const { getAllSessions } = require("../controllers/SessionController");
+const { getAllSessions, createSession } = require("../controllers/SessionController");
+const { getAllUSers, getProfile } = require("../controllers/UserController");
+const { Auth } = require("../middleware/Auth");
+const { CreateSubscription, GetAllSubscriptions, UpdateSubscription } = require("../controllers/SubscriptionController");
+const { CreatePurchaseSubscription, GetAllPurchaseSubscriptions } = require("../controllers/PurchaseSubsriptionController");
 
 
 const router = express.Router();
@@ -57,10 +61,34 @@ router.delete(`/delete-games/:id`, deleteGame);
 
 // sessions
 
-// router.post(`/sessions`, createSessionType);
+router.post(`/sessions`, Auth, createSession);
 router.get(`/sessions`, getAllSessions);
 // router.get(`/sessions/:id`, getSessionById);
 // router.put(`/update-sessions/:id`, updateSession);
 // router.delete(`/delete-sessions/:id`, deleteSession);
+
+
+// user routes 
+
+router.get('/users', Auth, getAllUSers)
+
+router.get('/profile', Auth, getProfile)
+
+
+
+
+// subscription 
+
+router.post('/subscription', upload.single("image"), Auth, CreateSubscription)
+router.get('/subscription', Auth, GetAllSubscriptions)
+router.put('/update-subscription/:id', upload.single("image"), Auth, UpdateSubscription)
+
+// purchase subscription
+
+router.post('/purchase-subscription', Auth, CreatePurchaseSubscription)
+router.get('/purchase-subscription', Auth, GetAllPurchaseSubscriptions)
+
+
+
 
 module.exports = router;
