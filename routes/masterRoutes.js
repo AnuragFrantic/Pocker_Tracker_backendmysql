@@ -2,13 +2,13 @@ const express = require("express");
 const { createSessionType, getAllSessionTypes, getSessionTypeById, updateSessionType, deleteSessionType } = require("../controllers/SessionTypeController");
 const { createPokerRoom, getAllPokerRooms, getPokerRoom, updatePokerRoom, deletePokerRoom, uploadCSV } = require("../controllers/PokerRoomController");
 const upload = require("../middleware/upload");
-const { createGameType, getAllGameTypes, updateGameType } = require("../controllers/GameTypesController");
+const { createGameType, getAllGameTypes, updateGameType, deleteGameType } = require("../controllers/GameTypesController");
 const { createGame, getAllGames, getGameById, updateGame, deleteGame } = require("../controllers/GameController");
-const { getAllSessions, createSession } = require("../controllers/SessionController");
+const { getAllSessions, createSession, updateSession } = require("../controllers/SessionController");
 const { getAllUSers, getProfile } = require("../controllers/UserController");
 const { Auth } = require("../middleware/Auth");
 const { CreateSubscription, GetAllSubscriptions, UpdateSubscription } = require("../controllers/SubscriptionController");
-const { CreatePurchaseSubscription, GetAllPurchaseSubscriptions } = require("../controllers/PurchaseSubsriptionController");
+const { CreatePurchaseSubscription, GetAllPurchaseSubscriptions, GetOwnPurchaseSubscriptions } = require("../controllers/PurchaseSubsriptionController");
 
 
 const router = express.Router();
@@ -47,6 +47,7 @@ router.post(`/game-types`, createGameType)
 router.get(`/game-types`, getAllGameTypes)
 
 router.put(`/update-game-types/:id`, updateGameType)
+router.delete('/delete-game-types/:id', deleteGameType)
 
 
 // games
@@ -64,7 +65,7 @@ router.delete(`/delete-games/:id`, deleteGame);
 router.post(`/sessions`, Auth, createSession);
 router.get(`/sessions`, getAllSessions);
 // router.get(`/sessions/:id`, getSessionById);
-// router.put(`/update-sessions/:id`, updateSession);
+router.put(`/update-sessions/:id`, updateSession);
 // router.delete(`/delete-sessions/:id`, deleteSession);
 
 
@@ -87,6 +88,8 @@ router.put('/update-subscription/:id', upload.single("image"), Auth, UpdateSubsc
 
 router.post('/purchase-subscription', Auth, CreatePurchaseSubscription)
 router.get('/purchase-subscription', Auth, GetAllPurchaseSubscriptions)
+router.get('/own-purchase-subscription', Auth, GetOwnPurchaseSubscriptions)
+
 
 
 

@@ -18,6 +18,11 @@ const Games = db.sequelize.define("Games", {
             key: 'id'
         }
     },
+    deleted_at: {
+        type: Date,
+        allowNull: true,
+        defaultValue: null
+    }
 
 
 }, {

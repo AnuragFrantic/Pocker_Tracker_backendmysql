@@ -50,6 +50,10 @@ const User = db.sequelize.define("User", {
         type: DataTypes.INTEGER,
         allowNull: true
     },
+    used_session_points: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+    },
 
     expire_date: {
         type: DataTypes.DATE,

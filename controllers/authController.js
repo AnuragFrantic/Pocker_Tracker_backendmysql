@@ -10,17 +10,32 @@ const User = db.User;
 
 
 // Register new user
+// Register new user
 exports.register = async (req, res) => {
     try {
         const { first_name, last_name, email, password, phone, session_points = 10 } = req.body;
 
-        // Check if email exists
-        const existingUser = await User.findOne({ where: { email } });
+        // ✅ Check if email or phone already exists
+        const existingUser = await User.findOne({
+            where: {
+                [db.Sequelize.Op.or]: [
+                    { email },
+                    { phone }
+                ]
+            }
+        });
+
         if (existingUser) {
-            return res.status(400).json({ message: "Email already registered", error: false });
+            let msg = "User already registered.";
+            if (existingUser.email === email) {
+                msg = "Email already registered.";
+            } else if (existingUser.phone === phone) {
+                msg = "Phone number already registered.";
+            }
+            return res.status(400).json({ message: msg, error: true });
         }
 
-        // Hash password
+        // ✅ Hash password
         const hashedPassword = await bcrypt.hash(password, 10);
 
         let imagePath = null;
@@ -28,7 +43,7 @@ exports.register = async (req, res) => {
             imagePath = `/uploads/${req.file.filename}`;
         }
 
-
+        // ✅ Create user
         const user = await User.create({
             first_name,
             last_name,
@@ -39,17 +54,20 @@ exports.register = async (req, res) => {
             image: imagePath
         });
 
-        // Return without password
+        // ✅ Exclude password before sending response
         const { password: _, ...userData } = user.toJSON();
 
         res.status(201).json({
             message: "✅ User registered successfully",
-            data: userData, error: true
+            data: userData,
+            error: false
         });
+
     } catch (err) {
-        res.status(500).json({ message: err.message, error: false });
+        res.status(500).json({ message: err.message, error: true });
     }
 };
+
 
 
 
@@ -74,7 +92,7 @@ exports.login = async (req, res) => {
         const token = jwt.sign(
             { id: user.id, email: user.email }, // 👈 keep 'id' (not user_id)
             process.env.JWT_SECRET || "mysecretkey",
-            { expiresIn: "1h" }
+            { expiresIn: "24h" }
         );
 
         res.json({

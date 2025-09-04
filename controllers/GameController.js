@@ -6,17 +6,26 @@ const GameTypes = db.GameTypes;
 exports.getAllGames = async (req, res) => {
     try {
         const games = await Games.findAll({
-            include: [{ model: GameTypes, as: "game_type" }]
+            include: [
+                {
+                    model: GameTypes,
+                    as: "game_type", // ✅ must match association alias
+                    attributes: ["id", "name"], // optional: only return specific fields
+                },
+            ],
+            where: { deleted_at: null },
         });
+
         res.status(200).json({
             data: games,
             message: "Games retrieved successfully",
-            error: false
+            error: false,
         });
     } catch (err) {
         res.status(500).json({ message: err.message, error: true });
     }
 };
+
 
 // Get single game by ID
 exports.getGameById = async (req, res) => {
@@ -78,7 +87,7 @@ exports.deleteGame = async (req, res) => {
         const game = await Games.findByPk(req.params.id);
         if (!game) return res.status(404).json({ message: "Game not found", error: true });
 
-        await game.destroy();
+        await game.update({ deleted_at: new Date() });
         res.status(200).json({ message: "Game deleted successfully", error: false });
     } catch (err) {
         res.status(500).json({ message: err.message, error: true });

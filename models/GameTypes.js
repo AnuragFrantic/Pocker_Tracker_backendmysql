@@ -11,6 +11,11 @@ const GameTypes = db.sequelize.define("GameTypes", {
         type: DataTypes.STRING,
         allowNull: false
     },
+    deleted_at: {
+        type: Date,
+        allowNull: true,
+        defaultValue: null
+    }
 
 }, {
     timestamps: true

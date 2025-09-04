@@ -52,6 +52,11 @@ const Sessions = db.sequelize.define("Sessions", {
         allowNull: false,
         defaultValue: 0,
     },
+    add_amount_history: {
+        type: DataTypes.JSON,   // ✅ not STRING
+        allowNull: true,
+        defaultValue: []
+    },
     re_buys: {
         type: DataTypes.INTEGER,
         allowNull: false,

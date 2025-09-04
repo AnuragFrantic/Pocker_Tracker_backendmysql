@@ -39,14 +39,14 @@ const PurchaseSubscription = db.sequelize.define("PurchaseSubscription", {
         defaultValue: "pending"
     },
 
-    // payment_reference: {
-    //     type: DataTypes.INTEGER,
-    //     allowNull: false,
-    //     references: {
-    //         model: "Payments",
-    //         key: "id"
-    //     },
-    // },
+    payment_reference: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: "Payments",
+            key: "id"
+        },
+    },
     sessions: {
         type: DataTypes.INTEGER,     // e.g. number of sessions attended
         allowNull: true
