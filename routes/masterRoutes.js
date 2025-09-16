@@ -7,7 +7,7 @@ const { createGame, getAllGames, getGameById, updateGame, deleteGame } = require
 const { getAllSessions, createSession, updateSession } = require("../controllers/SessionController");
 const { getAllUSers, getProfile } = require("../controllers/UserController");
 const { Auth } = require("../middleware/Auth");
-const { CreateSubscription, GetAllSubscriptions, UpdateSubscription } = require("../controllers/SubscriptionController");
+const { CreateSubscription, GetAllSubscriptions, UpdateSubscription, ToggleSubscriptionStatus } = require("../controllers/SubscriptionController");
 const { CreatePurchaseSubscription, GetAllPurchaseSubscriptions, GetOwnPurchaseSubscriptions } = require("../controllers/PurchaseSubsriptionController");
 
 
@@ -17,7 +17,7 @@ router.post(`/session-types`, createSessionType)
 router.get(`/session-types`, getAllSessionTypes)
 router.get(`/session-types/:id`, getSessionTypeById)
 router.put(`/update-session-types/:id`, updateSessionType)
-// router.delete(`/delete-session-types/:id`, deleteSessionType)
+router.delete(`/delete-session-types/:id`, deleteSessionType)
 
 
 
@@ -35,7 +35,9 @@ router.post("/poker-room", createPokerRoom);
 router.get("/poker-room", getAllPokerRooms);
 router.get("/poker-room/:id", getPokerRoom);
 router.put("/update-poker-room/:id", updatePokerRoom);
-router.delete("/delete-poker-room/:id", deletePokerRoom);
+
+router.put('/change-status-room/:id', Auth, deletePokerRoom)
+
 
 // CSV upload route (use middleware here)
 router.post("/upload-csv", upload.single("file"), uploadCSV);
@@ -83,6 +85,9 @@ router.get('/profile', Auth, getProfile)
 router.post('/subscription', upload.single("image"), Auth, CreateSubscription)
 router.get('/subscription', Auth, GetAllSubscriptions)
 router.put('/update-subscription/:id', upload.single("image"), Auth, UpdateSubscription)
+router.put('/change-status-subscription/:id', Auth, ToggleSubscriptionStatus)
+
+
 
 // purchase subscription
 

@@ -98,17 +98,21 @@ exports.UpdateSubscription = async (req, res) => {
 };
 
 // DELETE
-exports.DeleteSubscription = async (req, res) => {
+exports.ToggleSubscriptionStatus = async (req, res) => {
     try {
         const subscription = await Subscription.findByPk(req.params.id);
         if (!subscription) {
             return res.status(404).json({ message: "Subscription not found", error: true });
         }
 
-        await subscription.destroy();
+        // Toggle the status
+        subscription.is_active = !subscription.is_active;
+        await subscription.save();
+
         res.status(200).json({
-            message: "Subscription deleted successfully",
-            error: false
+            message: `Subscription ${subscription.is_active ? "activated" : "deactivated"} successfully`,
+            error: false,
+            data: subscription
         });
     } catch (err) {
         res.status(500).json({
@@ -121,3 +125,22 @@ exports.DeleteSubscription = async (req, res) => {
 
 
 
+
+
+
+// const deleteSelectedSubscriptions = async () => {
+//     try {
+//         const idsToDelete = [3, 6, 9];
+
+//         const deletedCount = await Subscription.destroy({
+//             where: { id: idsToDelete }
+//         });
+
+//         console.log(`Deleted ${deletedCount} subscriptions successfully`);
+//     } catch (err) {
+//         console.error("Error deleting subscriptions:", err.message);
+//     }
+// };
+
+// // Run it directly
+// deleteSelectedSubscriptions();

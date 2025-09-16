@@ -4,7 +4,9 @@ const SessionTypes = db.SessionTypes;
 // Get all session types
 exports.getAllSessionTypes = async (req, res) => {
     try {
-        const types = await SessionTypes.findAll();
+        const types = await SessionTypes.findAll({
+            where: { deleted_at: null },
+        });
         res.json({
             data: types,
             message: "Session types retrieved successfully",
@@ -67,14 +69,17 @@ exports.updateSessionType = async (req, res) => {
     }
 };
 
-// Delete a session type
+
+
 exports.deleteSessionType = async (req, res) => {
     try {
         const type = await SessionTypes.findByPk(req.params.id);
         if (!type) {
             return res.status(404).json({ message: "Session type not found", error: true });
         }
-        await type.destroy();
+
+        await type.update({ deleted_at: new Date() }); // set current timestamp
+
         res.json({ message: "Session type deleted", error: false });
     } catch (err) {
         res.status(500).json({ message: err.message, error: true });

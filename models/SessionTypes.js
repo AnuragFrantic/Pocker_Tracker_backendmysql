@@ -10,6 +10,11 @@ const SessionTypes = db.sequelize.define("SessionTypes", {
     name: {
         type: DataTypes.STRING,
         allowNull: false,
+    },
+    deleted_at: {
+        type: Date,
+        allowNull: true,
+        defaultValue: null
     }
 }, {
     timestamps: true

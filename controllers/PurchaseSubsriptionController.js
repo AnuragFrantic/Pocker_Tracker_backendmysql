@@ -80,7 +80,16 @@ exports.CreatePurchaseSubscription = async (req, res) => {
         // 2. Calculate dates
         const startDate = new Date();
         const endDate = new Date();
-        endDate.setDate(startDate.getDate() + subscription.duration_days);
+        // endDate.setDate(startDate.getDate() + subscription.duration_days);
+        if (subscription.duration_type === "days") {
+            endDate.setDate(startDate.getDate() + subscription.duration_value);
+        } else if (subscription.duration_type === "months") {
+            endDate.setMonth(startDate.getMonth() + subscription.duration_value);
+        } else if (subscription.duration_type === "years") {
+            endDate.setFullYear(startDate.getFullYear() + subscription.duration_value);
+        } else {
+            throw new Error("Invalid duration type");
+        }
 
         // 3. Sessions
         const sessions = subscription.max_sessions || null;

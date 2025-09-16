@@ -7,7 +7,6 @@ const Subscription = db.sequelize.define("Subscription", {
         autoIncrement: true,
         primaryKey: true,
     },
-
     name: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -32,9 +31,14 @@ const Subscription = db.sequelize.define("Subscription", {
         allowNull: false,
         defaultValue: "USD"
     },
-    duration_days: {
+    duration_value: {
         type: DataTypes.INTEGER,
-        allowNull: false,   // e.g. 30 for monthly, 365 for yearly
+        allowNull: false,   // e.g. 1 for 1 month, 12 for 1 year
+    },
+    duration_type: {
+        type: DataTypes.STRING,
+        allowNull: false,  // e.g. "monthly", "yearly"
+        enum: ["days", "months", "years"]
     },
     max_sessions: {
         type: DataTypes.INTEGER,

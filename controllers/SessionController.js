@@ -12,16 +12,28 @@ const PurchaseSubscription = db.PurchaseSubscription;
 
 exports.getAllSessions = async (req, res) => {
     try {
-        let data = await Session.findAll({
+        // 🔹 Extract pagination params from query (default: page=1, limit=10)
+        let { page = 1, limit = 10 } = req.query;
+        page = parseInt(page);
+        limit = parseInt(limit);
+
+        const offset = (page - 1) * limit;
+
+        // 🔹 Fetch data with pagination
+        let { count, rows } = await Session.findAndCountAll({
             include: [
-                { model: GameTypes, as: "game_type" },
-                { model: PokerRoom, as: "room" },
-                { model: Games, as: "game" }
-            ]
+                { model: GameTypes, as: "game_type", required: false },
+                { model: PokerRoom, as: "room", required: false },
+                { model: Games, as: "game", required: false },
+                { model: User, as: "user", required: false }
+            ],
+            limit,
+            offset,
+            order: [["createdAt", "DESC"]] // optional: sort by latest
         });
 
         // ✅ Parse add_amount_history for each session
-        data = data.map(session => {
+        rows = rows.map(session => {
             const json = session.toJSON();
             if (typeof json.add_amount_history === "string") {
                 try {
@@ -34,8 +46,14 @@ exports.getAllSessions = async (req, res) => {
         });
 
         res.status(200).json({
-            data,
-            message: "Session retrieved successfully",
+            data: rows,
+            pagination: {
+                total: count,
+                page,
+                limit,
+                totalPages: Math.ceil(count / limit)
+            },
+            message: "Sessions retrieved successfully",
             error: false
         });
     } catch (err) {

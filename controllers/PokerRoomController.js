@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const csv = require("csv-parser");
 const db = require("../models");
-
+const { Op } = require("sequelize");
 const PokerRoom = db.PokerRoom;
 
 // ✅ Create a poker room
@@ -37,12 +37,52 @@ exports.createPokerRoom = async (req, res) => {
 // ✅ Get all poker rooms
 exports.getAllPokerRooms = async (req, res) => {
     try {
-        let data = await PokerRoom.findAll();
-        res.json({ message: "Poker rooms retrieved successfully", error: false, data });
+        const { type, name, country, page = 1, limit = 50 } = req.query;
+
+        let where = {};
+
+        // If not admin, only active records
+        if (type !== "admin") {
+            where.is_active = true;
+        }
+
+        // Dynamic filters
+        if (name) {
+            where.name = { [Op.like]: `%${name}%` };
+        }
+        if (country) {
+            where.country = { [Op.like]: `%${country}%` };
+        }
+
+        const offset = (page - 1) * limit;
+
+        const { rows: data, count: total } = await PokerRoom.findAndCountAll({
+            where,
+            limit: parseInt(limit),
+            offset: parseInt(offset),
+            order: [["createdAt", "DESC"]],
+        });
+
+        res.json({
+            message: "Poker rooms retrieved successfully",
+            error: false,
+            data,
+            pagination: {
+                total,
+                page: parseInt(page),
+                limit: parseInt(limit),
+                totalPages: Math.ceil(total / limit),
+            },
+        });
     } catch (error) {
-        res.status(500).json({ message: "Error fetching poker rooms", error: true });
+        console.error(error);
+        res.status(500).json({
+            message: "Error fetching poker rooms",
+            error: true,
+        });
     }
 };
+
 
 // ✅ Get single poker room
 exports.getPokerRoom = async (req, res) => {
@@ -72,16 +112,29 @@ exports.updatePokerRoom = async (req, res) => {
 };
 
 // ✅ Delete poker room
+
+
 exports.deletePokerRoom = async (req, res) => {
     try {
         const room = await PokerRoom.findByPk(req.params.id);
         if (!room) {
-            return res.status(404).json({ message: "Poker room not found", error: true });
+            return res.status(404).json({ message: "Poker Room not found", error: true });
         }
-        await room.destroy();
-        res.json({ message: "Poker room deleted successfully", error: false });
-    } catch (error) {
-        res.status(500).json({ message: "Error deleting poker room", error: true });
+
+        // Toggle the status
+        room.is_active = !room.is_active;
+        await room.save();
+
+        res.status(200).json({
+            message: `room ${room.is_active ? "activated" : "deactivated"} successfully`,
+            error: false,
+            data: room
+        });
+    } catch (err) {
+        res.status(500).json({
+            message: err.message || "Internal server error",
+            error: true
+        });
     }
 };
 
