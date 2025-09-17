@@ -5,7 +5,7 @@ const db = require("../models");
 const { Op } = require("sequelize");
 const PokerRoom = db.PokerRoom;
 
-// ✅ Create a poker room
+//  Create a poker room
 exports.createPokerRoom = async (req, res) => {
     try {
         await PokerRoom.create(req.body);
@@ -34,7 +34,7 @@ exports.createPokerRoom = async (req, res) => {
 
 // clearPokerRooms();
 
-// ✅ Get all poker rooms
+//  Get all poker rooms
 exports.getAllPokerRooms = async (req, res) => {
     try {
         const { type, name, country, page = 1, limit = 50 } = req.query;
@@ -84,7 +84,7 @@ exports.getAllPokerRooms = async (req, res) => {
 };
 
 
-// ✅ Get single poker room
+//  Get single poker room
 exports.getPokerRoom = async (req, res) => {
     try {
         const room = await PokerRoom.findByPk(req.params.id);
@@ -97,7 +97,7 @@ exports.getPokerRoom = async (req, res) => {
     }
 };
 
-// ✅ Update poker room
+//  Update poker room
 exports.updatePokerRoom = async (req, res) => {
     try {
         const room = await PokerRoom.findByPk(req.params.id);
@@ -111,7 +111,7 @@ exports.updatePokerRoom = async (req, res) => {
     }
 };
 
-// ✅ Delete poker room
+//  Delete poker room
 
 
 exports.deletePokerRoom = async (req, res) => {

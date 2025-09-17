@@ -11,7 +11,7 @@ const PurchaseSubscription = db.sequelize.define("PurchaseSubscription", {
         type: DataTypes.UUID,
         allowNull: false,
         references: {
-            model: "Users",     // must match the actual table name for User
+            model: "Users",
             key: "id"
         },
 

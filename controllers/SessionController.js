@@ -32,7 +32,7 @@ exports.getAllSessions = async (req, res) => {
             order: [["createdAt", "DESC"]] // optional: sort by latest
         });
 
-        // ✅ Parse add_amount_history for each session
+        //  Parse add_amount_history for each session
         rows = rows.map(session => {
             const json = session.toJSON();
             if (typeof json.add_amount_history === "string") {
@@ -62,71 +62,110 @@ exports.getAllSessions = async (req, res) => {
 };
 
 
+// old code
+
+
 // exports.createSession = async (req, res) => {
+//     const t = await db.sequelize.transaction(); //  transaction for safety
 //     try {
 //         const data = req.body;
-//         const id = req.user.id; 
+//         const userId = req.user.id;
 
-//         // Check if user exists
-//         let user = await User.findByPk(id);
+//         //  Check if user exists
+//         let user = await User.findByPk(userId, { transaction: t });
 //         if (!user) {
+//             await t.rollback();
 //             return res.status(404).json({ message: "User Not Found", error: true });
 //         }
 
-//         // Check if user has enough session points
-//         if (!user.session_points || user.session_points <= 0) {
-//             return res.status(200).json({
-//                 message: "Insufficient session points. Please recharge your account.",
+//         //  Validate required fields
+//         if (!data.session_type_id) {
+//             await t.rollback();
+//             return res.status(400).json({ message: "Session type ID is required", error: true });
+//         }
+//         if (!data.game_type_id) {
+//             await t.rollback();
+//             return res.status(400).json({ message: "Game type ID is required", error: true });
+//         }
+
+//         let deductedFromUser = false;
+//         let deductedFromSubscription = false;
+
+//         //   Deduct from user free sessions if available
+//         if (user.session_points && user.session_points > 0) {
+//             user.session_points -= 1;
+//             user.used_session_points = (user.used_session_points || 0) + 1;
+//             await user.save({ transaction: t });
+//             deductedFromUser = true;
+//         }
+
+//         //  Check for active subscription
+//         let subscription = await PurchaseSubscription.findOne({
+//             where: {
+//                 user_id: userId,
+//                 status: "active",
+//                 remaining_sessions: { [db.Sequelize.Op.gt]: 0 }
+//             },
+//             order: [["end_date", "ASC"]],
+//             transaction: t
+//         });
+
+//         if (subscription) {
+//             subscription.remaining_sessions -= 1;
+//             await subscription.save({ transaction: t });
+//             deductedFromSubscription = true;
+//         }
+
+//         //  If neither free sessions nor subscription found
+//         if (!deductedFromUser && !deductedFromSubscription) {
+//             await t.rollback();
+//             return res.status(400).json({
+//                 message: "No free sessions or active subscription available. Please buy a subscription.",
 //                 error: true
 //             });
 //         }
 
-//         // Validate required fields
-//         if (!data.session_type_id) {
-//             return res.status(200).json({ message: "Session type ID is required", error: true });
-//         }
-//         if (!data.game_type_id) {
-//             return res.status(200).json({ message: "Game type ID is required", error: true });
-//         }
+//         //  Create session
+//         const newSession = await Session.create(
+//             { ...data, user_id: userId },
+//             { transaction: t }
+//         );
 
-//         // Deduct 1 session point
-//         user.session_points = user.session_points - 1;
-//         await user.save();
-
-
-
-//         // Create session and link with user
-//         const newSession = await Session.create({
-//             ...data,
-//             user_id: id // make sure Session has user_id FK
-//         });
-
-//         res.status(201).json({
-//             message: "Session created successfully & 1 point deducted",
+//         await t.commit();
+//         return res.status(201).json({
+//             message: " Session created successfully.",
 //             data: {
 //                 session: newSession,
-//                 remaining_points: user.session_points
+//                 remaining_free_sessions: user.session_points,
+//                 subscription_remaining: subscription ? subscription.remaining_sessions : null,
+//                 deducted_from: {
+//                     user_points: deductedFromUser,
+//                     subscription: deductedFromSubscription
+//                 }
 //             },
 //             error: false
 //         });
+
 //     } catch (err) {
-//         console.error("❌ Create Session Error:", err);
+//         await t.rollback();
+//         console.error(" Create Session Error:", err);
 //         res.status(500).json({ message: err.message, error: true });
 //     }
 // };
 
 
+
 exports.createSession = async (req, res) => {
-    const t = await db.sequelize.transaction(); // ✅ transaction for safety
+    const t = await db.sequelize.transaction(); // transaction for safety
     try {
         const data = req.body;
         const userId = req.user.id;
 
         // ✅ Check if user exists
-        let user = await User.findByPk(userId, { transaction: t });
+        const user = await db.User.findByPk(userId, { transaction: t });
         if (!user) {
             await t.rollback();
-            return res.status(404).json({ message: "User Not Found", error: true });
+            return res.status(404).json({ message: "User not found", error: true });
         }
 
         // ✅ Validate required fields
@@ -151,7 +190,7 @@ exports.createSession = async (req, res) => {
         }
 
         // ✅ Check for active subscription
-        let subscription = await PurchaseSubscription.findOne({
+        let subscription = await db.PurchaseSubscription.findOne({
             where: {
                 user_id: userId,
                 status: "active",
@@ -167,7 +206,7 @@ exports.createSession = async (req, res) => {
             deductedFromSubscription = true;
         }
 
-        // ❌ If neither free sessions nor subscription found
+        // ✅ If neither free sessions nor subscription found
         if (!deductedFromUser && !deductedFromSubscription) {
             await t.rollback();
             return res.status(400).json({
@@ -177,14 +216,33 @@ exports.createSession = async (req, res) => {
         }
 
         // ✅ Create session
-        const newSession = await Session.create(
+        const newSession = await db.Sessions.create(
             { ...data, user_id: userId },
+            { transaction: t }
+        );
+
+        // (Optional) also create a UserGameHistory entry for the session creator
+        await db.UserGameHistory.create(
+            {
+                session_id: newSession.id,
+                user_id: userId,
+                room_id: data.room_id,
+                games_id: data.games_id,
+                buy_in: data.buy_in || 0,
+                re_buys: data.re_buys || 0,
+                add_on_amount: data.add_on_amount || 0,
+                cash_out: data.cash_out || 0,
+                profit_loss:
+                    (data.cash_out || 0) -
+                    ((data.buy_in || 0) + (data.add_on_amount || 0) + (data.re_buys || 0)),
+                notes: data.session_notes || null
+            },
             { transaction: t }
         );
 
         await t.commit();
         return res.status(201).json({
-            message: "✅ Session created successfully.",
+            message: "Session created successfully",
             data: {
                 session: newSession,
                 remaining_free_sessions: user.session_points,
@@ -200,11 +258,43 @@ exports.createSession = async (req, res) => {
     } catch (err) {
         await t.rollback();
         console.error("❌ Create Session Error:", err);
-        res.status(500).json({ message: err.message, error: true });
+        res.status(500).json({ message: "Internal Server Error", error: true });
     }
 };
 
 
+// POST /sessions/:sessionId/game-history
+exports.addGameHistory = async (req, res) => {
+    const t = await db.sequelize.transaction();
+    try {
+        const { sessionId } = req.params;
+        const { game_id, hands_played, duration_minutes, winner_user_id, remarks } = req.body;
+
+        // ✅ Check if session exists
+        const session = await db.Sessions.findByPk(sessionId, { transaction: t });
+        if (!session) {
+            await t.rollback();
+            return res.status(404).json({ message: "Session not found", error: true });
+        }
+
+        // ✅ Create GameHistory
+        const gameHistory = await db.GameHistory.create({
+            session_id: sessionId,
+            game_id,
+            hands_played,
+            duration_minutes,
+            winner_user_id,
+            remarks
+        }, { transaction: t });
+
+        await t.commit();
+        return res.status(201).json({ message: "Game history added", data: gameHistory, error: false });
+    } catch (err) {
+        await t.rollback();
+        console.error("Add GameHistory Error:", err);
+        res.status(500).json({ message: "Internal Server Error", error: true });
+    }
+};
 
 
 
@@ -224,7 +314,7 @@ exports.updateSession = async (req, res) => {
             return res.status(404).json({ message: "Session not found", error: true });
         }
 
-        // ✅ Always use array for history
+        //  Always use array for history
         let history = Array.isArray(session.add_amount_history)
             ? session.add_amount_history
             : [];
@@ -272,7 +362,7 @@ exports.updateSession = async (req, res) => {
             error: false
         });
     } catch (err) {
-        console.error("❌ Update Session Error:", err);
+        console.error(" Update Session Error:", err);
         res.status(500).json({ message: err.message, error: true });
     }
 };
@@ -299,7 +389,7 @@ exports.deleteSession = async (req, res) => {
             error: false
         });
     } catch (err) {
-        console.error("❌ Delete Session Error:", err);
+        console.error(" Delete Session Error:", err);
         res.status(500).json({ message: err.message, error: true });
     }
 };

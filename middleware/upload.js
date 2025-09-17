@@ -19,7 +19,7 @@
 //     else cb(new Error("Only CSV files allowed"), false);
 // };
 
-// // ✅ Export the multer instance directly
+// //  Export the multer instance directly
 // module.exports = multer({ storage, fileFilter });
 const multer = require("multer");
 const path = require("path");
@@ -37,7 +37,7 @@ const storage = multer.diskStorage({
     },
 });
 
-// ✅ Allow CSV + Images
+//  Allow CSV + Images
 const fileFilter = (req, file, cb) => {
     const allowedImageTypes = ["image/jpeg", "image/png", "image/jpg"];
     const allowedCsvTypes = ["text/csv"];

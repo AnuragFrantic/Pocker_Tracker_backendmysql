@@ -12,9 +12,9 @@ const GameTypes = db.sequelize.define("GameTypes", {
         allowNull: false
     },
     deleted_at: {
-        type: Date,
+        type: DataTypes.DATE, // ✅ Use DataTypes.DATE
         allowNull: true,
-        defaultValue: null
+        defaultValue: null   // optional
     }
 
 }, {

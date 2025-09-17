@@ -67,6 +67,11 @@ const User = db.sequelize.define("User", {
             isEmail: true
         }
     },
+    type: {
+        type: DataTypes.ENUM("user", "admin"),
+        allowNull: false,
+        defaultValue: "user"
+    },
     password: {
         type: DataTypes.STRING,
         allowNull: false

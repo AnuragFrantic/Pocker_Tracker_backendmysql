@@ -12,10 +12,11 @@ const SessionTypes = db.sequelize.define("SessionTypes", {
         allowNull: false,
     },
     deleted_at: {
-        type: Date,
+        type: DataTypes.DATE, // ✅ Use DataTypes.DATE
         allowNull: true,
-        defaultValue: null
+        defaultValue: null   // optional, can be omitted
     }
+
 }, {
     timestamps: true
 });

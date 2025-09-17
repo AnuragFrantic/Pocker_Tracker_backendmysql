@@ -184,7 +184,7 @@ exports.GetOwnPurchaseSubscriptions = async (req, res) => {
         const userId = req.user.id;
 
         const purchases = await PurchaseSubscription.findAll({
-            where: { user_id: userId },   // ✅ filter by logged-in user
+            where: { user_id: userId },   //  filter by logged-in user
             include: [
                 { model: db.User, as: "user" },
                 { model: db.Subscription, as: "subscription" },

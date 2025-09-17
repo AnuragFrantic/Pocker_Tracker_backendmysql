@@ -17,7 +17,7 @@ function Auth(req, res, next) {
         const decoded = jwt.verify(token, SECRET_KEY);
 
 
-        // ✅ Now matches the login payload
+        //  Now matches the login payload
         req.user = { id: decoded.id, email: decoded.email };
         return next();
 

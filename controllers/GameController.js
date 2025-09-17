@@ -9,7 +9,7 @@ exports.getAllGames = async (req, res) => {
             include: [
                 {
                     model: GameTypes,
-                    as: "game_type", // ✅ must match association alias
+                    as: "game_type", //  must match association alias
                     attributes: ["id", "name"], // optional: only return specific fields
                 },
             ],

@@ -15,7 +15,7 @@ exports.register = async (req, res) => {
     try {
         const { first_name, last_name, email, password, phone, session_points = 10 } = req.body;
 
-        // ✅ Check if email or phone already exists
+        //  Check if email or phone already exists
         const existingUser = await User.findOne({
             where: {
                 [db.Sequelize.Op.or]: [
@@ -35,7 +35,7 @@ exports.register = async (req, res) => {
             return res.status(400).json({ message: msg, error: true });
         }
 
-        // ✅ Hash password
+        //  Hash password
         const hashedPassword = await bcrypt.hash(password, 10);
 
         let imagePath = null;
@@ -43,7 +43,7 @@ exports.register = async (req, res) => {
             imagePath = `/uploads/${req.file.filename}`;
         }
 
-        // ✅ Create user
+        //  Create user
         const user = await User.create({
             first_name,
             last_name,
@@ -54,11 +54,11 @@ exports.register = async (req, res) => {
             image: imagePath
         });
 
-        // ✅ Exclude password before sending response
+        //  Exclude password before sending response
         const { password: _, ...userData } = user.toJSON();
 
         res.status(201).json({
-            message: "✅ User registered successfully",
+            message: " User registered successfully",
             data: userData,
             error: false
         });
@@ -96,7 +96,7 @@ exports.login = async (req, res) => {
         );
 
         res.json({
-            message: "✅ Login successful",
+            message: " Login successful",
             data: {
                 _id: user._id,
                 first_name: user.first_name,
@@ -106,7 +106,7 @@ exports.login = async (req, res) => {
             error: true
         });
     } catch (err) {
-        console.error("❌ Login error:", err);
+        console.error(" Login error:", err);
         res.status(500).json({ message: "Internal server error", error: false });
     }
 };

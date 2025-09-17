@@ -8,12 +8,13 @@ const Sessions = db.sequelize.define("Sessions", {
         primaryKey: true,
     },
     user_id: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.UUID,
         allowNull: false,
         references: {
             model: "Users",
             key: "id"
-        }
+        },
+
     },
     session_type_id: {
         type: DataTypes.INTEGER,
@@ -60,11 +61,6 @@ const Sessions = db.sequelize.define("Sessions", {
         allowNull: false,
         defaultValue: 0,
     },
-    add_amount_history: {
-        type: DataTypes.JSON,   // ✅ not STRING
-        allowNull: true,
-        defaultValue: []
-    },
     re_buys: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -110,6 +106,7 @@ const Sessions = db.sequelize.define("Sessions", {
         allowNull: false,
         defaultValue: 0
     },
+
     session_notes: {
         type: DataTypes.STRING,
         allowNull: false,

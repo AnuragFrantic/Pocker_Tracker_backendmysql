@@ -12,7 +12,7 @@ const masterRoutes = require("./routes/masterRoutes");
 
 const app = express();
 
-// ✅ Enable CORS
+//  Enable CORS
 app.use(cors({
     origin: "http://localhost:5173", // your React app URL (Vite default)
     credentials: true
@@ -34,7 +34,7 @@ app.use("/master", masterRoutes);
 
 // Sync DB
 db.sequelize.sync().then(() => {
-    console.log("✅ Database synced");
+    console.log(" Database synced");
 });
 
 app.listen(3420, () => console.log("🚀 Server running on http://localhost:3420"));

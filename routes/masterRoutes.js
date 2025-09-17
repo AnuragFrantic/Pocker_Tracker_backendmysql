@@ -28,7 +28,7 @@ router.delete(`/delete-session-types/:id`, deleteSessionType)
 // const express = require("express");
 // const router = express.Router();
 // const pokerRoomController = require("../controllers/pokerRoomController");
-// const upload = require("../middlewares/upload"); // ✅ import middleware
+// const upload = require("../middlewares/upload"); //  import middleware
 
 // CRUD routes
 router.post("/poker-room", createPokerRoom);
@@ -76,6 +76,8 @@ router.put(`/update-sessions/:id`, updateSession);
 router.get('/users', Auth, getAllUSers)
 
 router.get('/profile', Auth, getProfile)
+// router.get('/user-detail/:id', Auth, getUSerProfile)
+
 
 
 
