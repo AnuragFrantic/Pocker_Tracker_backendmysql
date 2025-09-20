@@ -5,6 +5,8 @@ const PokerRoom = db.PokerRoom;
 const Games = db.Games;
 const User = db.User;
 const PurchaseSubscription = db.PurchaseSubscription;
+const UserGameHistory = db.UserGameHistory;
+const GameHistory = db.GameHistory;
 
 
 
@@ -32,18 +34,7 @@ exports.getAllSessions = async (req, res) => {
             order: [["createdAt", "DESC"]] // optional: sort by latest
         });
 
-        //  Parse add_amount_history for each session
-        rows = rows.map(session => {
-            const json = session.toJSON();
-            if (typeof json.add_amount_history === "string") {
-                try {
-                    json.add_amount_history = JSON.parse(json.add_amount_history);
-                } catch (e) {
-                    json.add_amount_history = [];
-                }
-            }
-            return json;
-        });
+
 
         res.status(200).json({
             data: rows,
@@ -181,6 +172,9 @@ exports.createSession = async (req, res) => {
         let deductedFromUser = false;
         let deductedFromSubscription = false;
 
+        let Totalamount = data.buy_in
+
+
         // ✅ Deduct from user free sessions if available
         if (user.session_points && user.session_points > 0) {
             user.session_points -= 1;
@@ -190,7 +184,7 @@ exports.createSession = async (req, res) => {
         }
 
         // ✅ Check for active subscription
-        let subscription = await db.PurchaseSubscription.findOne({
+        let subscription = await PurchaseSubscription.findOne({
             where: {
                 user_id: userId,
                 status: "active",
@@ -217,11 +211,11 @@ exports.createSession = async (req, res) => {
 
         // ✅ Create session
         const newSession = await db.Sessions.create(
-            { ...data, user_id: userId },
+            { ...data, user_id: userId, total_amount: Totalamount },
             { transaction: t }
         );
 
-        // (Optional) also create a UserGameHistory entry for the session creator
+
         await db.UserGameHistory.create(
             {
                 session_id: newSession.id,
@@ -263,38 +257,6 @@ exports.createSession = async (req, res) => {
 };
 
 
-// POST /sessions/:sessionId/game-history
-exports.addGameHistory = async (req, res) => {
-    const t = await db.sequelize.transaction();
-    try {
-        const { sessionId } = req.params;
-        const { game_id, hands_played, duration_minutes, winner_user_id, remarks } = req.body;
-
-        // ✅ Check if session exists
-        const session = await db.Sessions.findByPk(sessionId, { transaction: t });
-        if (!session) {
-            await t.rollback();
-            return res.status(404).json({ message: "Session not found", error: true });
-        }
-
-        // ✅ Create GameHistory
-        const gameHistory = await db.GameHistory.create({
-            session_id: sessionId,
-            game_id,
-            hands_played,
-            duration_minutes,
-            winner_user_id,
-            remarks
-        }, { transaction: t });
-
-        await t.commit();
-        return res.status(201).json({ message: "Game history added", data: gameHistory, error: false });
-    } catch (err) {
-        await t.rollback();
-        console.error("Add GameHistory Error:", err);
-        res.status(500).json({ message: "Internal Server Error", error: true });
-    }
-};
 
 
 
@@ -305,56 +267,70 @@ exports.addGameHistory = async (req, res) => {
 
 
 exports.updateSession = async (req, res) => {
+    const t = await db.sequelize.transaction(); // transaction for safety
     try {
         const { id } = req.params;
         const updates = req.body;
 
-        let session = await Session.findByPk(id);
+        let session = await Session.findByPk(id, { transaction: t });
         if (!session) {
+            await t.rollback();
             return res.status(404).json({ message: "Session not found", error: true });
         }
 
-        //  Always use array for history
-        let history = Array.isArray(session.add_amount_history)
-            ? session.add_amount_history
-            : [];
 
-        const amountFields = ["buy_in", "add_on_amount", "re_buys", "total_amount", "dealer_tips", "cash_out"];
 
-        amountFields.forEach(field => {
-            if (updates[field] !== undefined) {
-                let oldVal = session[field];
 
-                // Special case: accumulate add_on_amount
-                if (field === "add_on_amount") {
-                    const addedVal = Number(updates[field]);
-                    const newVal = oldVal + addedVal;
+        let createGameHistory = false;
 
-                    history.push({
-                        field,
-                        old_value: oldVal,
-                        added_value: addedVal,
-                        new_value: newVal,
-                        updated_at: new Date()
-                    });
+        let totalAmount =
+            parseInt(session.total_amount || 0) +
+            parseInt(session.re_buys || 0) +
+            parseInt(updates.add_on_amount || 0);
 
-                    session[field] = newVal;
-                } else if (updates[field] !== oldVal) {
-                    history.push({
-                        field,
-                        old_value: oldVal,
-                        new_value: updates[field],
-                        updated_at: new Date()
-                    });
 
-                    session[field] = updates[field];
-                }
-            }
-        });
 
-        session.add_amount_history = history;
+        const re_buys = parseInt(updates.re_buys ?? session.re_buys ?? 0);
 
-        await session.save();
+        const cash_out = parseInt(updates.cash_out ?? session.cash_out ?? 0);
+        const dealer_tips = parseInt(updates.dealer_tips ?? session.dealer_tips ?? 0);
+        const meals_other_exp = parseInt(updates.meals_other_exp ?? session.meals_other_exp ?? 0);
+
+
+
+
+        session.re_buys = re_buys;
+        session.cash_out = cash_out;
+        session.dealer_tips = dealer_tips;
+        session.meals_other_exp = meals_other_exp;
+
+        session.total_amount = totalAmount + re_buys + dealer_tips + meals_other_exp;
+
+        session.add_on_amount = parseInt(updates.add_on_amount || 0);
+        session.profit_loss = cash_out - session.total_amount;
+
+        await session.save({ transaction: t });
+
+
+        if (createGameHistory) {
+
+
+            await UserGameHistory.create({
+                session_id: session.id,
+                user_id: session.user_id,
+                games_id: session.games_id,
+                buy_in,
+                re_buys,
+                add_on_amount,
+                cash_out,
+                dealer_tips,
+                meals_other_exp,
+                profit_loss: session.profit_loss,
+                notes: `Update adjustment for Session #${session.id}`
+            }, { transaction: t });
+        }
+
+        await t.commit();
 
         res.status(200).json({
             message: "Session updated successfully",
@@ -362,7 +338,8 @@ exports.updateSession = async (req, res) => {
             error: false
         });
     } catch (err) {
-        console.error(" Update Session Error:", err);
+        await t.rollback();
+        console.error("Update Session Error:", err);
         res.status(500).json({ message: err.message, error: true });
     }
 };
@@ -393,3 +370,9 @@ exports.deleteSession = async (req, res) => {
         res.status(500).json({ message: err.message, error: true });
     }
 };
+
+
+
+// UserGameHistory = player-specific record (who spent/won how much).
+
+// GameHistory = overall session summary (who won, duration, hands played).

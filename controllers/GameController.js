@@ -5,15 +5,22 @@ const GameTypes = db.GameTypes;
 // Get all games
 exports.getAllGames = async (req, res) => {
     try {
+        const game_type = req.query.game_type || req.query["game-type"];
+        let whereCondition = { deleted_at: null };
+
+        if (game_type) {
+            whereCondition.game_type_id = game_type;
+        }
+
         const games = await Games.findAll({
+            where: whereCondition,
             include: [
                 {
                     model: GameTypes,
-                    as: "game_type", //  must match association alias
-                    attributes: ["id", "name"], // optional: only return specific fields
+                    as: "game_type",
+                    attributes: ["id", "name"],
                 },
             ],
-            where: { deleted_at: null },
         });
 
         res.status(200).json({
@@ -25,6 +32,9 @@ exports.getAllGames = async (req, res) => {
         res.status(500).json({ message: err.message, error: true });
     }
 };
+
+
+
 
 
 // Get single game by ID

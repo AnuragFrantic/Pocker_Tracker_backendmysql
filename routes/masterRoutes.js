@@ -5,7 +5,7 @@ const upload = require("../middleware/upload");
 const { createGameType, getAllGameTypes, updateGameType, deleteGameType } = require("../controllers/GameTypesController");
 const { createGame, getAllGames, getGameById, updateGame, deleteGame } = require("../controllers/GameController");
 const { getAllSessions, createSession, updateSession } = require("../controllers/SessionController");
-const { getAllUSers, getProfile } = require("../controllers/UserController");
+const { getAllUSers, getProfile, getUserProfile } = require("../controllers/UserController");
 const { Auth } = require("../middleware/Auth");
 const { CreateSubscription, GetAllSubscriptions, UpdateSubscription, ToggleSubscriptionStatus } = require("../controllers/SubscriptionController");
 const { CreatePurchaseSubscription, GetAllPurchaseSubscriptions, GetOwnPurchaseSubscriptions } = require("../controllers/PurchaseSubsriptionController");
@@ -76,7 +76,7 @@ router.put(`/update-sessions/:id`, updateSession);
 router.get('/users', Auth, getAllUSers)
 
 router.get('/profile', Auth, getProfile)
-// router.get('/user-detail/:id', Auth, getUSerProfile)
+router.get('/user-detail/:id', Auth, getUserProfile)
 
 
 

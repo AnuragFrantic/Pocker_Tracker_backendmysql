@@ -43,7 +43,7 @@ const UserGameHistory = db.sequelize.define("UserGameHistory", {
         defaultValue: 0,
     },
     profit_loss: {
-        type: DataTypes.DOUBLE, // cash_out - (buy_in + add_on_amount + rebuys)
+        type: DataTypes.DOUBLE, 
         allowNull: false,
         defaultValue: 0,
     },
