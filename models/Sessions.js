@@ -28,7 +28,7 @@ const Sessions = db.sequelize.define("Sessions", {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: "PokerRooms",
+            model: "PokerRoom",
             key: "id"
         }
     },
