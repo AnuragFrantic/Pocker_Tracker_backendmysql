@@ -2,7 +2,8 @@ const fs = require("fs");
 const path = require("path");
 const csv = require("csv-parser");
 const db = require("../models");
-const { Op } = require("sequelize");
+
+const { Op, literal, fn, col } = require("sequelize");
 const PokerRoom = db.PokerRoom;
 
 //  Create a poker room
@@ -34,10 +35,13 @@ exports.createPokerRoom = async (req, res) => {
 
 // clearPokerRooms();
 
-//  Get all poker rooms
+
+
+
+
 exports.getAllPokerRooms = async (req, res) => {
     try {
-        const { type, name, country, page = 1, limit = 50 } = req.query;
+        const { type, name, country, page = 1, limit = 50, lat, long } = req.query;
 
         let where = {};
 
@@ -56,11 +60,46 @@ exports.getAllPokerRooms = async (req, res) => {
 
         const offset = (page - 1) * limit;
 
+        let attributes = { include: [] };
+        let order = [["createdAt", "DESC"]];
+
+        // If latitude & longitude are provided, calculate distance and filter by 1 km radius
+        if (lat && long) {
+            const latNum = parseFloat(lat);
+            const longNum = parseFloat(long);
+
+            attributes.include.push([
+                literal(`(
+      6371 * acos(
+        cos(radians(${latNum}))
+        * cos(radians(lat))
+        * cos(radians(\`long\`) - radians(${longNum}))
+        + sin(radians(${latNum})) * sin(radians(lat))
+      )
+    )`),
+                "distance",
+            ]);
+
+            // Filter by 10000000 km radius
+            where[Op.and] = literal(`(
+    6371 * acos(
+      cos(radians(${latNum}))
+      * cos(radians(lat))
+      * cos(radians(\`long\`) - radians(${longNum}))
+      + sin(radians(${latNum})) * sin(radians(lat))
+    )
+  ) <= 10000000`);
+
+            // Sort by distance first
+            order = [[literal("distance"), "ASC"]];
+        }
+
         const { rows: data, count: total } = await PokerRoom.findAndCountAll({
             where,
+            attributes,
             limit: parseInt(limit),
             offset: parseInt(offset),
-            order: [["createdAt", "DESC"]],
+            order,
         });
 
         res.json({
@@ -82,6 +121,7 @@ exports.getAllPokerRooms = async (req, res) => {
         });
     }
 };
+
 
 
 //  Get single poker room

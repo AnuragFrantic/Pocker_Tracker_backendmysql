@@ -251,7 +251,7 @@ exports.createSession = async (req, res) => {
 
     } catch (err) {
         await t.rollback();
-        console.error("❌ Create Session Error:", err);
+        console.error(" Create Session Error:", err);
         res.status(500).json({ message: "Internal Server Error", error: true });
     }
 };

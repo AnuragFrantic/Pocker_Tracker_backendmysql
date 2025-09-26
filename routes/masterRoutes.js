@@ -9,6 +9,7 @@ const { getAllUSers, getProfile, getUserProfile } = require("../controllers/User
 const { Auth } = require("../middleware/Auth");
 const { CreateSubscription, GetAllSubscriptions, UpdateSubscription, ToggleSubscriptionStatus } = require("../controllers/SubscriptionController");
 const { CreatePurchaseSubscription, GetAllPurchaseSubscriptions, GetOwnPurchaseSubscriptions } = require("../controllers/PurchaseSubsriptionController");
+const { getallGameHistory } = require("../controllers/UserGameHistory");
 
 
 const router = express.Router();
@@ -96,6 +97,11 @@ router.put('/change-status-subscription/:id', Auth, ToggleSubscriptionStatus)
 router.post('/purchase-subscription', Auth, CreatePurchaseSubscription)
 router.get('/purchase-subscription', Auth, GetAllPurchaseSubscriptions)
 router.get('/own-purchase-subscription', Auth, GetOwnPurchaseSubscriptions)
+
+
+// game-history
+
+router.get('/game-history', Auth, getallGameHistory)
 
 
 
