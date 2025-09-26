@@ -22,22 +22,15 @@ const allowedOrigins = ["http://localhost:5173", "http://storo.doc24.care"];
 
 app.use(cors({
     origin: function (origin, callback) {
-        if (!origin) return callback(null, true); // allow non-browser requests like Postman
-        if (allowedOrigins.indexOf(origin) !== -1) {
-            callback(null, true);
-        } else {
-            callback(new Error("Not allowed by CORS"));
+        // allow requests with no origin (like Postman)
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.indexOf(origin) === -1) {
+            const msg = `The CORS policy for this site does not allow access from the specified Origin.`;
+            return callback(new Error(msg), false);
         }
+        return callback(null, true);
     },
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"]
-}));
-
-// Handle preflight requests
-app.options("*", cors({
-    origin: allowedOrigins,
-    credentials: true,
+    credentials: true
 }));
 
 app.use(express.json());
