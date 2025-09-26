@@ -14,9 +14,10 @@ const app = express();
 
 //  Enable CORS
 app.use(cors({
-    origin: "http://localhost:5173", // your React app URL (Vite default)
+    origin: ["http://localhost:5173", "http://storo.doc24.care/"],
     credentials: true
 }));
+http://storo.doc24.care/
 app.use(express.json());
 
 app.use('/uploads', express.static('uploads'));
