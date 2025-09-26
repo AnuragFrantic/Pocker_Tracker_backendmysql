@@ -3,6 +3,7 @@ const path = require("path");
 const csv = require("csv-parser");
 const db = require("../models");
 
+
 const { Op, literal, fn, col } = require("sequelize");
 const PokerRoom = db.PokerRoom;
 
@@ -179,51 +180,105 @@ exports.deletePokerRoom = async (req, res) => {
 };
 
 
+// exports.uploadCSV = async (req, res) => {
+//     try {
+//         if (!req.file) return res.status(400).json({ message: "No file uploaded", error: true });
+
+//         const filePath = path.join(__dirname, "../uploads", req.file.filename);
+//         const results = [];
+
+//         fs.createReadStream(filePath)
+//             .pipe(csv())
+//             .on("data", (row) => {
+//                 results.push(row);
+//             })
+//             .on("end", async () => {
+//                 try {
+//                     for (const row of results) {
+//                         await PokerRoom.upsert({
+//                             name: row.name,
+//                             address: row.address,
+//                             city: row.city,
+//                             state: row.state,
+//                             country: row.country,
+//                             lat: row.latitude,
+//                             long: row.longitude,
+//                             poker_links: row.poker_atlas_links,
+//                             description: row.description,
+//                             capacity: row.capacity,
+//                             is_active: true,
+//                         });
+//                     }
+
+//                     res.json({
+//                         message: "CSV imported successfully",
+//                         error: false
+//                     });
+
+//                     fs.unlinkSync(filePath); // clean up
+//                 } catch (err) {
+//                     console.error("Error processing CSV:", err);
+//                     res.status(500).json({ message: "Error processing CSV", error: true });
+//                 }
+//             });
+//     } catch (error) {
+//         console.error("Error uploading CSV:", error);
+//         res.status(500).json({ message: "Error uploading CSV", error: true });
+//     }
+// };
+
+
+
 exports.uploadCSV = async (req, res) => {
+    if (!req.file) {
+        return res.status(400).json({ message: "No file uploaded", error: true });
+    }
+
+    const filePath = path.join(__dirname, "../uploads", req.file.filename);
+    const results = [];
+
     try {
-        if (!req.file) return res.status(400).json({ message: "No file uploaded", error: true });
+        // Wrap CSV reading in a Promise to use async/await properly
+        await new Promise((resolve, reject) => {
+            fs.createReadStream(filePath)
+                .pipe(csv())
+                .on("data", (row) => {
+                    results.push(row);
+                })
+                .on("end", resolve)
+                .on("error", reject);
+        });
 
-        const filePath = path.join(__dirname, "../uploads", req.file.filename);
-        const results = [];
-
-        fs.createReadStream(filePath)
-            .pipe(csv())
-            .on("data", (row) => {
-                results.push(row);
-            })
-            .on("end", async () => {
-                try {
-                    for (const row of results) {
-                        await PokerRoom.upsert({
-                            name: row.name,
-                            address: row.address,
-                            city: row.city,
-                            state: row.state,
-                            country: row.country,
-                            lat: row.latitude,
-                            long: row.longitude,
-                            poker_links: row.poker_atlas_links,
-                            description: row.description,
-                            capacity: row.capacity,
-                            is_active: true,
-                        });
-                    }
-
-                    res.json({
-                        message: "CSV imported successfully",
-                        error: false
-                    });
-
-                    fs.unlinkSync(filePath); // clean up
-                } catch (err) {
-                    console.error("Error processing CSV:", err);
-                    res.status(500).json({ message: "Error processing CSV", error: true });
-                }
+        // Upsert each row
+        for (const row of results) {
+            // Make sure numeric fields are converted properly
+            await PokerRoom.upsert({
+                name: row.name,
+                address: row.address,
+                city: row.city,
+                state: row.state,
+                country: row.country,
+                lat: row.latitude ? parseFloat(row.latitude) : null,
+                long: row.longitude ? parseFloat(row.longitude) : null,
+                poker_links: row.poker_atlas_links,
+                description: row.description,
+                capacity: row.capacity ? parseInt(row.capacity) : null,
+                is_active: true,
             });
-    } catch (error) {
-        console.error("Error uploading CSV:", error);
-        res.status(500).json({ message: "Error uploading CSV", error: true });
+        }
+
+        // Delete file after processing
+        fs.unlinkSync(filePath);
+
+        res.json({ message: "CSV imported successfully", error: false });
+    } catch (err) {
+        console.error("Error processing CSV:", err);
+
+        // Attempt to clean up the uploaded file even on error
+        if (fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath);
+        }
+
+        res.status(500).json({ message: "Error processing CSV", error: true });
     }
 };
-
-
