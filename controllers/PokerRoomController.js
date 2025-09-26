@@ -2,6 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const csv = require("csv-parser");
 const db = require("../models");
+const { sequelize } = require('../config/db');
 
 const { Op, literal, fn, col } = require("sequelize");
 const PokerRoom = db.PokerRoom;
@@ -267,7 +268,7 @@ exports.uploadCSV = async (req, res) => {
         }
 
         // Re-enable foreign key checks
-        await sequelize.query("SET FOREIGN_KEY_CHECKS = 1");
+        await sequelize.query("SET FOREIGN_KEY_CHECKS = 0");
 
         // Clean up uploaded file
         fs.unlinkSync(filePath);
