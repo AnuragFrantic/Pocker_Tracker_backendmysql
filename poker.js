@@ -49,8 +49,14 @@ app.use("/master", masterRoutes);
 
 
 // Sync DB
-db.sequelize.sync().then(() => {
-    console.log(" Database synced");
+// db.sequelize.sync().then(() => {
+//     console.log(" Database synced");
+// });
+
+db.sequelize.sync({ force: true }).then(() => {
+    console.log("Database synced (all tables dropped and recreated)");
+}).catch(err => {
+    console.error("Error syncing database:", err);
 });
 
 app.listen(3420, () => console.log("🚀 Server running on http://localhost:3420"));
