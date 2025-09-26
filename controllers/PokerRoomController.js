@@ -3,7 +3,6 @@ const path = require("path");
 const csv = require("csv-parser");
 const db = require("../models");
 
-
 const { Op, literal, fn, col } = require("sequelize");
 const PokerRoom = db.PokerRoom;
 
@@ -228,56 +227,60 @@ exports.deletePokerRoom = async (req, res) => {
 // };
 
 
-
 exports.uploadCSV = async (req, res) => {
-    if (!req.file) {
-        return res.status(400).json({ message: "No file uploaded", error: true });
-    }
+    if (!req.file) return res.status(400).json({ message: "No file uploaded", error: true });
 
     const filePath = path.join(__dirname, "../uploads", req.file.filename);
     const results = [];
 
     try {
-        // Wrap CSV reading in a Promise to use async/await properly
+        // Wrap CSV reading in a Promise
         await new Promise((resolve, reject) => {
             fs.createReadStream(filePath)
                 .pipe(csv())
-                .on("data", (row) => {
-                    results.push(row);
-                })
+                .on("data", (row) => results.push(row))
                 .on("end", resolve)
                 .on("error", reject);
         });
 
+        // Disable foreign key checks temporarily
+        await sequelize.query("SET FOREIGN_KEY_CHECKS = 0");
+
         // Upsert each row
         for (const row of results) {
-            // Make sure numeric fields are converted properly
+            // Optional: normalize special characters to avoid utf8mb4 issues
+            const normalize = (str) => str ? str.normalize('NFKC') : str;
+
             await PokerRoom.upsert({
-                name: row.name,
-                address: row.address,
-                city: row.city,
-                state: row.state,
-                country: row.country,
+                name: normalize(row.name),
+                address: normalize(row.address),
+                city: normalize(row.city),
+                state: normalize(row.state),
+                country: normalize(row.country),
                 lat: row.latitude ? parseFloat(row.latitude) : null,
                 long: row.longitude ? parseFloat(row.longitude) : null,
                 poker_links: row.poker_atlas_links,
-                description: row.description,
+                description: normalize(row.description),
                 capacity: row.capacity ? parseInt(row.capacity) : null,
                 is_active: true,
             });
         }
 
-        // Delete file after processing
+        // Re-enable foreign key checks
+        await sequelize.query("SET FOREIGN_KEY_CHECKS = 1");
+
+        // Clean up uploaded file
         fs.unlinkSync(filePath);
 
         res.json({ message: "CSV imported successfully", error: false });
     } catch (err) {
         console.error("Error processing CSV:", err);
 
-        // Attempt to clean up the uploaded file even on error
-        if (fs.existsSync(filePath)) {
-            fs.unlinkSync(filePath);
-        }
+        // Ensure FK checks are re-enabled even if error occurs
+        await sequelize.query("SET FOREIGN_KEY_CHECKS = 1").catch(e => console.error("Error re-enabling FK checks:", e));
+
+        // Clean up file
+        if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
 
         res.status(500).json({ message: "Error processing CSV", error: true });
     }
