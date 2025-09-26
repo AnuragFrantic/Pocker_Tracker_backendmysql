@@ -17,7 +17,7 @@ app.use(cors({
     origin: ["http://localhost:5173", "http://storo.doc24.care/"],
     credentials: true
 }));
-http://storo.doc24.care/
+
 app.use(express.json());
 
 app.use('/uploads', express.static('uploads'));
