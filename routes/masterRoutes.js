@@ -10,6 +10,18 @@ const { Auth } = require("../middleware/Auth");
 const { CreateSubscription, GetAllSubscriptions, UpdateSubscription, ToggleSubscriptionStatus } = require("../controllers/SubscriptionController");
 const { CreatePurchaseSubscription, GetAllPurchaseSubscriptions, GetOwnPurchaseSubscriptions } = require("../controllers/PurchaseSubsriptionController");
 const { getallGameHistory } = require("../controllers/UserGameHistory");
+const metadataFromSequelizeModel = require("../utils/metadataFromSchema");
+const db = require("../models");
+
+const Sessions = db.Sessions;
+const GameTypes = db.GameTypes;
+const PokerRoom = db.PokerRoom;
+const SessionTypes = db.SessionTypes;
+
+const Games = db.Games;
+
+
+
 
 
 const router = express.Router();
@@ -70,6 +82,29 @@ router.get(`/sessions`, getAllSessions);
 // router.get(`/sessions/:id`, getSessionById);
 router.put(`/update-sessions/:id`, updateSession);
 // router.delete(`/delete-sessions/:id`, deleteSession);
+router.get("/sessions/metadata", async (req, res) => {
+    try {
+        const meta = await metadataFromSequelizeModel(
+            Sessions,
+            {
+                session_notes: { type: "textarea", label: "Session Notes" },
+            },
+            {
+                SessionTypes, // only used for session_type_id
+                GameTypes,    // only used for game_type_id
+                Games,
+                // PokerRooms
+            }
+        );
+
+        res.json(meta);
+    } catch (err) {
+        console.error("Metadata Error:", err);
+        res.status(500).json({ error: err.message });
+    }
+});
+
+
 
 
 // user routes 

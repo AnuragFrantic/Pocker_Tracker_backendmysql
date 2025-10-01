@@ -49,14 +49,20 @@ app.use("/master", masterRoutes);
 
 
 // Sync DB
-// db.sequelize.sync().then(() => {
-//     console.log(" Database synced");
+db.sequelize.sync().then(() => {
+    console.log(" Database synced");
+});
+// if you want to force update and drop the table
+// db.sequelize.sync({ force: true }).then(() => {
+//     console.log("Database synced (all tables dropped and recreated)");
+// }).catch(err => {
+//     console.error("Error syncing database:", err);
 // });
 
-db.sequelize.sync({ force: true }).then(() => {
-    console.log("Database synced (all tables dropped and recreated)");
-}).catch(err => {
-    console.error("Error syncing database:", err);
-});
+
+// if you want to  update and dont drop the table
+// db.sequelize.sync({ alter: true }).then(() => {
+//     console.log("Database synced (tables altered if needed)");
+// });
 
 app.listen(3420, () => console.log("🚀 Server running on http://localhost:3420"));
