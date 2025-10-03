@@ -77,7 +77,6 @@ exports.deleteSessionType = async (req, res) => {
         if (!type) {
             return res.status(404).json({ message: "Session type not found", error: true });
         }
-
         await type.update({ deleted_at: new Date() }); // set current timestamp
 
         res.json({ message: "Session type deleted", error: false });

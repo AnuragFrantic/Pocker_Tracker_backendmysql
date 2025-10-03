@@ -6,7 +6,7 @@ const Games = db.Games;
 const User = db.User;
 const PurchaseSubscription = db.PurchaseSubscription;
 const UserGameHistory = db.UserGameHistory;
-const GameHistory = db.GameHistory;
+
 
 
 
@@ -53,23 +53,21 @@ exports.getAllSessions = async (req, res) => {
 };
 
 
-// old code
-
 
 // exports.createSession = async (req, res) => {
-//     const t = await db.sequelize.transaction(); //  transaction for safety
+//     const t = await db.sequelize.transaction(); // transaction for safety
 //     try {
 //         const data = req.body;
 //         const userId = req.user.id;
 
-//         //  Check if user exists
-//         let user = await User.findByPk(userId, { transaction: t });
+//         // ✅ Check if user exists
+//         const user = await db.User.findByPk(userId, { transaction: t });
 //         if (!user) {
 //             await t.rollback();
-//             return res.status(404).json({ message: "User Not Found", error: true });
+//             return res.status(404).json({ message: "User not found", error: true });
 //         }
 
-//         //  Validate required fields
+//         // ✅ Validate required fields
 //         if (!data.session_type_id) {
 //             await t.rollback();
 //             return res.status(400).json({ message: "Session type ID is required", error: true });
@@ -82,7 +80,10 @@ exports.getAllSessions = async (req, res) => {
 //         let deductedFromUser = false;
 //         let deductedFromSubscription = false;
 
-//         //   Deduct from user free sessions if available
+//         let Totalamount = data.buy_in
+
+
+//         // ✅ Deduct from user free sessions if available
 //         if (user.session_points && user.session_points > 0) {
 //             user.session_points -= 1;
 //             user.used_session_points = (user.used_session_points || 0) + 1;
@@ -90,7 +91,7 @@ exports.getAllSessions = async (req, res) => {
 //             deductedFromUser = true;
 //         }
 
-//         //  Check for active subscription
+//         // ✅ Check for active subscription
 //         let subscription = await PurchaseSubscription.findOne({
 //             where: {
 //                 user_id: userId,
@@ -107,7 +108,7 @@ exports.getAllSessions = async (req, res) => {
 //             deductedFromSubscription = true;
 //         }
 
-//         //  If neither free sessions nor subscription found
+//         // ✅ If neither free sessions nor subscription found
 //         if (!deductedFromUser && !deductedFromSubscription) {
 //             await t.rollback();
 //             return res.status(400).json({
@@ -116,15 +117,34 @@ exports.getAllSessions = async (req, res) => {
 //             });
 //         }
 
-//         //  Create session
-//         const newSession = await Session.create(
-//             { ...data, user_id: userId },
+//         // ✅ Create session
+//         const newSession = await db.Sessions.create(
+//             { ...data, user_id: userId, total_amount: Totalamount },
+//             { transaction: t }
+//         );
+
+
+//         await db.UserGameHistory.create(
+//             {
+//                 session_id: newSession.id,
+//                 user_id: userId,
+//                 room_id: data.room_id,
+//                 games_id: data.games_id,
+//                 buy_in: data.buy_in || 0,
+//                 re_buys: data.re_buys || 0,
+//                 add_on_amount: data.add_on_amount || 0,
+//                 cash_out: data.cash_out || 0,
+//                 profit_loss:
+//                     (data.cash_out || 0) -
+//                     ((data.buy_in || 0) + (data.add_on_amount || 0) + (data.re_buys || 0)),
+//                 notes: data.session_notes || null
+//             },
 //             { transaction: t }
 //         );
 
 //         await t.commit();
 //         return res.status(201).json({
-//             message: " Session created successfully.",
+//             message: "Session created successfully",
 //             data: {
 //                 session: newSession,
 //                 remaining_free_sessions: user.session_points,
@@ -140,14 +160,13 @@ exports.getAllSessions = async (req, res) => {
 //     } catch (err) {
 //         await t.rollback();
 //         console.error(" Create Session Error:", err);
-//         res.status(500).json({ message: err.message, error: true });
+//         res.status(500).json({ message: "Internal Server Error", error: true });
 //     }
 // };
 
 
-
 exports.createSession = async (req, res) => {
-    const t = await db.sequelize.transaction(); // transaction for safety
+    const t = await db.sequelize.transaction();
     try {
         const data = req.body;
         const userId = req.user.id;
@@ -172,67 +191,111 @@ exports.createSession = async (req, res) => {
         let deductedFromUser = false;
         let deductedFromSubscription = false;
 
-        let Totalamount = data.buy_in
-
-
-        // ✅ Deduct from user free sessions if available
+        // ✅ Deduct from user free sessions first
         if (user.session_points && user.session_points > 0) {
             user.session_points -= 1;
             user.used_session_points = (user.used_session_points || 0) + 1;
             await user.save({ transaction: t });
             deductedFromUser = true;
-        }
-
-        // ✅ Check for active subscription
-        let subscription = await PurchaseSubscription.findOne({
-            where: {
-                user_id: userId,
-                status: "active",
-                remaining_sessions: { [db.Sequelize.Op.gt]: 0 }
-            },
-            order: [["end_date", "ASC"]],
-            transaction: t
-        });
-
-        if (subscription) {
-            subscription.remaining_sessions -= 1;
-            await subscription.save({ transaction: t });
-            deductedFromSubscription = true;
-        }
-
-        // ✅ If neither free sessions nor subscription found
-        if (!deductedFromUser && !deductedFromSubscription) {
-            await t.rollback();
-            return res.status(400).json({
-                message: "No free sessions or active subscription available. Please buy a subscription.",
-                error: true
+        } else {
+            // ✅ Or from subscription
+            let subscription = await PurchaseSubscription.findOne({
+                where: {
+                    user_id: userId,
+                    status: "active",
+                    remaining_sessions: { [db.Sequelize.Op.gt]: 0 },
+                    end_date: { [db.Sequelize.Op.gte]: new Date() } // ensure not expired
+                },
+                order: [["end_date", "ASC"]],
+                transaction: t
             });
+
+            if (subscription) {
+                subscription.remaining_sessions -= 1;
+                await subscription.save({ transaction: t });
+                deductedFromSubscription = true;
+            }
+
+            if (!deductedFromSubscription) {
+                await t.rollback();
+                return res.status(400).json({
+                    message: "No free sessions or active subscription available. Please buy a subscription.",
+                    error: true
+                });
+            }
         }
+
+        // ✅ Handle add_on_amount (array or single)
+        let addOns = [];
+        if (Array.isArray(data.add_on_amount)) {
+            addOns = data.add_on_amount.map(a => Number(a) || 0);
+        } else if (data.add_on_amount) {
+            addOns = [Number(data.add_on_amount)];
+        }
+
+        const totalAddOn = addOns.reduce((sum, val) => sum + val, 0);
+
+        // ✅ Calculate totals
+        const buyIn = Number(data.buy_in || 0);
+        const reBuys = Number(data.re_buys || 0);
+        const dealerTips = Number(data.dealer_tips || 0);
+        const mealsExp = Number(data.meals_other_exp || 0);
+        const cashOut = Number(data.cash_out || 0);
+
+        const totalAmount = buyIn + reBuys + totalAddOn + dealerTips + mealsExp;
+        const profitLoss = cashOut - totalAmount;
 
         // ✅ Create session
         const newSession = await db.Sessions.create(
-            { ...data, user_id: userId, total_amount: Totalamount },
+            {
+                ...data,
+                user_id: userId,
+                add_on_amount: totalAddOn,
+                total_amount: totalAmount,
+                profit_loss: profitLoss
+            },
             { transaction: t }
         );
 
-
+        // ✅ Create main history row (buy_in + session start details)
         await db.UserGameHistory.create(
             {
                 session_id: newSession.id,
                 user_id: userId,
                 room_id: data.room_id,
                 games_id: data.games_id,
-                buy_in: data.buy_in || 0,
-                re_buys: data.re_buys || 0,
-                add_on_amount: data.add_on_amount || 0,
-                cash_out: data.cash_out || 0,
-                profit_loss:
-                    (data.cash_out || 0) -
-                    ((data.buy_in || 0) + (data.add_on_amount || 0) + (data.re_buys || 0)),
+                buy_in: buyIn,
+                re_buys: reBuys,
+                add_on_amount: 0, // base session, no add-on yet
+                cash_out: cashOut,
+                dealer_tips: dealerTips,
+                meals_other_exp: mealsExp,
+                profit_loss: profitLoss,
                 notes: data.session_notes || null
             },
             { transaction: t }
         );
+
+        // ✅ Create separate history entries for each add-on
+        for (const addOn of addOns) {
+            await db.UserGameHistory.create(
+                {
+                    session_id: newSession.id,
+                    user_id: userId,
+                    room_id: data.room_id,
+                    games_id: data.games_id,
+                    buy_in: buyIn,
+                    re_buys: reBuys,
+                    add_on_amount: addOn,
+                    cash_out: cashOut,
+                    dealer_tips: dealerTips,
+                    meals_other_exp: mealsExp,
+                    profit_loss: profitLoss,
+                    notes: `Add-on of ${addOn} for Session #${newSession.id}`
+                },
+                { transaction: t }
+            );
+        }
 
         await t.commit();
         return res.status(201).json({
@@ -240,11 +303,7 @@ exports.createSession = async (req, res) => {
             data: {
                 session: newSession,
                 remaining_free_sessions: user.session_points,
-                subscription_remaining: subscription ? subscription.remaining_sessions : null,
-                deducted_from: {
-                    user_points: deductedFromUser,
-                    subscription: deductedFromSubscription
-                }
+                deducted_from: deductedFromUser ? "user_points" : "subscription"
             },
             error: false
         });
@@ -255,8 +314,6 @@ exports.createSession = async (req, res) => {
         res.status(500).json({ message: "Internal Server Error", error: true });
     }
 };
-
-
 
 
 
