@@ -30,7 +30,9 @@ const Sessions = db.sequelize.define("Sessions", {
         references: {
             model: "PokerRooms",
             key: "id"
-        }
+        },
+        onDelete: 'SET NULL',
+        onUpdate: 'CASCADE'
     },
     room_name: {
         type: DataTypes.STRING,
