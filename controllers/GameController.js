@@ -1,8 +1,10 @@
 
 const db = require("../models");
+const { Sequelize } = require('../config/db');
 
 const Games = db.Games;
 const GameTypes = db.GameTypes;
+const Sessions = db.Sessions;
 
 
 
@@ -119,102 +121,3 @@ exports.deleteGame = async (req, res) => {
 
 
 
-// exports.getGameStats = async (req, res) => {
-//     try {
-//         const game_type = req.query.game_type || req.query["game-type"];
-//         let whereCondition = { deleted_at: null };
-
-//         if (game_type) {
-//             whereCondition.game_type_id = game_type;
-//         }
-
-//         const games = await Games.findAll({
-//             where: whereCondition,
-//             include: [
-//                 { model: GameTypes, as: "game_type", attributes: ["id", "name"] },
-//                 { model: Sessions, as: "sessions", attributes: [] }
-//             ],
-//             attributes: [
-//                 "id",
-//                 "name",
-//                 "game_type_id",
-//                 [
-//                     Sequelize.fn("COUNT", Sequelize.col("sessions.id")),
-//                     "sessions_played"
-//                 ],
-//                 [
-//                     Sequelize.fn("SUM", Sequelize.col("sessions.profit_loss")),
-//                     "total_profit_loss"
-//                 ],
-//                 [
-//                     Sequelize.literal(`
-//                         CASE
-//                             WHEN COUNT(sessions.id) = 0
-//                             THEN 0
-//                             ELSE SUM(sessions.profit_loss) / COUNT(sessions.id)
-//                         END
-//                     `),
-//                     "profit_loss_per_session"
-//                 ]
-//             ],
-//             group: ["Games.id", "game_type.id"]
-//         });
-
-//         res.status(200).json({
-//             data: games,
-//             message: "Game statistics retrieved successfully",
-//             error: false,
-//         });
-//     } catch (err) {
-//         console.error("Error in getGameStats:", err);
-//         res.status(500).json({ message: err.message, error: true });
-//     }
-// };
-
-// exports.getSingleGameStats = async (req, res) => {
-//     try {
-//         const game = await Games.findByPk(req.params.id, {
-//             include: [
-//                 { model: GameTypes, as: "game_type", attributes: ["id", "name"] },
-//                 { model: Sessions, as: "sessions", attributes: [] }
-//             ],
-//             attributes: [
-//                 "id",
-//                 "name",
-//                 "game_type_id",
-//                 [
-//                     Sequelize.fn("COUNT", Sequelize.col("sessions.id")),
-//                     "sessions_played"
-//                 ],
-//                 [
-//                     Sequelize.fn("SUM", Sequelize.col("sessions.profit_loss")),
-//                     "total_profit_loss"
-//                 ],
-//                 [
-//                     Sequelize.literal(`
-//                         CASE
-//                             WHEN COUNT(sessions.id) = 0
-//                             THEN 0
-//                             ELSE SUM(sessions.profit_loss) / COUNT(sessions.id)
-//                         END
-//                     `),
-//                     "profit_loss_per_session"
-//                 ]
-//             ],
-//             group: ["Games.id", "game_type.id"]
-//         });
-
-//         if (!game) {
-//             return res.status(404).json({ message: "Game not found", error: true });
-//         }
-
-//         res.status(200).json({
-//             data: game,
-//             message: "Single game statistics retrieved successfully",
-//             error: false
-//         });
-//     } catch (err) {
-//         console.error("Error in getSingleGameStats:", err);
-//         res.status(500).json({ message: err.message, error: true });
-//     }
-// };

@@ -7,9 +7,9 @@ const Games = db.Games;
 
 
 exports.getallGameHistory = async (req, res) => {
-
+    const userid = req.user.id
     const sessionid = req.query.session || req.query["session"];
-    whereCondition = {}
+    const whereCondition = { user_id: userid };
 
     if (sessionid) {
         whereCondition.session_id = sessionid;

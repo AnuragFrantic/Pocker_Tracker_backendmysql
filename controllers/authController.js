@@ -58,7 +58,7 @@ exports.register = async (req, res) => {
         const { password: _, ...userData } = user.toJSON();
 
         const token = jwt.sign(
-            { id: user.id, email: user.email }, // 👈 keep 'id' (not user_id)
+            { id: user.id, email: user.email, type: user.type }, // 👈 keep 'id' (not user_id)
             process.env.JWT_SECRET || "mysecretkey",
             { expiresIn: "24h" }
         );
@@ -98,7 +98,7 @@ exports.login = async (req, res) => {
 
         // generate JWT token
         const token = jwt.sign(
-            { id: user.id, email: user.email }, // 👈 keep 'id' (not user_id)
+            { id: user.id, email: user.email, type: user.type }, // 👈 keep 'id' (not user_id)
             process.env.JWT_SECRET || "mysecretkey",
             { expiresIn: "24h" }
         );

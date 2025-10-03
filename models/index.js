@@ -36,6 +36,7 @@ db.Sessions.belongsTo(db.Games, { foreignKey: "games_id", as: "game" });
 
 
 
+
 // ---------------- UserGameHistory ----------------
 db.User.hasMany(db.UserGameHistory, { foreignKey: "user_id", as: "game_histories" });
 db.UserGameHistory.belongsTo(db.User, { foreignKey: "user_id", as: "history_user" });
@@ -43,6 +44,8 @@ db.UserGameHistory.belongsTo(db.User, { foreignKey: "user_id", as: "history_user
 db.Sessions.hasMany(db.UserGameHistory, { foreignKey: "session_id", as: "user_game_histories" });
 db.UserGameHistory.belongsTo(db.Sessions, { foreignKey: "session_id", as: "session" });
 db.UserGameHistory.belongsTo(db.Games, { foreignKey: "games_id", as: "games" });
+
+// db.UserGameHistory.belongsTo(db.GameTypes, { foreignKey: "game_type_id", as: "game_type" });
 
 
 

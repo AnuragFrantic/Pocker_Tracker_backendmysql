@@ -6,7 +6,7 @@ const Games = db.Games;
 const User = db.User;
 const PurchaseSubscription = db.PurchaseSubscription;
 const UserGameHistory = db.UserGameHistory;
-
+const { Sequelize } = require('../config/db');
 
 
 
@@ -14,15 +14,28 @@ const UserGameHistory = db.UserGameHistory;
 
 exports.getAllSessions = async (req, res) => {
     try {
-        // 🔹 Extract pagination params from query (default: page=1, limit=10)
-        let { page = 1, limit = 10 } = req.query;
+        let { page = 1, limit = 10, games_id } = req.query;
+
         page = parseInt(page);
         limit = parseInt(limit);
-
         const offset = (page - 1) * limit;
+
+        // 🔹 Build where condition based on user type and optional games_id
+        const whereCondition = {};
+
+        if (req.user.type === "user") {
+            whereCondition.user_id = req.user.id; // only user's sessions
+        }
+
+        if (games_id) {
+            // support multiple game IDs as comma-separated values
+            const gameIds = games_id.split(",").map(id => parseInt(id));
+            whereCondition.games_id = gameIds.length > 1 ? { [db.Sequelize.Op.in]: gameIds } : gameIds[0];
+        }
 
         // 🔹 Fetch data with pagination
         let { count, rows } = await Session.findAndCountAll({
+            where: whereCondition,
             include: [
                 { model: GameTypes, as: "game_type", required: false },
                 { model: PokerRoom, as: "room", required: false },
@@ -31,10 +44,8 @@ exports.getAllSessions = async (req, res) => {
             ],
             limit,
             offset,
-            order: [["createdAt", "DESC"]] // optional: sort by latest
+            order: [["createdAt", "DESC"]] // sort by latest
         });
-
-
 
         res.status(200).json({
             data: rows,
@@ -51,6 +62,8 @@ exports.getAllSessions = async (req, res) => {
         res.status(500).json({ message: err.message, error: true });
     }
 };
+
+
 
 
 
@@ -427,6 +440,70 @@ exports.deleteSession = async (req, res) => {
         res.status(500).json({ message: err.message, error: true });
     }
 };
+
+exports.getUserGameAnalytics = async (req, res) => {
+    try {
+        const userId = req.user.id;
+
+        // 🔹 Fetch all sessions for this user
+        const sessions = await db.Sessions.findAll({
+            where: { user_id: userId },
+            include: [
+                {
+                    model: db.Games,
+                    as: "game",
+                    attributes: ["id", "name"]
+                }
+            ]
+        });
+
+        // 🔹 Aggregate by game
+        const analytics = {};
+
+        sessions.forEach(session => {
+            if (!session.game) return; // skip if no game linked
+
+            const gameId = session.game.id;
+            const gameName = session.game.name;
+
+            if (!analytics[gameId]) {
+                analytics[gameId] = {
+                    gameId,
+                    gameName,
+                    totalProfitLoss: 0,
+                    sessionsPlayed: 0
+                };
+            }
+
+            const totalAmount = parseFloat(session.total_amount) || 0;
+            const cashOut = parseFloat(session.cash_out) || 0;
+            const profitLoss = cashOut - totalAmount;
+
+            analytics[gameId].totalProfitLoss += profitLoss;
+            analytics[gameId].sessionsPlayed += 1;
+        });
+
+        // 🔹 Convert to array and calculate profit per session
+        const result = Object.values(analytics).map(a => ({
+            gameId: a.gameId,
+            game: a.gameName,
+            profitLoss: a.totalProfitLoss,
+            sessions: a.sessionsPlayed,
+            profitPerSession: a.totalProfitLoss / (a.sessionsPlayed || 1)
+        }));
+
+        res.status(200).json({
+            data: result,
+            message: "User game analytics retrieved successfully",
+            error: false
+        });
+
+    } catch (err) {
+        console.error("Error in getUserGameAnalytics:", err);
+        res.status(500).json({ message: err.message, error: true });
+    }
+};
+
 
 
 

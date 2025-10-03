@@ -18,7 +18,7 @@ function Auth(req, res, next) {
 
 
         //  Now matches the login payload
-        req.user = { id: decoded.id, email: decoded.email };
+        req.user = { id: decoded.id, email: decoded.email, type: decoded.type };
         return next();
 
     } catch (error) {

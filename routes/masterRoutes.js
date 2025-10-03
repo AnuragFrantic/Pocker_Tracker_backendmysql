@@ -4,8 +4,8 @@ const { createPokerRoom, getAllPokerRooms, getPokerRoom, updatePokerRoom, delete
 const upload = require("../middleware/upload");
 const { createGameType, getAllGameTypes, updateGameType, deleteGameType } = require("../controllers/GameTypesController");
 const { createGame, getAllGames, getGameById, updateGame, deleteGame } = require("../controllers/GameController");
-const { getAllSessions, createSession, updateSession } = require("../controllers/SessionController");
-const { getAllUSers, getProfile, getUserProfile } = require("../controllers/UserController");
+const { getAllSessions, createSession, updateSession, getUserGameAnalytics } = require("../controllers/SessionController");
+const { getAllUSers, getProfile, getUserProfile, updateUserProfile } = require("../controllers/UserController");
 const { Auth } = require("../middleware/Auth");
 const { CreateSubscription, GetAllSubscriptions, UpdateSubscription, ToggleSubscriptionStatus } = require("../controllers/SubscriptionController");
 const { CreatePurchaseSubscription, GetAllPurchaseSubscriptions, GetOwnPurchaseSubscriptions } = require("../controllers/PurchaseSubsriptionController");
@@ -72,15 +72,14 @@ router.get(`/games`, getAllGames);
 router.get(`/games/:id`, getGameById);
 router.put(`/update-games/:id`, updateGame);
 router.delete(`/delete-games/:id`, deleteGame);
-// router.get("/game-stats", Auth, getGameStats);
-// router.get("/game-stats/:id", Auth, getSingleGameStats);
+
 
 
 
 // sessions
 
 router.post(`/sessions`, Auth, createSession);
-router.get(`/sessions`, getAllSessions);
+router.get(`/sessions`, Auth, getAllSessions);
 // router.get(`/sessions/:id`, getSessionById);
 router.put(`/update-sessions/:id`, updateSession);
 // router.delete(`/delete-sessions/:id`, deleteSession);
@@ -106,6 +105,9 @@ router.get("/sessions/metadata", async (req, res) => {
     }
 });
 
+router.get("/game-stats", Auth, getUserGameAnalytics);
+
+
 
 
 
@@ -115,6 +117,8 @@ router.get('/users', Auth, getAllUSers)
 
 router.get('/profile', Auth, getProfile)
 router.get('/user-detail/:id', Auth, getUserProfile)
+router.put('/update-profile', Auth, updateUserProfile)
+
 
 
 

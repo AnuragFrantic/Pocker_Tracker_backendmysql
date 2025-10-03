@@ -182,3 +182,38 @@ exports.getUserProfile = async (req, res) => {
     }
 };
 
+
+
+exports.updateUserProfile = async (req, res) => {
+    try {
+        // 🔹 Use body.id if passed, otherwise authenticated user's id
+        const userId = req.body.id || req.user.id;
+
+        // Remove id from updateData to avoid overriding primary key
+        const { id, ...updateData } = req.body;
+
+        // 🔹 Update user data
+        const [updated] = await User.update(updateData, {
+            where: { id: userId }
+        });
+
+        if (!updated) {
+            return res.status(404).json({ message: "User not found", error: true });
+        }
+
+        // 🔹 Fetch updated user profile
+        const updatedUser = await User.findByPk(userId, {
+            attributes: ["id", "first_name", "last_name", "email", "phone", "address", "city", "state", "zipcode", "image"]
+        });
+
+        res.status(200).json({
+            message: "User profile updated successfully",
+            data: updatedUser,
+            error: false
+        });
+
+    } catch (err) {
+        console.error("updateUserProfile Error:", err);
+        res.status(500).json({ message: "Internal server error", error: true });
+    }
+};
