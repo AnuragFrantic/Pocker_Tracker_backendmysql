@@ -72,6 +72,8 @@ router.get(`/games`, getAllGames);
 router.get(`/games/:id`, getGameById);
 router.put(`/update-games/:id`, updateGame);
 router.delete(`/delete-games/:id`, deleteGame);
+// router.get("/game-stats", Auth, getGameStats);
+// router.get("/game-stats/:id", Auth, getSingleGameStats);
 
 
 

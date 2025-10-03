@@ -32,6 +32,10 @@ const Sessions = db.sequelize.define("Sessions", {
             key: "id"
         }
     },
+    room_name: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
     game_type_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
