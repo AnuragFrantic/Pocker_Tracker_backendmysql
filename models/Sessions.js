@@ -26,13 +26,11 @@ const Sessions = db.sequelize.define("Sessions", {
     },
     room_id: {
         type: DataTypes.INTEGER,
-        allowNull: true,
+        allowNull: false,
         references: {
             model: "PokerRooms",
             key: "id"
         },
-        onDelete: 'SET NULL',
-        onUpdate: 'CASCADE'
     },
     room_name: {
         type: DataTypes.STRING,
