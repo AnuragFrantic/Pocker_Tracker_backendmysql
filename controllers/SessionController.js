@@ -184,6 +184,8 @@ exports.createSession = async (req, res) => {
         const data = req.body;
         const userId = req.user.id;
 
+        console.log(req.body)
+
         // ✅ Check if user exists
         const user = await db.User.findByPk(userId, { transaction: t });
         if (!user) {
