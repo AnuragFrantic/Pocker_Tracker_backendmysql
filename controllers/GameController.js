@@ -53,12 +53,12 @@ exports.getGameById = async (req, res) => {
 // Create a new game
 exports.createGame = async (req, res) => {
     try {
-        const { name, game_type_id } = req.body;
+        const { name, game_type_id, is_active } = req.body;
 
         if (!game_type_id) {
             return res.status(400).json({ message: "Game type is required", error: true });
         }
-        const game = await Games.create({ name, game_type_id });
+        const game = await Games.create({ name, game_type_id, is_active });
         res.status(201).json({
             data: game,
             message: "Game created successfully",
@@ -72,12 +72,14 @@ exports.createGame = async (req, res) => {
 // Update a game
 exports.updateGame = async (req, res) => {
     try {
-        const { name, game_type_id, amount } = req.body;
+        const { name, game_type_id, amount, is_active } = req.body;
         const game = await Games.findByPk(req.params.id);
         if (!game) return res.status(404).json({ message: "Game not found", error: true });
 
         game.name = name || game.name;
         game.game_type_id = game_type_id || game.game_type_id;
+        game.is_active = is_active || game.is_active;
+
 
         await game.save();
 

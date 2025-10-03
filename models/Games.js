@@ -11,6 +11,10 @@ const Games = db.sequelize.define("Games", {
         type: DataTypes.STRING,
         allowNull: false
     },
+    is_active: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+    },
     game_type_id: {
         type: DataTypes.INTEGER,
         references: {

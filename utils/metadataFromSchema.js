@@ -27,7 +27,7 @@ async function metadataFromSequelizeModel(sequelizeModel, overrides = {}, models
             const labelField = possibleLabels.find(f => f in refModel.rawAttributes) || "id";
 
             const records = await refModel.findAll({ attributes: ["id", labelField] });
-            field.type = "apiSelect";
+            field.type = "dropdown";
             field.ref = refName;
             field.options = records.map(r => ({ label: r[labelField], value: r.id }));
         }

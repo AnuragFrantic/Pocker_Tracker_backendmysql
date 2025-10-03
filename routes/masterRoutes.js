@@ -90,8 +90,8 @@ router.get("/sessions/metadata", async (req, res) => {
                 session_notes: { type: "textarea", label: "Session Notes" },
             },
             {
-                SessionTypes, // only used for session_type_id
-                GameTypes,    // only used for game_type_id
+                SessionTypes,
+                GameTypes,
                 Games,
                 // PokerRooms
             }
