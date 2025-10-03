@@ -14,7 +14,9 @@ const { Sequelize } = require('../config/db');
 
 exports.getAllSessions = async (req, res) => {
     try {
-        let { page = 1, limit = 10, games_id } = req.query;
+        let { page = 1, limit = 10, games_id, room_id } = req.query;
+
+        console.log("rr", room_id)
 
         page = parseInt(page);
         limit = parseInt(limit);
@@ -31,6 +33,11 @@ exports.getAllSessions = async (req, res) => {
             // support multiple game IDs as comma-separated values
             const gameIds = games_id.split(",").map(id => parseInt(id));
             whereCondition.games_id = gameIds.length > 1 ? { [db.Sequelize.Op.in]: gameIds } : gameIds[0];
+        }
+
+        if (room_id) {
+            const roomIds = room_id.split(",").map(id => parseInt(id));
+            whereCondition.room_id = roomIds.length > 1 ? { [db.Sequelize.Op.in]: roomIds } : roomIds[0];
         }
 
         // 🔹 Fetch data with pagination
@@ -473,6 +480,72 @@ exports.getUserGameAnalytics = async (req, res) => {
         res.status(500).json({ message: err.message, error: true });
     }
 };
+
+
+
+exports.getUserRoomAnalytics = async (req, res) => {
+    try {
+        const userId = req.user.id;
+
+        // 🔹 Fetch all sessions for this user
+        const sessions = await db.Sessions.findAll({
+            where: { user_id: userId },
+            include: [
+                {
+                    model: db.PokerRoom,
+                    as: "room",
+                    attributes: ["id", "name"]
+                }
+            ]
+        });
+
+        // 🔹 Aggregate by room
+        const analytics = {};
+
+        sessions.forEach(session => {
+            if (!session.room) return; // skip if no room linked
+
+            const roomId = session.room.id;
+            const roomName = session.room.name;
+
+            if (!analytics[roomId]) {
+                analytics[roomId] = {
+                    roomId,
+                    roomName,
+                    totalProfitLoss: 0,
+                    sessionsPlayed: 0
+                };
+            }
+
+            const totalAmount = parseFloat(session.total_amount) || 0;
+            const cashOut = parseFloat(session.cash_out) || 0;
+            const profitLoss = cashOut - totalAmount;
+
+            analytics[roomId].totalProfitLoss += profitLoss;
+            analytics[roomId].sessionsPlayed += 1;
+        });
+
+        // 🔹 Convert to array and calculate profit per session
+        const result = Object.values(analytics).map(a => ({
+            roomId: a.roomId,
+            room: a.roomName,
+            profitLoss: a.totalProfitLoss,
+            sessions: a.sessionsPlayed,
+            profitPerSession: a.totalProfitLoss / (a.sessionsPlayed || 1)
+        }));
+
+        res.status(200).json({
+            data: result,
+            message: "User room analytics retrieved successfully",
+            error: false
+        });
+
+    } catch (err) {
+        console.error("Error in getUserRoomAnalytics:", err);
+        res.status(500).json({ message: err.message, error: true });
+    }
+};
+
 
 
 

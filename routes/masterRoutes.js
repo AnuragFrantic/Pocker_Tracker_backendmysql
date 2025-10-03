@@ -4,7 +4,7 @@ const { createPokerRoom, getAllPokerRooms, getPokerRoom, updatePokerRoom, delete
 const upload = require("../middleware/upload");
 const { createGameType, getAllGameTypes, updateGameType, deleteGameType } = require("../controllers/GameTypesController");
 const { createGame, getAllGames, getGameById, updateGame, deleteGame } = require("../controllers/GameController");
-const { getAllSessions, createSession, updateSession, getUserGameAnalytics } = require("../controllers/SessionController");
+const { getAllSessions, createSession, updateSession, getUserGameAnalytics, getUserRoomAnalytics } = require("../controllers/SessionController");
 const { getAllUSers, getProfile, getUserProfile, updateUserProfile } = require("../controllers/UserController");
 const { Auth } = require("../middleware/Auth");
 const { CreateSubscription, GetAllSubscriptions, UpdateSubscription, ToggleSubscriptionStatus } = require("../controllers/SubscriptionController");
@@ -106,6 +106,8 @@ router.get("/sessions/metadata", async (req, res) => {
 });
 
 router.get("/game-stats", Auth, getUserGameAnalytics);
+
+router.get("/analytics/rooms", Auth, getUserRoomAnalytics);
 
 
 
