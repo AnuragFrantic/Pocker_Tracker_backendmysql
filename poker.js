@@ -61,8 +61,8 @@ db.sequelize.sync().then(() => {
 
 
 // if you want to  update and dont drop the table
-db.sequelize.sync({ alter: true }).then(() => {
-    console.log("Database synced (tables altered if needed)");
-});
+// db.sequelize.sync({ alter: true }).then(() => {
+//     console.log("Database synced (tables altered if needed)");
+// });
 
 app.listen(3420, () => console.log("🚀 Server running on http://localhost:3420"));
