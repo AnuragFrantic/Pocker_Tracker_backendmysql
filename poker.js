@@ -18,7 +18,7 @@ const app = express();
 //     credentials: true
 // }));
 
-const allowedOrigins = ["http://localhost:5173", "http://storo.doc24.care"];
+const allowedOrigins = ["http://localhost:5175", "http://storo.doc24.care"];
 
 app.use(cors({
     origin: function (origin, callback) {

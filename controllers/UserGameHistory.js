@@ -10,13 +10,20 @@ const PokerRoom = db.PokerRoom
 
 
 exports.getallGameHistory = async (req, res) => {
-    const userid = req.user.id
+    const userid = req.user.id;
     const sessionid = req.query.session || req.query["session"];
-    const whereCondition = { user_id: userid };
+    let whereCondition = {};
+    const type = req.user.type
+
+    if (type === "user") {
+        // User can see only their own history
+        whereCondition.user_id = userid;
+    }
 
     if (sessionid) {
         whereCondition.session_id = sessionid;
     }
+
     try {
         const data = await UserGameHistory.findAll({
             where: whereCondition,
@@ -24,21 +31,47 @@ exports.getallGameHistory = async (req, res) => {
                 {
                     model: Games,
                     as: "games",
-                    attributes: ["id", "name", 'game_type_id'],
+                    attributes: ["id", "name", "game_type_id"],
                 },
             ],
-        })
+        });
+
+        // Parse JSON fields before sending
+        const parsedData = data.map((item) => {
+            const jsonFields = [
+                "buy_in",
+                "re_buys",
+                "add_on_amount",
+                "dealer_tips",
+                "cash_out",
+            ];
+
+            const parsedItem = item.toJSON();
+
+            jsonFields.forEach((field) => {
+                try {
+                    parsedItem[field] = parsedItem[field]
+                        ? JSON.parse(parsedItem[field])
+                        : [];
+                } catch {
+                    parsedItem[field] = [];
+                }
+            });
+
+            return parsedItem;
+        });
 
         res.json({
-            data,
+            data: parsedData,
             message: "Game History retrieved successfully",
             error: false,
         });
     } catch (err) {
-        console.log(err)
+        console.error(err);
         res.status(500).json({ message: err.message, error: true });
     }
-}
+};
+
 
 
 
@@ -79,8 +112,9 @@ exports.getFormattedGameHistory = async (req, res) => {
 
         // 🔹 Group by session
         const grouped = {};
-        histories.forEach(h => {
-            const s = h.session;
+
+        histories.forEach((record) => {
+            const s = record.session;
             if (!s) return;
 
             if (!grouped[s.id]) {
@@ -90,42 +124,61 @@ exports.getFormattedGameHistory = async (req, res) => {
                     date: new Date(s.createdAt).toLocaleDateString("en-US"),
                     addOns: [],
                     totalProfitLoss: 0,
-                    stakes: s.stakes || null,
-                    notes: s.session_notes || null,
-                    game: h.games ? h.games.name : null
+                    stakes: s.stakes || "-",
+                    notes: s.session_notes || "",
+                    game: record.games ? record.games.name : "-",
                 };
             }
 
-            // collect add-ons
-            if (h.add_on_amount && Number(h.add_on_amount) > 0) {
-                grouped[s.id].addOns.push(`$${h.add_on_amount}`);
-            }
+            // 🔸 Safely parse JSON fields
+            const parseArray = (val) => {
+                if (!val) return [];
+                try {
+                    return Array.isArray(val) ? val : JSON.parse(val);
+                } catch {
+                    return [];
+                }
+            };
 
-            // accumulate profit/loss
-            const cashOut = Number(h.cash_out) || 0;
-            const total = Number(h.buy_in || 0) + Number(h.re_buys || 0) + Number(h.add_on_amount || 0) + Number(h.dealer_tips || 0) + Number(h.meals_other_exp || 0);
-            grouped[s.id].totalProfitLoss += (cashOut - total);
+            const buyIn = parseArray(record.buy_in);
+            const rebuys = parseArray(record.re_buys);
+            const addOns = parseArray(record.add_on_amount);
+            const dealerTips = parseArray(record.dealer_tips);
+            const cashOut = parseArray(record.cash_out);
+            const mealsExp = Number(record.meals_other_exp || 0);
+
+            // 🔸 Compute totals
+            const totalBuyIn = buyIn.reduce((sum, x) => sum + (x.amount || 0), 0);
+            const totalRebuys = rebuys.reduce((sum, x) => sum + (x.amount || 0), 0);
+            const totalAddOns = addOns.reduce((sum, x) => sum + (x.amount || 0), 0);
+            const totalDealerTips = dealerTips.reduce((sum, x) => sum + (x.amount || 0), 0);
+            const totalCashOut = cashOut.reduce((sum, x) => sum + (x.amount || 0), 0);
+
+            grouped[s.id].addOns.push(...addOns);
+            const totalSpent = totalBuyIn + totalRebuys + totalAddOns + totalDealerTips + mealsExp;
+            const profitLoss = totalCashOut - totalSpent;
+            grouped[s.id].totalProfitLoss += profitLoss;
         });
 
         // 🔹 Format output
-        const result = Object.values(grouped).map(s => ({
+        const result = Object.values(grouped).map((s) => ({
             room: s.roomName,
             date: s.date,
-            addOns: s.addOns.length > 0 ? s.addOns.join(", ") : "None",
+            addOns: s.addOns.length > 0 ? s.addOns : [],
             profitLoss: `$${s.totalProfitLoss.toFixed(2)}`,
-            stakes: s.stakes || "-",
+            stakes: s.stakes,
             game: s.game,
-            notes: s.notes || ""
+            notes: s.notes,
         }));
 
         res.json({
             data: result,
             message: "Formatted game history retrieved successfully",
-            error: false
+            error: false,
         });
-
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: err.message, error: true });
     }
 };
+

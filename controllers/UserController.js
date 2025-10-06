@@ -48,47 +48,31 @@ exports.getProfile = async (req, res) => {
 
 exports.getUserProfile = async (req, res) => {
     try {
-        let id = req.params.id;
+        const id = req.params.id;
 
-        let user = await User.findByPk(id, {
+        const user = await User.findByPk(id, {
             include: [
-                // 🟢 Sessions
                 {
                     model: Session,
                     as: "sessions",
-                    attributes: ["id", "game_type_id", "buy_in", "cash_out", "createdAt", "total_amount", "session_type_id", "room_id", "games_id"],
+                    attributes: [
+                        "id",
+                        "game_type_id",
+                        "buy_in",
+                        "cash_out",
+                        "createdAt",
+                        "total_amount",
+                        "session_type_id",
+                        "room_id",
+                        "games_id"
+                    ],
                     include: [
-                        {
-                            model: Games,
-                            as: "game",
-                            attributes: ["id", "game_type_id", "name"]
-                        },
-                        {
-                            model: GamesType,
-                            as: "game_type",
-                            attributes: ["id", "name"]
-                        },
-                        {
-                            model: SessionTypes,
-                            as: "session_type",
-                            attributes: ["id", "name"]
-                        },
-                        {
-                            model: PokerRoom,
-                            as: "room",
-                            attributes: ["id", "name"]
-                        },
-
+                        { model: Games, as: "game", attributes: ["id", "game_type_id", "name"] },
+                        { model: GamesType, as: "game_type", attributes: ["id", "name"] },
+                        { model: SessionTypes, as: "session_type", attributes: ["id", "name"] },
+                        { model: PokerRoom, as: "room", attributes: ["id", "name"] },
                     ]
-
                 },
-
-
-
-
-
-
-                // 🟢 User Game Histories
                 {
                     model: UserGameHistory,
                     as: "game_histories",
@@ -105,8 +89,6 @@ exports.getUserProfile = async (req, res) => {
                         }
                     ]
                 },
-
-                // 🟢 Subscriptions
                 {
                     model: PurchaseSubscription,
                     as: "subscriptions",
@@ -146,22 +128,20 @@ exports.getUserProfile = async (req, res) => {
             return res.status(404).json({ message: "User not found", error: true });
         }
 
-        // 🟢 Calculate stats
+        // 🧮 Calculate stats
         const total_sessions_created = user.sessions?.length || 0;
         const total_games_played = user.game_histories?.length || 0;
 
-        // Profit/Loss = sum(cash_out - buy_in) for all sessions
         let total_profit_loss = 0;
 
-        if (user.sessions && user.sessions.length > 0) {
+        if (user.sessions?.length) {
             user.sessions.forEach(sess => {
-                const totalAmount = parseFloat(sess.total_amount) || 0;
-                const cash_out = parseFloat(sess.cash_out) || 0;
-                total_profit_loss += (cash_out - totalAmount);
+                const totalAmount = parseFloat(sess.total_amount || 0);
+                const cashOut = parseFloat(sess.cash_out || 0);
+                total_profit_loss += (cashOut - totalAmount);
             });
         }
 
-        // 🟢 Add profit status
         const profit_status = total_profit_loss >= 0;
 
         res.status(200).json({
@@ -171,9 +151,9 @@ exports.getUserProfile = async (req, res) => {
                 total_sessions_created,
                 total_games_played,
                 total_profit_loss,
-                profit: profit_status
+                profit: profit_status,
             },
-            error: false
+            error: false,
         });
 
     } catch (err) {
@@ -181,6 +161,7 @@ exports.getUserProfile = async (req, res) => {
         res.status(500).json({ message: "Internal server error", error: true });
     }
 };
+
 
 
 

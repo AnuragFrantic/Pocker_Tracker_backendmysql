@@ -54,7 +54,7 @@ const Sessions = db.sequelize.define("Sessions", {
         }
     },
     buy_in: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.DOUBLE,
         allowNull: false,
     },
     meals_other_exp: {
@@ -67,7 +67,7 @@ const Sessions = db.sequelize.define("Sessions", {
         defaultValue: 0,
     },
     re_buys: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.DOUBLE,
         allowNull: false,
         defaultValue: 0,
     },
@@ -102,12 +102,12 @@ const Sessions = db.sequelize.define("Sessions", {
         allowNull: true,
     },
     dealer_tips: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.DOUBLE,
         allowNull: false,
         defaultValue: 0
     },
     cash_out: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.DOUBLE,
         allowNull: false,
         defaultValue: 0
     },

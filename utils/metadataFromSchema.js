@@ -6,6 +6,7 @@ async function metadataFromSequelizeModel(sequelizeModel, overrides = {}, models
         if (["createdAt", "updatedAt", "deleted_at", 'id', 'user_id'].includes(fieldName)) continue;
 
         const attr = attributes[fieldName];
+        
 
         let field = {
             name: fieldName,

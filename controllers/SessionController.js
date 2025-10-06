@@ -16,7 +16,7 @@ exports.getAllSessions = async (req, res) => {
     try {
         let { page = 1, limit = 10, games_id, room_id } = req.query;
 
-        console.log("rr", room_id)
+
 
         page = parseInt(page);
         limit = parseInt(limit);
@@ -193,7 +193,7 @@ exports.createSession = async (req, res) => {
 
         // ✅ Helper to safely convert to number, fallback to 0
         const toNumber = (val) => {
-            if (val === undefined || val === null || val === '') return 0;
+            if (val === undefined || val === null || val === "") return 0;
             return Number(val);
         };
 
@@ -201,13 +201,18 @@ exports.createSession = async (req, res) => {
         const user = await db.User.findByPk(userId, { transaction: t });
         if (!user) {
             await t.rollback();
-            return res.status(404).json({ message: "User not found", error: true });
+            return res
+                .status(404)
+                .json({ message: "User not found", error: true });
         }
 
         // Validate required fields
         if (!data.session_type_id || !data.game_type_id || !data.games_id) {
             await t.rollback();
-            return res.status(400).json({ message: "Missing required session fields", error: true });
+            return res.status(400).json({
+                message: "Missing required session fields",
+                error: true,
+            });
         }
 
         let deductedFromUser = false;
@@ -226,10 +231,10 @@ exports.createSession = async (req, res) => {
                     user_id: userId,
                     status: "active",
                     remaining_sessions: { [db.Sequelize.Op.gt]: 0 },
-                    end_date: { [db.Sequelize.Op.gte]: new Date() }
+                    end_date: { [db.Sequelize.Op.gte]: new Date() },
                 },
                 order: [["end_date", "ASC"]],
-                transaction: t
+                transaction: t,
             });
 
             if (subscription) {
@@ -241,68 +246,98 @@ exports.createSession = async (req, res) => {
             if (!deductedFromSubscription) {
                 await t.rollback();
                 return res.status(400).json({
-                    message: "No free sessions or active subscription available. Please buy a subscription.",
-                    error: true
+                    message:
+                        "No free sessions or active subscription available. Please buy a subscription.",
+                    error: true,
                 });
             }
         }
 
-        // Handle add-ons
-        let addOns = [];
-        if (Array.isArray(data.add_on_amount)) {
-            addOns = data.add_on_amount.map(toNumber);
-        } else {
-            addOns = [toNumber(data.add_on_amount)];
-        }
-        const totalAddOn = addOns.reduce((sum, val) => sum + val, 0);
+        // ✅ Convert numeric/array fields into [{ amount: number }]
+        const formatArray = (val) => {
+            if (!val) return [];
+            if (Array.isArray(val))
+                return val.map((num) => ({ amount: toNumber(num) }));
+            return [{ amount: toNumber(val) }];
+        };
 
-        // Convert all numeric fields
+        const buyInArray = formatArray(data.buy_in);
+        const reBuyArray = formatArray(data.re_buys);
+        const addOnArray = formatArray(data.add_on_amount);
+        const dealerTipsArray = formatArray(data.dealer_tips);
+        const cashOutArray = formatArray(data.cash_out);
+
+        // ✅ Calculate total add-ons, buy-ins, etc.
+        const sumAmounts = (arr) =>
+            Array.isArray(arr) ? arr.reduce((sum, obj) => sum + obj.amount, 0) : 0;
+
+        const totalBuyIn = sumAmounts(buyInArray);
+        const totalReBuy = sumAmounts(reBuyArray);
+        const totalAddOn = sumAmounts(addOnArray);
+        const totalDealerTips = sumAmounts(dealerTipsArray);
+        const totalCashOut = sumAmounts(cashOutArray);
+
+        const totalAmount =
+            totalBuyIn +
+            totalReBuy +
+            totalAddOn +
+            totalDealerTips +
+            toNumber(data.meals_other_exp);
+
+        // ✅ Create session payload
         const sessionPayload = {
             ...data,
             user_id: userId,
-            buy_in: toNumber(data.buy_in),
+            buy_in: totalBuyIn,
             meals_other_exp: toNumber(data.meals_other_exp),
             add_on_amount: totalAddOn,
-            re_buys: toNumber(data.re_buys),
-            total_amount: toNumber(data.buy_in) + toNumber(data.re_buys) + totalAddOn + toNumber(data.meals_other_exp) + toNumber(data.dealer_tips),
+            re_buys: totalReBuy,
+            dealer_tips: totalDealerTips,
+            cash_out: totalCashOut,
+            total_amount: totalAmount,
             stakes: toNumber(data.stakes),
-            dealer_tips: toNumber(data.dealer_tips),
-            cash_out: toNumber(data.cash_out),
         };
 
-        // Create session
+        // Create main session
         const newSession = await db.Sessions.create(sessionPayload, { transaction: t });
 
-        // Save to history
+        // ✅ Create UserGameHistory (Single record with arrays of objects)
         await db.UserGameHistory.create({
             session_id: newSession.id,
             user_id: userId,
             room_id: data.room_id,
             games_id: data.games_id,
-            buy_in: sessionPayload.buy_in,
-            re_buys: sessionPayload.re_buys,
-            add_on_amount: totalAddOn,
-            cash_out: sessionPayload.cash_out,
-            dealer_tips: sessionPayload.dealer_tips,
-            meals_other_exp: sessionPayload.meals_other_exp,
-            profit_loss: sessionPayload.cash_out - sessionPayload.total_amount,
-            notes: data.session_notes || null
+            buy_in: buyInArray,
+            re_buys: reBuyArray,
+            add_on_amount: addOnArray,
+            dealer_tips: dealerTipsArray,
+            cash_out: cashOutArray,
+            profit_loss: totalCashOut - totalAmount,
+            notes: data.session_notes || null,
         }, { transaction: t });
 
         await t.commit();
 
         res.status(201).json({
             message: "Session created successfully",
-            data: { session: newSession, remaining_free_sessions: user.session_points, deducted_from: deductedFromUser ? "user_points" : "subscription" },
-            error: false
+            data: {
+                session: newSession,
+                remaining_free_sessions: user.session_points,
+                deducted_from: deductedFromUser
+                    ? "user_points"
+                    : "subscription",
+            },
+            error: false,
         });
-
     } catch (err) {
         await t.rollback();
         console.error("Create Session Error:", err);
-        res.status(500).json({ message: "Internal Server Error", error: true });
+        res
+            .status(500)
+            .json({ message: "Internal Server Error", error: true });
     }
 };
+
 
 
 
@@ -434,6 +469,14 @@ exports.getUserGameAnalytics = async (req, res) => {
             ]
         });
 
+        if (!sessions || sessions.length === 0) {
+            return res.status(200).json({
+                data: [],
+                message: "No sessions found for this user",
+                error: false
+            });
+        }
+
         // 🔹 Aggregate by game
         const analytics = {};
 
@@ -452,8 +495,8 @@ exports.getUserGameAnalytics = async (req, res) => {
                 };
             }
 
-            const totalAmount = parseFloat(session.total_amount) || 0;
-            const cashOut = parseFloat(session.cash_out) || 0;
+            const totalAmount = Number(session.total_amount) || 0;
+            const cashOut = Number(session.cash_out) || 0;
             const profitLoss = cashOut - totalAmount;
 
             analytics[gameId].totalProfitLoss += profitLoss;
@@ -464,9 +507,9 @@ exports.getUserGameAnalytics = async (req, res) => {
         const result = Object.values(analytics).map(a => ({
             gameId: a.gameId,
             game: a.gameName,
-            profitLoss: a.totalProfitLoss,
+            profitLoss: Number(a.totalProfitLoss.toFixed(2)),
             sessions: a.sessionsPlayed,
-            profitPerSession: a.totalProfitLoss / (a.sessionsPlayed || 1)
+            profitPerSession: Number((a.totalProfitLoss / (a.sessionsPlayed || 1)).toFixed(2))
         }));
 
         res.status(200).json({
@@ -477,7 +520,7 @@ exports.getUserGameAnalytics = async (req, res) => {
 
     } catch (err) {
         console.error("Error in getUserGameAnalytics:", err);
-        res.status(500).json({ message: err.message, error: true });
+        res.status(500).json({ message: "Internal Server Error", error: true });
     }
 };
 
@@ -487,7 +530,7 @@ exports.getUserRoomAnalytics = async (req, res) => {
     try {
         const userId = req.user.id;
 
-        // 🔹 Fetch all sessions for this user
+        // Fetch all sessions for this user
         const sessions = await db.Sessions.findAll({
             where: { user_id: userId },
             include: [
@@ -495,43 +538,63 @@ exports.getUserRoomAnalytics = async (req, res) => {
                     model: db.PokerRoom,
                     as: "room",
                     attributes: ["id", "name"]
+                },
+                {
+                    model: db.Games,
+                    as: "game",
+                    attributes: ["id", "name"]
                 }
             ]
         });
 
-        // 🔹 Aggregate by room
+        if (!sessions || sessions.length === 0) {
+            return res.status(200).json({
+                data: [],
+                message: "No sessions found for this user",
+                error: false
+            });
+        }
+
         const analytics = {};
 
         sessions.forEach(session => {
-            if (!session.room) return; // skip if no room linked
+            // Use room_id if exists, otherwise room_name
+            const key = session.room?.id
+                ? `id_${session.room.id}`
+                : session.room_name
+                    ? `name_${session.room_name}`
+                    : "unknown_room";
 
-            const roomId = session.room.id;
-            const roomName = session.room.name;
+            const roomId = session.room?.id || null;
+            const roomName = session.room?.name || session.room_name || "Unknown Room";
 
-            if (!analytics[roomId]) {
-                analytics[roomId] = {
+            const totalAmount = Number(session.total_amount) || 0;
+            const cashOut = Number(session.cash_out) || 0;
+            const profitLoss = cashOut - totalAmount;
+            const gamesPlayed = session.game ? 1 : 0;
+
+            if (!analytics[key]) {
+                analytics[key] = {
                     roomId,
                     roomName,
                     totalProfitLoss: 0,
-                    sessionsPlayed: 0
+                    sessionsPlayed: 0,
+                    gamesPlayed: 0
                 };
             }
 
-            const totalAmount = parseFloat(session.total_amount) || 0;
-            const cashOut = parseFloat(session.cash_out) || 0;
-            const profitLoss = cashOut - totalAmount;
-
-            analytics[roomId].totalProfitLoss += profitLoss;
-            analytics[roomId].sessionsPlayed += 1;
+            analytics[key].totalProfitLoss += profitLoss;
+            analytics[key].sessionsPlayed += 1;
+            analytics[key].gamesPlayed += gamesPlayed;
         });
 
-        // 🔹 Convert to array and calculate profit per session
         const result = Object.values(analytics).map(a => ({
             roomId: a.roomId,
             room: a.roomName,
-            profitLoss: a.totalProfitLoss,
             sessions: a.sessionsPlayed,
-            profitPerSession: a.totalProfitLoss / (a.sessionsPlayed || 1)
+            gamesPlayed: a.gamesPlayed,
+            profitLoss: Number(a.totalProfitLoss.toFixed(2)),
+            profitPerSession: Number((a.totalProfitLoss / (a.sessionsPlayed || 1)).toFixed(2))
         }));
 
         res.status(200).json({
@@ -542,9 +605,11 @@ exports.getUserRoomAnalytics = async (req, res) => {
 
     } catch (err) {
         console.error("Error in getUserRoomAnalytics:", err);
-        res.status(500).json({ message: err.message, error: true });
+        res.status(500).json({ message: "Internal Server Error", error: true });
     }
 };
+
+
 
 
 
