@@ -18,7 +18,7 @@ const app = express();
 //     credentials: true
 // }));
 
-const allowedOrigins = ["http://localhost:5175", "http://storo.doc24.care"];
+const allowedOrigins = ["http://localhost:5173", "http://storo.doc24.care", "http://localhost:3420"];
 
 app.use(cors({
     origin: function (origin, callback) {
@@ -32,6 +32,9 @@ app.use(cors({
     },
     credentials: true
 }));
+
+
+app.use("/master/webhook", require("./routes/subscriptionRoutes"));
 
 app.use(express.json());
 

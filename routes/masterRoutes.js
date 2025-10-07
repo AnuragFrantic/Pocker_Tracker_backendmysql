@@ -8,7 +8,7 @@ const { getAllSessions, createSession, updateSession, getUserGameAnalytics, getU
 const { getAllUSers, getProfile, getUserProfile, updateUserProfile } = require("../controllers/UserController");
 const { Auth } = require("../middleware/Auth");
 const { CreateSubscription, GetAllSubscriptions, UpdateSubscription, ToggleSubscriptionStatus } = require("../controllers/SubscriptionController");
-const { CreatePurchaseSubscription, GetAllPurchaseSubscriptions, GetOwnPurchaseSubscriptions } = require("../controllers/PurchaseSubsriptionController");
+const { GetAllPurchaseSubscriptions, GetOwnPurchaseSubscriptions, CreateStripeCheckoutSession } = require("../controllers/PurchaseSubsriptionController");
 const { getallGameHistory, getFormattedGameHistory } = require("../controllers/UserGameHistory");
 const metadataFromSequelizeModel = require("../utils/metadataFromSchema");
 const db = require("../models");
@@ -119,7 +119,6 @@ router.get("/history/formatted", Auth, getFormattedGameHistory);
 // user routes 
 
 router.get('/users', Auth, getAllUSers)
-
 router.get('/profile', Auth, getProfile)
 router.get('/user-detail/:id', Auth, getUserProfile)
 router.put('/update-profile', Auth, updateUserProfile)
@@ -140,7 +139,11 @@ router.put('/change-status-subscription/:id', Auth, ToggleSubscriptionStatus)
 
 // purchase subscription
 
-router.post('/purchase-subscription', Auth, CreatePurchaseSubscription)
+// router.post('/purchase-subscription', Auth, CreatePurchaseSubscription)
+router.post('/purchase-subscription', Auth, CreateStripeCheckoutSession)
+
+
+
 router.get('/purchase-subscription', Auth, GetAllPurchaseSubscriptions)
 router.get('/own-purchase-subscription', Auth, GetOwnPurchaseSubscriptions)
 
