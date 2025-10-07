@@ -15,6 +15,8 @@ const path = require('path')
 
 const app = express();
 
+app.use("/master/webhook", require("./routes/subscriptionRoutes"));
+
 //  Enable CORS
 // app.use(cors({
 //     origin: ["http://localhost:5173", "http://storo.doc24.care/"],
@@ -37,7 +39,7 @@ app.use(cors({
 }));
 
 
-app.use("/master/webhook", require("./routes/subscriptionRoutes"));
+
 
 app.use(express.json());
 
@@ -77,17 +79,17 @@ db.sequelize.sync().then(() => {
 //     key: pvtkey,
 //     cert: certificate,
 // };
-const options = {
-    cert: fs.readFileSync('/etc/letsencrypt/live/rinsezone.com/fullchain.pem', 'utf-8'),
-    key: fs.readFileSync('/etc/letsencrypt/live/rinsezone.com/privkey.pem', 'utf-8'),
-};
+// const options = {
+//     cert: fs.readFileSync('/etc/letsencrypt/live/rinsezone.com/fullchain.pem', 'utf-8'),
+//     key: fs.readFileSync('/etc/letsencrypt/live/rinsezone.com/privkey.pem', 'utf-8'),
+// };
 
 
-https.createServer(options, app)
-    .listen(3420, function (req, res) {
-        console.log("Server started at port https : 3420");
-    });
+// https.createServer(options, app)
+//     .listen(3420, function (req, res) {
+//         console.log("Server started at port https : 3420");
+//     });
 
-// app.listen(3420, () => console.log("🚀 Server running on http://localhost:3420"));
+app.listen(3420, () => console.log("🚀 Server running on http://localhost:3420"));
 
 

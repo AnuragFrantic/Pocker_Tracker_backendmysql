@@ -163,6 +163,8 @@ exports.StripeWebhookHandler = async (req, res) => {
             process.env.STRIPE_WEBHOOK_SECRET
         );
 
+        console.log("RAW BODY TYPE:", typeof req.body, Buffer.isBuffer(req.body));
+
 
     } catch (err) {
         console.error("Webhook signature verification failed:", err.message);
