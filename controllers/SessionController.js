@@ -267,6 +267,7 @@ exports.createSession = async (req, res) => {
         const dealerTipsArray = formatArray(data.dealer_tips);
         const cashOutArray = formatArray(data.cash_out);
 
+
         // ✅ Calculate total add-ons, buy-ins, etc.
         const sumAmounts = (arr) =>
             Array.isArray(arr) ? arr.reduce((sum, obj) => sum + obj.amount, 0) : 0;
@@ -276,6 +277,7 @@ exports.createSession = async (req, res) => {
         const totalAddOn = sumAmounts(addOnArray);
         const totalDealerTips = sumAmounts(dealerTipsArray);
         const totalCashOut = sumAmounts(cashOutArray);
+
 
         const totalAmount =
             totalBuyIn +
@@ -311,6 +313,7 @@ exports.createSession = async (req, res) => {
             re_buys: reBuyArray,
             add_on_amount: addOnArray,
             dealer_tips: dealerTipsArray,
+            meal_exp: data.meals_other_exp,
             cash_out: cashOutArray,
             profit_loss: totalCashOut - totalAmount,
             notes: data.session_notes || null,

@@ -114,6 +114,12 @@ const UserGameHistory = db.sequelize.define("UserGameHistory", {
         defaultValue: [],
     },
 
+    meal_exp: {
+        type: DataTypes.DECIMAL(10, 2),
+        allowNull: true,
+        defaultValue: 0.00,
+    },
+
     cash_out: {
         type: DataTypes.JSON,  // example: [{ amount: 800 }]
         allowNull: false,
@@ -133,6 +139,7 @@ const UserGameHistory = db.sequelize.define("UserGameHistory", {
 
 }, {
     timestamps: true,
+    tableName: "UserGameHistory"
 });
 
 module.exports = UserGameHistory;

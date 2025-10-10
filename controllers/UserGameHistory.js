@@ -229,13 +229,11 @@ exports.annualreport = async (req, res) => {
             });
         }
 
-        // ✅ safer reducer — works even if arr is null, object, or missing
         const sumAmounts = (arr) => {
             if (!arr) return 0;
             if (Array.isArray(arr)) {
                 return arr.reduce((a, c) => a + (c?.amount || 0), 0);
             }
-            // if accidentally stored as object or number
             if (typeof arr === "object" && arr.amount) return arr.amount;
             if (typeof arr === "number") return arr;
             return 0;
@@ -257,8 +255,8 @@ exports.annualreport = async (req, res) => {
             totalCashOut += sumAmounts(item.cash_out);
             profitLoss += item.profit_loss || 0;
 
-            if (item.meals) mealsAndOthers += sumAmounts(item.meals);
-            if (item.others) mealsAndOthers += sumAmounts(item.others);
+            // ✅ include meal_exp (numeric)
+            mealsAndOthers += item.meal_exp ? Number(item.meal_exp) : 0;
         });
 
         const totalExpenditure =
@@ -291,3 +289,4 @@ exports.annualreport = async (req, res) => {
         });
     }
 };
+
