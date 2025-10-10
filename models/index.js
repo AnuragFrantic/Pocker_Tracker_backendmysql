@@ -25,7 +25,6 @@ db.Games.belongsTo(db.GameTypes, { foreignKey: "game_type_id", as: "game_type" }
 
 
 
-
 // ---------------- Sessions ----------------
 db.Sessions.belongsTo(db.User, { foreignKey: "user_id", as: "user" });
 db.User.hasMany(db.Sessions, { foreignKey: "user_id", as: "sessions" });

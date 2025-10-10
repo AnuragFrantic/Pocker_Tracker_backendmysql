@@ -90,6 +90,6 @@ https.createServer(options, app)
         console.log("Server started at port https : 3420");
     });
 
-// app.listen(3420, () => console.log("🚀 Server running on http://localhost:3420"));
+app.listen(3420, () => console.log("🚀 Server running on http://localhost:3420"));
 
 
