@@ -1,6 +1,8 @@
 const db = require("../models");
 const Session = db.Sessions;
 const GameTypes = db.GameTypes;
+const SessionTypes = db.SessionTypes;
+
 const PokerRoom = db.PokerRoom;
 const Games = db.Games;
 const User = db.User;
@@ -54,6 +56,8 @@ exports.getAllSessions = async (req, res) => {
             include: [
                 { model: GameTypes, as: "game_type", required: false },
                 { model: PokerRoom, as: "room", required: false },
+                { model: SessionTypes, as: "session_type", required: false },
+
                 { model: Games, as: "game", required: false },
                 { model: User, as: "user", required: false }
             ],
@@ -62,17 +66,33 @@ exports.getAllSessions = async (req, res) => {
             order: [["createdAt", "DESC"]]
         });
 
-        // Add profit_loss to each session
-        const dataWithProfitLoss = rows.map(session => {
-            const profit_loss = (session.cash_out || 0) - (session.total_amount || 0);
+        // Add profit_loss and location to each session
+        const dataWithExtras = rows.map(session => {
+            const s = session.toJSON();
+            const profit_loss = (s.cash_out || 0) - (s.total_amount || 0);
+
+            // Determine location
+            let location = "";
+            if (s.room && s.room.address) {
+                location = s.room.address;
+            }
+            // else if (s.session_type && s.session_type.name) {
+            //     location = `${s.session_type.name}-gPoker`; // fallback to session type name
+            // } 
+            else {
+                location = s.room_name; // default fallback
+            }
+
             return {
-                ...session.toJSON(),
-                profit_loss
+                ...s,
+                profit_loss,
+                location
             };
         });
 
+
         res.status(200).json({
-            data: dataWithProfitLoss,
+            data: dataWithExtras,
             pagination: {
                 total: count,
                 page,
@@ -87,6 +107,7 @@ exports.getAllSessions = async (req, res) => {
         res.status(500).json({ message: err.message, error: true });
     }
 };
+
 
 
 
