@@ -7,6 +7,7 @@ const User = db.User;
 const PurchaseSubscription = db.PurchaseSubscription;
 const UserGameHistory = db.UserGameHistory;
 const { Sequelize } = require('../config/db');
+const { Op } = require("sequelize");
 
 
 
@@ -16,31 +17,38 @@ exports.getAllSessions = async (req, res) => {
     try {
         let { page = 1, limit = 10, games_id, room_id } = req.query;
 
-
-
         page = parseInt(page);
         limit = parseInt(limit);
         const offset = (page - 1) * limit;
 
-        // 🔹 Build where condition based on user type and optional games_id
         const whereCondition = {};
-
         if (req.user.type === "user") {
-            whereCondition.user_id = req.user.id; // only user's sessions
+            whereCondition.user_id = req.user.id;
         }
 
+        // Game filter (ID or name)
         if (games_id) {
-            // support multiple game IDs as comma-separated values
-            const gameIds = games_id.split(",").map(id => parseInt(id));
-            whereCondition.games_id = gameIds.length > 1 ? { [db.Sequelize.Op.in]: gameIds } : gameIds[0];
+            const gameValues = games_id.split(",");
+            const ids = gameValues.filter(v => /^\d+$/.test(v)).map(Number);
+            const names = gameValues.filter(v => !/^\d+$/.test(v));
+
+            whereCondition[Op.or] = [];
+            if (ids.length) whereCondition[Op.or].push({ games_id: { [Op.in]: ids } });
+            if (names.length) whereCondition[Op.or].push({ "$game.name$": { [Op.in]: names } });
         }
 
+        // Room filter (ID or name)
         if (room_id) {
-            const roomIds = room_id.split(",").map(id => parseInt(id));
-            whereCondition.room_id = roomIds.length > 1 ? { [db.Sequelize.Op.in]: roomIds } : roomIds[0];
+            const roomValues = room_id.split(",");
+            const ids = roomValues.filter(v => /^\d+$/.test(v)).map(Number);
+            const names = roomValues.filter(v => !/^\d+$/.test(v));
+
+            if (!whereCondition[Op.or]) whereCondition[Op.or] = [];
+            if (ids.length) whereCondition[Op.or].push({ room_id: { [Op.in]: ids } });
+            if (names.length) whereCondition[Op.or].push({ "$room.name$": { [Op.in]: names } });
         }
 
-        // 🔹 Fetch data with pagination
+        // Fetch sessions
         let { count, rows } = await Session.findAndCountAll({
             where: whereCondition,
             include: [
@@ -51,11 +59,20 @@ exports.getAllSessions = async (req, res) => {
             ],
             limit,
             offset,
-            order: [["createdAt", "DESC"]] // sort by latest
+            order: [["createdAt", "DESC"]]
+        });
+
+        // Add profit_loss to each session
+        const dataWithProfitLoss = rows.map(session => {
+            const profit_loss = (session.cash_out || 0) - (session.total_amount || 0);
+            return {
+                ...session.toJSON(),
+                profit_loss
+            };
         });
 
         res.status(200).json({
-            data: rows,
+            data: dataWithProfitLoss,
             pagination: {
                 total: count,
                 page,
@@ -66,9 +83,12 @@ exports.getAllSessions = async (req, res) => {
             error: false
         });
     } catch (err) {
+        console.error(err);
         res.status(500).json({ message: err.message, error: true });
     }
 };
+
+
 
 
 
