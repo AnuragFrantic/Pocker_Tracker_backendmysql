@@ -47,7 +47,7 @@ exports.getAllSessions = async (req, res) => {
 
             if (!whereCondition[Op.or]) whereCondition[Op.or] = [];
             if (ids.length) whereCondition[Op.or].push({ room_id: { [Op.in]: ids } });
-            if (names.length) whereCondition[Op.or].push({ "$room.name$": { [Op.in]: names } });
+            if (names.length) whereCondition[Op.or].push({ "$room_name$": { [Op.in]: names } });
         }
 
         // Fetch sessions
