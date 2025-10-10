@@ -272,14 +272,14 @@ exports.GetOwnPurchaseSubscriptions = async (req, res) => {
     try {
         const userId = req.user.id;
 
-        const purchases = await PurchaseSubscription.findAll({
-            where: { user_id: userId },   //  filter by logged-in user
+        const purchases = await db.PurchaseSubscription.findAll({
+            where: { user_id: userId },   // filter by logged-in user
             include: [
-                { model: db.User, as: "user" },
+                { model: db.User, as: "subscription_user" }, // use the correct alias
                 { model: db.Subscription, as: "subscription" },
                 { model: db.Payment, as: "payment" }
             ],
-            order: [["createdAt", "DESC"]] // optional: latest first
+            order: [["createdAt", "DESC"]] // latest first
         });
 
         res.status(200).json({
@@ -288,12 +288,14 @@ exports.GetOwnPurchaseSubscriptions = async (req, res) => {
             error: false,
         });
     } catch (err) {
+        console.error(err);
         res.status(500).json({
             message: err.message || "Internal server error",
             error: true,
         });
     }
 };
+
 
 
 // READ ONE
