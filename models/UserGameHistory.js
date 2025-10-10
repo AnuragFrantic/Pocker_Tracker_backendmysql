@@ -133,7 +133,6 @@ const UserGameHistory = db.sequelize.define("UserGameHistory", {
 
 }, {
     timestamps: true,
-    tableName: "UserGameHistory",
 });
 
 module.exports = UserGameHistory;

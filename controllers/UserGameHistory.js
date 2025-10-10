@@ -5,7 +5,7 @@ const Sessions = db.Sessions
 const PokerRoom = db.PokerRoom
 
 
-
+const { Op } = require("sequelize");
 
 
 
@@ -182,3 +182,112 @@ exports.getFormattedGameHistory = async (req, res) => {
     }
 };
 
+
+
+
+
+
+exports.annualreport = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const year = req.query.year || 2025;
+
+        const histories = await UserGameHistory.findAll({
+            where: {
+                user_id: userId,
+                createdAt: {
+                    [Op.between]: [
+                        new Date(`${year}-01-01T00:00:00.000Z`),
+                        new Date(`${year}-12-31T23:59:59.999Z`),
+                    ],
+                },
+            },
+            include: [
+                {
+                    model: Games,
+                    as: "games",
+                    attributes: ["id", "name", "game_type_id"],
+                },
+            ],
+        });
+
+        if (!histories.length) {
+            return res.status(200).json({
+                message: `No game history found for year ${year}`,
+                data: {
+                    totalBuyIns: 0,
+                    totalReBuys: 0,
+                    totalAddOns: 0,
+                    dealerTips: 0,
+                    mealsAndOthers: 0,
+                    totalExpenditure: 0,
+                    totalIncome: 0,
+                    netProfitLoss: 0,
+                    totalSessions: 0,
+                },
+                error: false,
+            });
+        }
+
+        // ✅ safer reducer — works even if arr is null, object, or missing
+        const sumAmounts = (arr) => {
+            if (!arr) return 0;
+            if (Array.isArray(arr)) {
+                return arr.reduce((a, c) => a + (c?.amount || 0), 0);
+            }
+            // if accidentally stored as object or number
+            if (typeof arr === "object" && arr.amount) return arr.amount;
+            if (typeof arr === "number") return arr;
+            return 0;
+        };
+
+        let totalBuyIns = 0;
+        let totalReBuys = 0;
+        let totalAddOns = 0;
+        let dealerTips = 0;
+        let totalCashOut = 0;
+        let mealsAndOthers = 0;
+        let profitLoss = 0;
+
+        histories.forEach((item) => {
+            totalBuyIns += sumAmounts(item.buy_in);
+            totalReBuys += sumAmounts(item.re_buys);
+            totalAddOns += sumAmounts(item.add_on_amount);
+            dealerTips += sumAmounts(item.dealer_tips);
+            totalCashOut += sumAmounts(item.cash_out);
+            profitLoss += item.profit_loss || 0;
+
+            if (item.meals) mealsAndOthers += sumAmounts(item.meals);
+            if (item.others) mealsAndOthers += sumAmounts(item.others);
+        });
+
+        const totalExpenditure =
+            totalBuyIns + totalReBuys + totalAddOns + dealerTips + mealsAndOthers;
+        const totalIncome = totalCashOut;
+        const netProfitLoss = totalIncome - totalExpenditure;
+
+        res.status(200).json({
+            message: `Annual Report for ${year}`,
+            data: {
+                totalBuyIns,
+                totalReBuys,
+                totalAddOns,
+                dealerTips,
+                mealsAndOthers,
+                totalExpenditure,
+                totalIncome,
+                netProfitLoss,
+                totalSessions: histories.length,
+                profitLoss,
+            },
+            error: false,
+        });
+    } catch (error) {
+        console.error("Annual Report Error:", error);
+        res.status(500).json({
+            message: "Error generating annual report",
+            error: true,
+            details: error.message,
+        });
+    }
+};

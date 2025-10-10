@@ -9,7 +9,7 @@ const { getAllUSers, getProfile, getUserProfile, updateUserProfile } = require("
 const { Auth } = require("../middleware/Auth");
 const { CreateSubscription, GetAllSubscriptions, UpdateSubscription, ToggleSubscriptionStatus } = require("../controllers/SubscriptionController");
 const { GetAllPurchaseSubscriptions, GetOwnPurchaseSubscriptions, CreateStripeCheckoutSession } = require("../controllers/PurchaseSubsriptionController");
-const { getallGameHistory, getFormattedGameHistory } = require("../controllers/UserGameHistory");
+const { getallGameHistory, getFormattedGameHistory, annualreport } = require("../controllers/UserGameHistory");
 const metadataFromSequelizeModel = require("../utils/metadataFromSchema");
 const db = require("../models");
 
@@ -151,6 +151,8 @@ router.get('/own-purchase-subscription', Auth, GetOwnPurchaseSubscriptions)
 // game-history
 
 router.get('/game-history', Auth, getallGameHistory)
+router.get('/annual-report', Auth, annualreport)
+
 
 
 

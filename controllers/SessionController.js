@@ -230,7 +230,7 @@ exports.createSession = async (req, res) => {
                 where: {
                     user_id: userId,
                     status: "active",
-                    remaining_sessions: { [db.Sequelize.Op.gt]: 0 },
+                    // remaining_sessions: { [db.Sequelize.Op.gt]: 0 },
                     end_date: { [db.Sequelize.Op.gte]: new Date() },
                 },
                 order: [["end_date", "ASC"]],

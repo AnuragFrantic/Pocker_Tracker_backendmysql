@@ -32,18 +32,67 @@ exports.getAllUSers = async (req, res) => {
     }
 }
 
+// exports.getProfile = async (req, res) => {
+//     try {
+//         let id = req.user.id;
+//         let user = await User.findByPk(id);
+//         if (!user) {
+//             return res.status(404).json({ message: "User not found", error: true });
+//         }
+//         res.status(200).json({ message: "User profile fetched  successfully", data: user, error: false });
+//     } catch (err) {
+//         res.status(500).json({ message: "Internal server error", error: true });
+//     }
+// }
+
+
 exports.getProfile = async (req, res) => {
     try {
-        let id = req.user.id;
-        let user = await User.findByPk(id);
+        const id = req.user.id;
+
+        // Fetch user with their subscriptions
+        const user = await User.findByPk(id, {
+            include: [
+                {
+                    model: db.PurchaseSubscription,
+                    as: "purchase_subscriptions",
+                    attributes: ["id", "status", "start_date", "end_date"]
+                }
+            ]
+        });
+
         if (!user) {
             return res.status(404).json({ message: "User not found", error: true });
         }
-        res.status(200).json({ message: "User profile fetched successfully", data: user, error: false });
+
+        // 🔍 Check for active & non-expired subscription
+        const now = new Date();
+        const activeSubscription = user.purchase_subscriptions?.find(sub => {
+            if (!sub.start_date || !sub.end_date) return false;
+            const start = new Date(sub.start_date);
+            const end = new Date(sub.end_date);
+            return sub.status === "active" && start <= now && end >= now;
+        });
+
+        const unlimited_session = Boolean(activeSubscription);
+
+        res.status(200).json({
+            message: "User profile fetched successfully",
+            data: {
+                ...user.toJSON(),
+                unlimited_session
+            },
+            error: false
+        });
+
     } catch (err) {
+        console.error("getProfile Error:", err);
         res.status(500).json({ message: "Internal server error", error: true });
     }
-}
+};
+
+
+// in this only check active subscription or whihc is not expired and give one parameter unlimited session true or false 
 
 
 exports.getUserProfile = async (req, res) => {
@@ -161,6 +210,7 @@ exports.getUserProfile = async (req, res) => {
         res.status(500).json({ message: "Internal server error", error: true });
     }
 };
+
 
 
 

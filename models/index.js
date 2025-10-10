@@ -19,6 +19,7 @@ db.PurchaseSubscription.belongsTo(db.Payment, { foreignKey: "payment_reference",
 db.User.hasMany(db.PurchaseSubscription, { foreignKey: "user_id", as: "subscriptions" });
 
 
+
 // ---------------- Games ----------------
 db.Games.belongsTo(db.GameTypes, { foreignKey: "game_type_id", as: "game_type" });
 
@@ -39,6 +40,9 @@ db.Sessions.belongsTo(db.Games, { foreignKey: "games_id", as: "game" });
 
 // ---------------- UserGameHistory ----------------
 db.User.hasMany(db.UserGameHistory, { foreignKey: "user_id", as: "game_histories" });
+db.User.hasMany(db.PurchaseSubscription, { foreignKey: "user_id", as: "purchase_subscriptions" });
+
+
 db.UserGameHistory.belongsTo(db.User, { foreignKey: "user_id", as: "history_user" });
 
 db.Sessions.hasMany(db.UserGameHistory, { foreignKey: "session_id", as: "user_game_histories" });
