@@ -23,7 +23,7 @@ app.use("/master/webhook", require("./routes/subscriptionRoutes"));
 //     credentials: true
 // }));
 
-const allowedOrigins = ["http://localhost:5173", "http://storo.doc24.care", "http://localhost:3420"];
+const allowedOrigins = ["http://localhost:5173", "http://storo.doc24.care", "http://localhost:3420", "https://poker-admin-panel-dka8.vercel.app"];
 
 app.use(cors({
     origin: function (origin, callback) {
