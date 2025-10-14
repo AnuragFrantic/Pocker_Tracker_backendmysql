@@ -81,7 +81,7 @@ exports.getAllPokerRooms = async (req, res) => {
                 "distance",
             ]);
 
-            // Filter by 100 km radius
+            // Filter by 1000000000000 km radius
             where[Op.and] = literal(`(
     6371 * acos(
       cos(radians(${latNum}))
@@ -89,7 +89,7 @@ exports.getAllPokerRooms = async (req, res) => {
       * cos(radians(\`long\`) - radians(${longNum}))
       + sin(radians(${latNum})) * sin(radians(lat))
     )
-  ) <= 100`);
+  ) <= 1000000000000`);
 
             // Sort by distance first
             order = [[literal("distance"), "ASC"]];
