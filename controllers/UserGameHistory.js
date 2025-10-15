@@ -361,8 +361,16 @@ exports.annualreport = async (req, res) => {
             });
         }
 
+        // ✅ Updated sumAmounts to handle JSON strings
         const sumAmounts = (arr) => {
             if (!arr) return 0;
+            if (typeof arr === "string") {
+                try {
+                    arr = JSON.parse(arr);
+                } catch {
+                    return 0;
+                }
+            }
             if (Array.isArray(arr)) {
                 return arr.reduce((a, c) => a + (c?.amount || 0), 0);
             }
@@ -391,7 +399,7 @@ exports.annualreport = async (req, res) => {
 
         const totalExpenditure = totalBuyIns + totalReBuys + totalAddOns + dealerTips + mealsAndOthers;
         const totalIncome = totalCashOut;
-        const netProfitLoss = totalIncome - totalExpenditure; // matches income - expenditure
+        const netProfitLoss = totalIncome - totalExpenditure;
 
         res.status(200).json({
             message: `Annual Report for ${year}`,
