@@ -16,6 +16,8 @@ exports.register = async (req, res) => {
         const { first_name, last_name, email, password, phone, session_points = 10 } = req.body;
 
         //  Check if email or phone already exists
+        email = email.toLowerCase();
+
         const existingUser = await User.findOne({
             where: {
                 [db.Sequelize.Op.or]: [
