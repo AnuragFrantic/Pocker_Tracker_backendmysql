@@ -465,12 +465,12 @@ exports.annualreport = async (req, res) => {
                     totalReBuys: 0,
                     totalAddOns: 0,
                     dealerTips: 0,
-                    mealsAndEntertainment: 0,
+                    mealsAndOthers: 0,
                     totalExpenditure: 0,
                     totalIncome: 0,
                     netProfitLoss: 0,
                     totalSessions: 0,
-                    gamblingProfitLoss: 0,
+                    profitLoss: 0,
                 },
                 error: false,
             });
@@ -490,43 +490,47 @@ exports.annualreport = async (req, res) => {
         let totalBuyIns = 0;
         let totalReBuys = 0;
         let totalAddOns = 0;
-        let dealerTips = 0; // can be miscellaneous gambling expense
-        let mealsAndEntertainment = 0; // meals and other entertainment
+        let dealerTips = 0;
+        let mealsAndOthers = 0;
         let totalCashOut = 0;
-        let gamblingProfitLoss = 0; // profit/loss from gambling only
+        let profitLoss = 0; // gambling profit/loss
 
         histories.forEach((item) => {
-            totalBuyIns += sumAmounts(item.buy_in);
-            totalReBuys += sumAmounts(item.re_buys);
-            totalAddOns += sumAmounts(item.add_on_amount);
-            dealerTips += sumAmounts(item.dealer_tips);
-            totalCashOut += sumAmounts(item.cash_out);
+            const buyIn = sumAmounts(item.buy_in);
+            const reBuy = sumAmounts(item.re_buys);
+            const addOn = sumAmounts(item.add_on_amount);
+            const tip = sumAmounts(item.dealer_tips);
+            const cashOut = sumAmounts(item.cash_out);
+            const meal = Number(item.meal_exp || 0);
 
-            // Meals and entertainment separate
-            mealsAndEntertainment += Number(item.meal_exp || 0);
+            totalBuyIns += buyIn;
+            totalReBuys += reBuy;
+            totalAddOns += addOn;
+            dealerTips += tip;
+            mealsAndOthers += meal;
+            totalCashOut += cashOut;
 
-            // Only gambling profit/loss (cash_out - buy_in/rebuys/addons/tips)
-            const sessionExpenditure = sumAmounts(item.buy_in) + sumAmounts(item.re_buys) + sumAmounts(item.add_on_amount) + sumAmounts(item.dealer_tips);
-            gamblingProfitLoss += sumAmounts(item.cash_out) - sessionExpenditure;
+            // Gambling profit/loss = income - gambling expenditures (exclude meals)
+            profitLoss += cashOut - (buyIn + reBuy + addOn + tip);
         });
 
-        const totalExpenditure = totalBuyIns + totalReBuys + totalAddOns + dealerTips + mealsAndEntertainment;
+        const totalExpenditure = totalBuyIns + totalReBuys + totalAddOns + dealerTips + mealsAndOthers;
         const totalIncome = totalCashOut;
         const netProfitLoss = totalIncome - totalExpenditure;
 
         res.status(200).json({
-            message: `Annual Report for ${year} (Tax-Friendly)`,
+            message: `Annual Report for ${year}`,
             data: {
                 totalBuyIns,
                 totalReBuys,
                 totalAddOns,
                 dealerTips,
-                mealsAndEntertainment,
+                mealsAndOthers,
                 totalExpenditure,
                 totalIncome,
                 netProfitLoss,
                 totalSessions: histories.length,
-                gamblingProfitLoss, // only gambling profit/loss, exclude meals
+                profitLoss, // gambling profit/loss only, meals excluded
             },
             error: false,
         });
@@ -539,3 +543,4 @@ exports.annualreport = async (req, res) => {
         });
     }
 };
+
