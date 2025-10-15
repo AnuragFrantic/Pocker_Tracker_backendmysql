@@ -323,6 +323,7 @@ exports.annualreport = async (req, res) => {
         const userId = req.user.id;
         const year = req.query.year || 2025;
 
+        // 🔹 Fetch all game histories for the user in that year
         const histories = await UserGameHistory.findAll({
             where: {
                 user_id: userId,
@@ -342,7 +343,7 @@ exports.annualreport = async (req, res) => {
             ],
         });
 
-        // 🟡 If no records found
+        // 🔹 Handle empty data
         if (!histories.length) {
             return res.status(200).json({
                 message: `No game history found for year ${year}`,
@@ -356,12 +357,13 @@ exports.annualreport = async (req, res) => {
                     totalIncome: 0,
                     netProfitLoss: 0,
                     totalSessions: 0,
+                    profitLoss: 0,
                 },
                 error: false,
             });
         }
 
-        // ✅ Robust summing function (handles number, object, array)
+        // 🔹 Helper to safely sum all amounts (array, object, or number)
         const sumAmounts = (value) => {
             if (!value) return 0;
 
@@ -380,7 +382,7 @@ exports.annualreport = async (req, res) => {
             return 0;
         };
 
-        // 🟢 Initialize totals
+        // 🔹 Initialize totals
         let totalBuyIns = 0;
         let totalReBuys = 0;
         let totalAddOns = 0;
@@ -389,32 +391,25 @@ exports.annualreport = async (req, res) => {
         let mealsAndOthers = 0;
         let profitLoss = 0;
 
-        // 🧮 Loop through all sessions
+        // 🔹 Loop through all sessions and accumulate
         histories.forEach((item) => {
             totalBuyIns += sumAmounts(item.buy_in);
             totalReBuys += sumAmounts(item.re_buys);
             totalAddOns += sumAmounts(item.add_on_amount);
-
-            // ✅ dealer_tips can be object, array, or number
-            dealerTips += sumAmounts(item.dealer_tips);
-
-            // ✅ cash_out represents total income
-            totalCashOut += sumAmounts(item.cash_out);
-
-            profitLoss += Number(item.profit_loss) || 0;
-
-            // ✅ include meal_exp (numeric)
+            dealerTips += sumAmounts(item.dealer_tips); // ✅ expense
+            totalCashOut += sumAmounts(item.cash_out);  // ✅ income
             mealsAndOthers += Number(item.meal_exp) || 0;
+            profitLoss += Number(item.profit_loss) || 0;
         });
 
-        // 🧾 Totals
+        // 🔹 Calculate totals
         const totalExpenditure =
             totalBuyIns + totalReBuys + totalAddOns + dealerTips + mealsAndOthers;
 
-        const totalIncome = totalCashOut; // ✅ includes all cash_out
+        const totalIncome = totalCashOut;
         const netProfitLoss = totalIncome - totalExpenditure;
 
-        // ✅ Final response
+        // 🔹 Send response
         res.status(200).json({
             message: `Annual Report for ${year}`,
             data: {
@@ -431,7 +426,6 @@ exports.annualreport = async (req, res) => {
             },
             error: false,
         });
-
     } catch (error) {
         console.error("Annual Report Error:", error);
         res.status(500).json({
@@ -441,4 +435,5 @@ exports.annualreport = async (req, res) => {
         });
     }
 };
+
 
