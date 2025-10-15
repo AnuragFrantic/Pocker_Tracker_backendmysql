@@ -323,7 +323,7 @@ exports.annualreport = async (req, res) => {
         const userId = req.user.id;
         const year = req.query.year || 2025;
 
-        // 🔹 Fetch all game histories for the user in that year
+        // 🔹 Fetch all game histories for the user for that year
         const histories = await UserGameHistory.findAll({
             where: {
                 user_id: userId,
@@ -343,7 +343,7 @@ exports.annualreport = async (req, res) => {
             ],
         });
 
-        // 🔹 Handle empty data
+        // 🔹 If no data found
         if (!histories.length) {
             return res.status(200).json({
                 message: `No game history found for year ${year}`,
@@ -358,31 +358,30 @@ exports.annualreport = async (req, res) => {
                     netProfitLoss: 0,
                     totalSessions: 0,
                     profitLoss: 0,
+                    sessions: []
                 },
                 error: false,
             });
         }
 
-        // 🔹 Helper to safely sum all amounts (array, object, or number)
+        // 🔹 Helper: safely sum any numeric structure
         const sumAmounts = (value) => {
             if (!value) return 0;
 
             if (Array.isArray(value)) {
-                return value.reduce((acc, item) => acc + (Number(item?.amount) || 0), 0);
+                return value.reduce((acc, v) => acc + (Number(v?.amount) || 0), 0);
             }
 
             if (typeof value === "object" && value.amount) {
                 return Number(value.amount) || 0;
             }
 
-            if (!isNaN(value)) {
-                return Number(value);
-            }
+            if (!isNaN(value)) return Number(value);
 
             return 0;
         };
 
-        // 🔹 Initialize totals
+        // 🔹 Totals
         let totalBuyIns = 0;
         let totalReBuys = 0;
         let totalAddOns = 0;
@@ -391,15 +390,40 @@ exports.annualreport = async (req, res) => {
         let mealsAndOthers = 0;
         let profitLoss = 0;
 
-        // 🔹 Loop through all sessions and accumulate
+        // 🔹 Collect per-session data (optional)
+        const sessions = [];
+
         histories.forEach((item) => {
-            totalBuyIns += sumAmounts(item.buy_in);
-            totalReBuys += sumAmounts(item.re_buys);
-            totalAddOns += sumAmounts(item.add_on_amount);
-            dealerTips += sumAmounts(item.dealer_tips); // ✅ expense
-            totalCashOut += sumAmounts(item.cash_out);  // ✅ income
-            mealsAndOthers += Number(item.meal_exp) || 0;
-            profitLoss += Number(item.profit_loss) || 0;
+            const buyIn = sumAmounts(item.buy_in);
+            const reBuy = sumAmounts(item.re_buys);
+            const addOn = sumAmounts(item.add_on_amount);
+            const tip = sumAmounts(item.dealer_tips);
+            const cashOut = sumAmounts(item.cash_out);
+            const meal = Number(item.meal_exp) || 0;
+            const pl = Number(item.profit_loss) || 0;
+
+            // Accumulate totals
+            totalBuyIns += buyIn;
+            totalReBuys += reBuy;
+            totalAddOns += addOn;
+            dealerTips += tip;
+            totalCashOut += cashOut;
+            mealsAndOthers += meal;
+            profitLoss += pl;
+
+            // Keep per-session breakdown
+            sessions.push({
+                sessionId: item.session_id,
+                gameName: item.games?.name || "N/A",
+                buyIn,
+                reBuy,
+                addOn,
+                dealerTips: tip,
+                cashOut,
+                mealExpense: meal,
+                profitLoss: pl,
+                createdAt: item.createdAt,
+            });
         });
 
         // 🔹 Calculate totals
@@ -409,7 +433,7 @@ exports.annualreport = async (req, res) => {
         const totalIncome = totalCashOut;
         const netProfitLoss = totalIncome - totalExpenditure;
 
-        // 🔹 Send response
+        // 🔹 Final Response
         res.status(200).json({
             message: `Annual Report for ${year}`,
             data: {
@@ -423,6 +447,7 @@ exports.annualreport = async (req, res) => {
                 netProfitLoss,
                 totalSessions: histories.length,
                 profitLoss,
+                sessions, // ✅ Detailed breakdown
             },
             error: false,
         });
@@ -435,5 +460,6 @@ exports.annualreport = async (req, res) => {
         });
     }
 };
+
 
 
