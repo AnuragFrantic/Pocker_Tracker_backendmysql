@@ -79,9 +79,10 @@ const User = db.User;
 
 exports.register = async (req, res) => {
     try {
-        let { first_name, last_name, email, password, phone, session_points = 10 } = req.body;
+        // Destructure required fields and collect any extra fields in `rest`
+        let { first_name, last_name, email, password, phone, session_points = 10, ...rest } = req.body;
 
-        // Normalize email to lowercase for uniqueness
+        // Normalize email to lowercase
         const normalizedEmail = email.toLowerCase();
 
         // Check if email or phone already exists (case-insensitive for email)
@@ -115,7 +116,7 @@ exports.register = async (req, res) => {
             imagePath = `/uploads/${req.file.filename}`;
         }
 
-        // Create user with normalized email
+        // Create user, include extra fields from rest
         const user = await User.create({
             first_name,
             last_name,
@@ -123,9 +124,11 @@ exports.register = async (req, res) => {
             phone,
             password: hashedPassword,
             session_points,
-            image: imagePath
+            image: imagePath,
+            ...rest // ✅ include extra fields like address, state, zipcode, etc.
         });
 
+        // Exclude password from response
         const { password: _, ...userData } = user.toJSON();
 
         const token = jwt.sign(
@@ -145,6 +148,7 @@ exports.register = async (req, res) => {
         res.status(500).json({ message: err.message, error: true });
     }
 };
+
 
 
 
