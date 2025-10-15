@@ -518,6 +518,7 @@ exports.annualreport = async (req, res) => {
         const totalIncome = totalCashOut;
         const netProfitLoss = totalIncome - totalExpenditure;
 
+        // 🔹 Swap netProfitLoss and profitLoss in the response
         res.status(200).json({
             message: `Annual Report for ${year}`,
             data: {
@@ -528,9 +529,9 @@ exports.annualreport = async (req, res) => {
                 mealsAndOthers,
                 totalExpenditure,
                 totalIncome,
-                netProfitLoss,
+                netProfitLoss: profitLoss, // swapped
                 totalSessions: histories.length,
-                profitLoss, // gambling profit/loss only, meals excluded
+                profitLoss: netProfitLoss, // swapped
             },
             error: false,
         });
@@ -543,4 +544,5 @@ exports.annualreport = async (req, res) => {
         });
     }
 };
+
 
