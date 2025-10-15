@@ -321,9 +321,8 @@ exports.getFormattedGameHistory = async (req, res) => {
 exports.annualreport = async (req, res) => {
     try {
         const userId = req.user.id;
-        const year = req.query.year || 2025;
+        const year = req.query.year || new Date().getFullYear();
 
-        // 🔹 Fetch all game histories for the user for that year
         const histories = await UserGameHistory.findAll({
             where: {
                 user_id: userId,
@@ -343,7 +342,6 @@ exports.annualreport = async (req, res) => {
             ],
         });
 
-        // 🔹 If no data found
         if (!histories.length) {
             return res.status(200).json({
                 message: `No game history found for year ${year}`,
@@ -358,30 +356,21 @@ exports.annualreport = async (req, res) => {
                     netProfitLoss: 0,
                     totalSessions: 0,
                     profitLoss: 0,
-                    sessions: []
                 },
                 error: false,
             });
         }
 
-        // 🔹 Helper: safely sum any numeric structure
-        const sumAmounts = (value) => {
-            if (!value) return 0;
-
-            if (Array.isArray(value)) {
-                return value.reduce((acc, v) => acc + (Number(v?.amount) || 0), 0);
+        const sumAmounts = (arr) => {
+            if (!arr) return 0;
+            if (Array.isArray(arr)) {
+                return arr.reduce((a, c) => a + (c?.amount || 0), 0);
             }
-
-            if (typeof value === "object" && value.amount) {
-                return Number(value.amount) || 0;
-            }
-
-            if (!isNaN(value)) return Number(value);
-
+            if (typeof arr === "object" && arr.amount) return arr.amount;
+            if (typeof arr === "number") return arr;
             return 0;
         };
 
-        // 🔹 Totals
         let totalBuyIns = 0;
         let totalReBuys = 0;
         let totalAddOns = 0;
@@ -390,50 +379,20 @@ exports.annualreport = async (req, res) => {
         let mealsAndOthers = 0;
         let profitLoss = 0;
 
-        // 🔹 Collect per-session data (optional)
-        const sessions = [];
-
         histories.forEach((item) => {
-            const buyIn = sumAmounts(item.buy_in);
-            const reBuy = sumAmounts(item.re_buys);
-            const addOn = sumAmounts(item.add_on_amount);
-            const tip = sumAmounts(item.dealer_tips);
-            const cashOut = sumAmounts(item.cash_out);
-            const meal = Number(item.meal_exp) || 0;
-            const pl = Number(item.profit_loss) || 0;
-
-            // Accumulate totals
-            totalBuyIns += buyIn;
-            totalReBuys += reBuy;
-            totalAddOns += addOn;
-            dealerTips += tip;
-            totalCashOut += cashOut;
-            mealsAndOthers += meal;
-            profitLoss += pl;
-
-            // Keep per-session breakdown
-            sessions.push({
-                sessionId: item.session_id,
-                gameName: item.games?.name || "N/A",
-                buyIn,
-                reBuy,
-                addOn,
-                dealerTips: tip,
-                cashOut,
-                mealExpense: meal,
-                profitLoss: pl,
-                createdAt: item.createdAt,
-            });
+            totalBuyIns += sumAmounts(item.buy_in);
+            totalReBuys += sumAmounts(item.re_buys);
+            totalAddOns += sumAmounts(item.add_on_amount);
+            dealerTips += sumAmounts(item.dealer_tips);
+            totalCashOut += sumAmounts(item.cash_out);
+            mealsAndOthers += Number(item.meal_exp || 0);
+            profitLoss += Number(item.profit_loss || 0);
         });
 
-        // 🔹 Calculate totals
-        const totalExpenditure =
-            totalBuyIns + totalReBuys + totalAddOns + dealerTips + mealsAndOthers;
-
+        const totalExpenditure = totalBuyIns + totalReBuys + totalAddOns + dealerTips + mealsAndOthers;
         const totalIncome = totalCashOut;
-        const netProfitLoss = totalIncome - totalExpenditure;
+        const netProfitLoss = totalIncome - totalExpenditure; // matches income - expenditure
 
-        // 🔹 Final Response
         res.status(200).json({
             message: `Annual Report for ${year}`,
             data: {
@@ -446,8 +405,7 @@ exports.annualreport = async (req, res) => {
                 totalIncome,
                 netProfitLoss,
                 totalSessions: histories.length,
-                profitLoss,
-                sessions, // ✅ Detailed breakdown
+                profitLoss, // sum of individual session profit_loss
             },
             error: false,
         });
@@ -460,6 +418,4 @@ exports.annualreport = async (req, res) => {
         });
     }
 };
-
-
 
