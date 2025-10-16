@@ -754,91 +754,6 @@ exports.getUserCashGameAnalytics = async (req, res) => {
 
 
 
-// exports.getUserRoomAnalytics = async (req, res) => {
-//     try {
-//         const userId = req.user.id;
-
-//         // Fetch all sessions for this user
-//         const sessions = await db.Sessions.findAll({
-//             where: { user_id: userId },
-//             include: [
-//                 {
-//                     model: db.PokerRoom,
-//                     as: "room",
-//                     attributes: ["id", "name"]
-//                 },
-//                 {
-//                     model: db.Games,
-//                     as: "game",
-//                     attributes: ["id", "name"]
-//                 }
-//             ]
-//         });
-
-//         if (!sessions || sessions.length === 0) {
-//             return res.status(200).json({
-//                 data: [],
-//                 message: "No sessions found for this user",
-//                 error: false
-//             });
-//         }
-
-//         const analytics = {};
-
-//         sessions.forEach(session => {
-//             // Use room_id if exists, otherwise room_name
-//             const key = session.room?.id
-//                 ? `id_${session.room.id}`
-//                 : session.room_name
-//                     ? `name_${session.room_name}`
-//                     : "unknown_room";
-
-//             const roomId = session.room?.id || null;
-//             const roomName = session.room?.name || session.room_name || "Unknown Room";
-
-//             const totalAmount = Number(session.total_amount) || 0;
-//             const cashOut = Number(session.cash_out) || 0;
-//             const profitLoss = cashOut - totalAmount;
-//             const gamesPlayed = session.game ? 1 : 0;
-
-//             if (!analytics[key]) {
-//                 analytics[key] = {
-//                     roomId,
-//                     roomName,
-//                     totalProfitLoss: 0,
-//                     sessionsPlayed: 0,
-//                     gamesPlayed: 0
-//                 };
-//             }
-
-//             analytics[key].totalProfitLoss += profitLoss;
-//             analytics[key].sessionsPlayed += 1;
-//             analytics[key].gamesPlayed += gamesPlayed;
-//         });
-
-//         const result = Object.values(analytics).map(a => ({
-//             roomId: a.roomId,
-//             room: a.roomName,
-//             sessions: a.sessionsPlayed,
-//             gamesPlayed: a.gamesPlayed,
-//             profitLoss: Number(a.totalProfitLoss.toFixed(2)),
-//             profitPerSession: Number((a.totalProfitLoss / (a.sessionsPlayed || 1)).toFixed(2))
-//         }));
-
-//         res.status(200).json({
-//             data: result,
-//             message: "User room analytics retrieved successfully",
-//             error: false
-//         });
-
-//     } catch (err) {
-//         console.error("Error in getUserRoomAnalytics:", err);
-//         res.status(500).json({ message: "Internal Server Error", error: true });
-//     }
-// };
-
-
-
 exports.getUserRoomAnalytics = async (req, res) => {
     try {
         const userId = req.user.id;
@@ -881,13 +796,9 @@ exports.getUserRoomAnalytics = async (req, res) => {
             const roomId = session.room?.id || null;
             const roomName = session.room?.name || session.room_name || "Unknown Room";
 
-            const totalAmount = Number(session.total_amount) || 0; // Buy-in
+            const totalAmount = Number(session.total_amount) || 0;
             const cashOut = Number(session.cash_out) || 0;
-            const dealerTips = Number(session.dealer_tips) || 0;   // Include dealer tips
-
-            // Profit/Loss = CashOut - BuyIn - DealerTips
-            const profitLoss = cashOut - totalAmount - dealerTips;
-
+            const profitLoss = cashOut - totalAmount;
             const gamesPlayed = session.game ? 1 : 0;
 
             if (!analytics[key]) {
@@ -925,6 +836,9 @@ exports.getUserRoomAnalytics = async (req, res) => {
         res.status(500).json({ message: "Internal Server Error", error: true });
     }
 };
+
+
+
 
 
 
