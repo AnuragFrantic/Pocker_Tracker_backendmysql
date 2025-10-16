@@ -107,9 +107,6 @@ router.get("/sessions/metadata", async (req, res) => {
 
 router.get("/game-stats", Auth, getUserGameAnalytics);
 router.get("/cash-game-stats", Auth, getUserCashGameAnalytics);
-
-
-
 router.get("/analytics/rooms", Auth, getUserRoomAnalytics);
 
 
