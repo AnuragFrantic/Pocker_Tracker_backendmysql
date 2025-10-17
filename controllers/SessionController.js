@@ -14,7 +14,6 @@ const { Op } = require("sequelize");
 
 
 
-
 exports.getAllSessions = async (req, res) => {
     try {
         let { page = 1, limit = 10, games_id, room_id } = req.query;
@@ -57,7 +56,6 @@ exports.getAllSessions = async (req, res) => {
                 { model: GameTypes, as: "game_type", required: false },
                 { model: PokerRoom, as: "room", required: false },
                 { model: SessionTypes, as: "session_type", required: false },
-
                 { model: Games, as: "game", required: false },
                 { model: User, as: "user", required: false }
             ],
@@ -66,21 +64,25 @@ exports.getAllSessions = async (req, res) => {
             order: [["createdAt", "DESC"]]
         });
 
-        // Add profit_loss and location to each session
+        // ✅ Include only relevant fields in profit/loss calculation
         const dataWithExtras = rows.map(session => {
             const s = session.toJSON();
-            const profit_loss = (s.cash_out || 0) - (s.total_amount || 0);
+
+            const buy_in = Number(s.buy_in) || 0;
+            const add_on = Number(s.add_on_amount) || 0;
+            const re_buys = Number(s.re_buys) || 0;
+            const dealer_tips = Number(s.dealer_tips) || 0;
+            const cash_out = Number(s.cash_out) || 0;
+
+            // ✅ Corrected profit/loss formula (exclude meals and other expenses)
+            const profit_loss = cash_out - (buy_in + add_on + re_buys + dealer_tips);
 
             // Determine location
             let location = "";
             if (s.room && s.room.address) {
                 location = s.room.address;
-            }
-            // else if (s.session_type && s.session_type.name) {
-            //     location = `${s.session_type.name}-gPoker`; // fallback to session type name
-            // } 
-            else {
-                location = s.room_name; // default fallback
+            } else {
+                location = s.room_name;
             }
 
             return {
@@ -89,7 +91,6 @@ exports.getAllSessions = async (req, res) => {
                 location
             };
         });
-
 
         res.status(200).json({
             data: dataWithExtras,
@@ -107,6 +108,7 @@ exports.getAllSessions = async (req, res) => {
         res.status(500).json({ message: err.message, error: true });
     }
 };
+
 
 
 
