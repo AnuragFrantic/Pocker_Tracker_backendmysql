@@ -637,14 +637,12 @@ exports.getUserGameAnalytics = async (req, res) => {
             }
 
             // ✅ Updated profit/loss calculation
-            // Include only cash_out, buy_in, dealer_tips (and add_on, re_buys)
+            // Include only buy_in and re_buys
             const buyIn = Number(session.buy_in) || 0;
-            const addOn = Number(session.add_on_amount) || 0;
             const reBuys = Number(session.re_buys) || 0;
-            const dealerTips = Number(session.dealer_tips) || 0;
             const cashOut = Number(session.cash_out) || 0;
 
-            const profitLoss = cashOut - (buyIn + addOn + reBuys + dealerTips);
+            const profitLoss = cashOut - (buyIn + reBuys);
 
             analytics[gameId].totalProfitLoss += profitLoss;
             analytics[gameId].sessionsPlayed += 1;
@@ -671,6 +669,7 @@ exports.getUserGameAnalytics = async (req, res) => {
         res.status(500).json({ message: "Internal Server Error", error: true });
     }
 };
+
 
 
 
