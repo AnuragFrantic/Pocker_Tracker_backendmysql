@@ -736,16 +736,9 @@ exports.getUserCashGameAnalytics = async (req, res) => {
                 };
             }
 
-            // ✅ Updated profit/loss calculation:
-            // Include only cash_out, buy_in, dealer_tips — exclude meals/other expenses
-            const buyIn = Number(session.buy_in) || 0;
-            const addOn = Number(session.add_on_amount) || 0;
-            const reBuys = Number(session.re_buys) || 0;
-            const dealerTips = Number(session.dealer_tips) || 0;
+            const totalAmount = Number(session.total_amount) || 0;
             const cashOut = Number(session.cash_out) || 0;
-
-            // total_amount field remains, but we compute profitLoss manually
-            const profitLoss = cashOut - (buyIn + addOn + reBuys + dealerTips);
+            const profitLoss = cashOut - totalAmount;
 
             analytics[gameId].totalProfitLoss += profitLoss;
             analytics[gameId].sessionsPlayed += 1;
