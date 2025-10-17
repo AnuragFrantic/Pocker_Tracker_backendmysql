@@ -820,13 +820,13 @@ exports.getUserRoomAnalytics = async (req, res) => {
 
             // Extract numeric values safely
             const buyIn = Number(session.buy_in) || 0;
-            const addOn = Number(session.add_on_amount) || 0;
+            const addOn = Number(session.add_on_amount) || 0; // kept for totals, not for profit/loss
             const reBuys = Number(session.re_buys) || 0;
             const dealerTips = Number(session.dealer_tips) || 0;
             const cashOut = Number(session.cash_out) || 0;
 
-            // ✅ New profit/loss formula (only poker-related costs)
-            const profitLoss = cashOut - (buyIn + addOn + reBuys + dealerTips);
+            // ✅ Updated profit/loss formula (exclude add_on_amount)
+            const profitLoss = cashOut - (buyIn + reBuys + dealerTips);
 
             const gamesPlayed = session.game ? 1 : 0;
 
