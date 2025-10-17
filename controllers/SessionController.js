@@ -817,12 +817,13 @@ exports.getUserRoomAnalytics = async (req, res) => {
 
             // Extract numeric values safely
             const buyIn = Number(session.buy_in) || 0;
+            const addOn = Number(session.add_on_amount) || 0;
             const reBuys = Number(session.re_buys) || 0;
             const dealerTips = Number(session.dealer_tips) || 0;
             const cashOut = Number(session.cash_out) || 0;
 
-            // ✅ Profit/loss formula: only buy_in + re_buys + dealer_tips
-            const profitLoss = cashOut - (buyIn + reBuys + dealerTips);
+            // ✅ New profit/loss formula (only poker-related costs)
+            const profitLoss = cashOut - (buyIn + addOn + reBuys + dealerTips);
 
             const gamesPlayed = session.game ? 1 : 0;
 
@@ -834,6 +835,7 @@ exports.getUserRoomAnalytics = async (req, res) => {
                     sessionsPlayed: 0,
                     gamesPlayed: 0,
                     totalBuyIn: 0,
+                    totalAddOn: 0,
                     totalReBuys: 0,
                     totalDealerTips: 0,
                     totalCashOut: 0
@@ -845,6 +847,7 @@ exports.getUserRoomAnalytics = async (req, res) => {
             analytics[key].sessionsPlayed += 1;
             analytics[key].gamesPlayed += gamesPlayed;
             analytics[key].totalBuyIn += buyIn;
+            analytics[key].totalAddOn += addOn;
             analytics[key].totalReBuys += reBuys;
             analytics[key].totalDealerTips += dealerTips;
             analytics[key].totalCashOut += cashOut;
@@ -857,6 +860,7 @@ exports.getUserRoomAnalytics = async (req, res) => {
             sessions: a.sessionsPlayed,
             gamesPlayed: a.gamesPlayed,
             totalBuyIn: Number(a.totalBuyIn.toFixed(2)),
+            totalAddOn: Number(a.totalAddOn.toFixed(2)),
             totalReBuys: Number(a.totalReBuys.toFixed(2)),
             totalDealerTips: Number(a.totalDealerTips.toFixed(2)),
             totalCashOut: Number(a.totalCashOut.toFixed(2)),
