@@ -64,30 +64,27 @@ exports.getAllSessions = async (req, res) => {
             order: [["createdAt", "DESC"]]
         });
 
-        // ✅ Include only relevant fields in profit/loss calculation
+        // ✅ Calculate profit/loss based ONLY on buy_in and cash_out
         const dataWithExtras = rows.map(session => {
             const s = session.toJSON();
 
             const buy_in = Number(s.buy_in) || 0;
-            const add_on = Number(s.add_on_amount) || 0;
-            const re_buys = Number(s.re_buys) || 0;
-            const dealer_tips = Number(s.dealer_tips) || 0;
             const cash_out = Number(s.cash_out) || 0;
 
-            // ✅ Corrected profit/loss formula (exclude meals and other expenses)
-            const profit_loss = cash_out - (buy_in + add_on + re_buys + dealer_tips);
+            const profit_loss = cash_out - buy_in; // ✅ Only cash_out - buy_in
 
             // Determine location
-            let location = "";
-            if (s.room && s.room.address) {
-                location = s.room.address;
-            } else {
-                location = s.room_name;
-            }
+            const location = s.room?.address || s.room_name || "N/A";
+
+            // Determine status (Profit or Loss)
+            const result_type = profit_loss > 0 ? "Profit" : profit_loss < 0 ? "Loss" : "Break-even";
 
             return {
                 ...s,
-                profit_loss,
+                buy_in,
+                cash_out,
+                profit_loss: Number(profit_loss.toFixed(2)),
+                result_type,
                 location
             };
         });
@@ -103,11 +100,14 @@ exports.getAllSessions = async (req, res) => {
             message: "Sessions retrieved successfully",
             error: false
         });
+
     } catch (err) {
-        console.error(err);
+        console.error("Error in getAllSessions:", err);
         res.status(500).json({ message: err.message, error: true });
     }
 };
+
+
 
 
 
