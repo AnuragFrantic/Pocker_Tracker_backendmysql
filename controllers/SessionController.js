@@ -821,9 +821,11 @@ exports.getUserRoomAnalytics = async (req, res) => {
             const reBuys = Number(session.re_buys) || 0;
             const dealerTips = Number(session.dealer_tips) || 0;
             const cashOut = Number(session.cash_out) || 0;
+            const meal_exp = Number(session.meals_other_exp) || 0;
+
 
             // ✅ New profit/loss formula (only poker-related costs)
-            const profitLoss = cashOut - (buyIn + addOn + reBuys + dealerTips);
+            const profitLoss = cashOut - (buyIn + addOn + reBuys + dealerTips + meal_exp);
 
             const gamesPlayed = session.game ? 1 : 0;
 
