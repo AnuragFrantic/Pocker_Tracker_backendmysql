@@ -71,13 +71,13 @@ exports.getAllSessions = async (req, res) => {
             const buy_in = Number(s.buy_in) || 0;
             const cash_out = Number(s.cash_out) || 0;
 
-            // ✅ Profit/Loss = cash_out - buy_in only
+            // ✅ Strict calculation: only cash_out - buy_in
             const profit_loss = cash_out - buy_in;
 
-            // Determine location
+            // Location
             const location = s.room?.address || s.room_name || "N/A";
 
-            // Determine status (Profit, Loss, or Break-even)
+            // Profit/Loss status
             const result_type = profit_loss > 0 ? "Profit" : profit_loss < 0 ? "Loss" : "Break-even";
 
             return {
@@ -89,6 +89,7 @@ exports.getAllSessions = async (req, res) => {
                 location
             };
         });
+
 
 
         res.status(200).json({
