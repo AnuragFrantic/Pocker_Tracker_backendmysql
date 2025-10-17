@@ -630,15 +630,9 @@ exports.getUserGameAnalytics = async (req, res) => {
                 };
             }
 
-            // ✅ Updated profit/loss calculation
-            // Include only cash_out, buy_in, dealer_tips (and add_on, re_buys)
-            const buyIn = Number(session.buy_in) || 0;
-            const addOn = Number(session.add_on_amount) || 0;
-            const reBuys = Number(session.re_buys) || 0;
-            const dealerTips = Number(session.dealer_tips) || 0;
+            const totalAmount = Number(session.total_amount) || 0;
             const cashOut = Number(session.cash_out) || 0;
-
-            const profitLoss = cashOut - (buyIn + addOn + reBuys + dealerTips);
+            const profitLoss = cashOut - totalAmount;
 
             analytics[gameId].totalProfitLoss += profitLoss;
             analytics[gameId].sessionsPlayed += 1;
@@ -665,7 +659,6 @@ exports.getUserGameAnalytics = async (req, res) => {
         res.status(500).json({ message: "Internal Server Error", error: true });
     }
 };
-
 
 
 exports.getUserCashGameAnalytics = async (req, res) => {
@@ -730,16 +723,9 @@ exports.getUserCashGameAnalytics = async (req, res) => {
                 };
             }
 
-            // ✅ Updated profit/loss calculation:
-            // Include only cash_out, buy_in, dealer_tips — exclude meals/other expenses
-            const buyIn = Number(session.buy_in) || 0;
-            const addOn = Number(session.add_on_amount) || 0;
-            const reBuys = Number(session.re_buys) || 0;
-            const dealerTips = Number(session.dealer_tips) || 0;
+            const totalAmount = Number(session.total_amount) || 0;
             const cashOut = Number(session.cash_out) || 0;
-
-            // total_amount field remains, but we compute profitLoss manually
-            const profitLoss = cashOut - (buyIn + addOn + reBuys + dealerTips);
+            const profitLoss = cashOut - totalAmount;
 
             analytics[gameId].totalProfitLoss += profitLoss;
             analytics[gameId].sessionsPlayed += 1;
@@ -767,8 +753,89 @@ exports.getUserCashGameAnalytics = async (req, res) => {
 
 
 
+// in this add profit and loss
+// exports.getUserRoomAnalytics = async (req, res) => {
+//     try {
+//         const userId = req.user.id;
 
+//         // Fetch all sessions for this user
+//         const sessions = await db.Sessions.findAll({
+//             where: { user_id: userId },
+//             include: [
+//                 {
+//                     model: db.PokerRoom,
+//                     as: "room",
+//                     attributes: ["id", "name"]
+//                 },
+//                 {
+//                     model: db.Games,
+//                     as: "game",
+//                     attributes: ["id", "name"]
+//                 }
+//             ]
+//         });
 
+//         if (!sessions || sessions.length === 0) {
+//             return res.status(200).json({
+//                 data: [],
+//                 message: "No sessions found for this user",
+//                 error: false
+//             });
+//         }
+
+//         const analytics = {};
+
+//         sessions.forEach(session => {
+//             // Use room_id if exists, otherwise room_name
+//             const key = session.room?.id
+//                 ? `id_${session.room.id}`
+//                 : session.room_name
+//                     ? `name_${session.room_name}`
+//                     : "unknown_room";
+
+//             const roomId = session.room?.id || null;
+//             const roomName = session.room?.name || session.room_name || "Unknown Room";
+
+//             const totalAmount = Number(session.total_amount) || 0;
+//             const cashOut = Number(session.cash_out) || 0;
+//             const profitLoss = cashOut - totalAmount;
+//             const gamesPlayed = session.game ? 1 : 0;
+
+//             if (!analytics[key]) {
+//                 analytics[key] = {
+//                     roomId,
+//                     roomName,
+//                     totalProfitLoss: 0,
+//                     sessionsPlayed: 0,
+//                     gamesPlayed: 0
+//                 };
+//             }
+
+//             analytics[key].totalProfitLoss += profitLoss;
+//             analytics[key].sessionsPlayed += 1;
+//             analytics[key].gamesPlayed += gamesPlayed;
+//         });
+
+//         const result = Object.values(analytics).map(a => ({
+//             roomId: a.roomId,
+//             room: a.roomName,
+//             sessions: a.sessionsPlayed,
+//             gamesPlayed: a.gamesPlayed,
+//             profitLoss: Number(a.totalProfitLoss.toFixed(2)),
+//             profitPerSession: Number((a.totalProfitLoss / (a.sessionsPlayed || 1)).toFixed(2))
+//         }));
+
+//         res.status(200).json({
+//             data: result,
+//             message: "User room analytics retrieved successfully",
+//             error: false
+//         });
+
+//     } catch (err) {
+//         console.error("Error in getUserRoomAnalytics:", err);
+//         res.status(500).json({ message: "Internal Server Error", error: true });
+//     }
+// };
 
 
 
