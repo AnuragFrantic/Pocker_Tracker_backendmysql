@@ -641,8 +641,11 @@ exports.getUserGameAnalytics = async (req, res) => {
             const buyIn = Number(session.buy_in) || 0;
             const reBuys = Number(session.re_buys) || 0;
             const cashOut = Number(session.cash_out) || 0;
+            const dealerTips = Number(session.dealer_tips) || 0;
+            const meal_exp = Number(session.meals_other_exp) || 0;
 
-            const profitLoss = cashOut - (buyIn + reBuys);
+
+            const profitLoss = cashOut - (buyIn + reBuys + dealerTips + meal_exp);
 
             analytics[gameId].totalProfitLoss += profitLoss;
             analytics[gameId].sessionsPlayed += 1;
