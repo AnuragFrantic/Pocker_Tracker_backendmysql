@@ -823,7 +823,7 @@ exports.getUserRoomAnalytics = async (req, res) => {
             const cashOut = Number(session.cash_out) || 0;
 
             // ✅ New profit/loss formula (only poker-related costs)
-            const profitLoss = cashOut - buyIn;
+            const profitLoss = cashOut - (buyIn + addOn + reBuys + dealerTips);
 
             const gamesPlayed = session.game ? 1 : 0;
 
