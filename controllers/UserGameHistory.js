@@ -227,7 +227,6 @@ exports.getFormattedGameHistory = async (req, res) => {
             });
         }
 
-        // 🔹 Group by session
         const grouped = {};
         let totalProfit = 0;
         let totalLoss = 0;
@@ -249,7 +248,6 @@ exports.getFormattedGameHistory = async (req, res) => {
                 };
             }
 
-            // 🔸 Parse JSON arrays safely
             const parseArray = (val) => {
                 if (!val) return [];
                 try {
@@ -262,30 +260,26 @@ exports.getFormattedGameHistory = async (req, res) => {
             const buyIn = parseArray(record.buy_in);
             const rebuys = parseArray(record.re_buys);
             const addOns = parseArray(record.add_on_amount);
-            const dealerTips = parseArray(record.dealer_tips);
             const cashOut = parseArray(record.cash_out);
-            const mealsExp = Number(record.meals_other_exp || 0);
 
-            // 🔸 Totals
             const totalBuyIn = buyIn.reduce((sum, x) => sum + (x.amount || 0), 0);
             const totalRebuys = rebuys.reduce((sum, x) => sum + (x.amount || 0), 0);
             const totalAddOns = addOns.reduce((sum, x) => sum + (x.amount || 0), 0);
-            const totalDealerTips = dealerTips.reduce((sum, x) => sum + (x.amount || 0), 0);
             const totalCashOut = cashOut.reduce((sum, x) => sum + (x.amount || 0), 0);
 
             grouped[s.id].addOns.push(...addOns);
 
-            const totalSpent = totalBuyIn + totalRebuys + totalDealerTips + mealsExp;
+            // ✅ Only include buy-in, re-buys, add-ons in "spent"
+            const totalSpent = totalBuyIn + totalRebuys + totalAddOns;
+
             const profitLoss = totalCashOut - totalSpent;
 
             grouped[s.id].totalProfitLoss += profitLoss;
 
-            // 🔹 Track overall totals
             if (profitLoss >= 0) totalProfit += profitLoss;
-            else totalLoss += profitLoss; // (negative value)
+            else totalLoss += profitLoss;
         });
 
-        // 🔹 Format per-session output
         const result = Object.values(grouped).map((s) => ({
             room: s.roomName,
             date: s.date,
@@ -296,8 +290,7 @@ exports.getFormattedGameHistory = async (req, res) => {
             notes: s.notes,
         }));
 
-        // 🔹 Compute net total
-        const netProfitLoss = totalProfit + totalLoss; // since totalLoss is negative
+        const netProfitLoss = totalProfit + totalLoss;
 
         res.json({
             data: result,
@@ -315,6 +308,7 @@ exports.getFormattedGameHistory = async (req, res) => {
         res.status(500).json({ message: err.message, error: true });
     }
 };
+
 
 
 
