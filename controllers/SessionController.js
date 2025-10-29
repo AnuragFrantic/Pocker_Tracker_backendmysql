@@ -675,12 +675,114 @@ exports.getUserGameAnalytics = async (req, res) => {
 
 
 
+// old code without room name
+// exports.getUserCashGameAnalytics = async (req, res) => {
+//     try {
+//         const userId = req.user.id;
+
+//         // 🔹 Fetch all sessions for this user, including Game + GameType
+//         const sessions = await db.Sessions.findAll({
+//             where: { user_id: userId },
+//             include: [
+//                 {
+//                     model: db.Games,
+//                     as: "game",
+//                     attributes: ["id", "name", "game_type_id"],
+//                     include: [
+//                         {
+//                             model: db.GameTypes,
+//                             as: "game_type",
+//                             attributes: ["id", "name"]
+//                         }
+//                     ]
+//                 },
+//                 {
+//                     model: db.PokerRoom,
+//                     as: "room",
+//                     attributes: ["id", "name", "address", "city", "state", "country"]
+//                 }
+//             ]
+//         });
+
+//         if (!sessions || sessions.length === 0) {
+//             return res.status(200).json({
+//                 data: [],
+//                 message: "No sessions found for this user",
+//                 error: false
+//             });
+//         }
+
+//         // 🔹 Filter sessions where GameType = "Cash Game"
+//         const cashGameSessions = sessions.filter(
+//             s => s.game && s.game.game_type && s.game.game_type.name === "Cash Game"
+//         );
+
+//         if (cashGameSessions.length === 0) {
+//             return res.status(200).json({
+//                 data: [],
+//                 message: "No Cash Game sessions found for this user",
+//                 error: false
+//             });
+//         }
+
+//         // 🔹 Aggregate by game
+//         const analytics = {};
+
+//         cashGameSessions.forEach(session => {
+//             const gameId = session.game.id;
+//             const gameName = session.game.name;
+//             const gameTypeName = session.game.game_type?.name || "Unknown";
+//             const roomName = session.room?.name || "Unknown Room";
+//             const roomAddress = session.room?.address || "";
+//             const roomCountry = session.room?.country || "";
+
+//             if (!analytics[gameId]) {
+//                 analytics[gameId] = {
+//                     gameId,
+//                     gameName,
+//                     gameType: gameTypeName,
+//                     totalProfitLoss: 0,
+//                     sessionsPlayed: 0
+//                 };
+//             }
+
+//             const totalAmount = Number(session.total_amount) || 0;
+//             const cashOut = Number(session.cash_out) || 0;
+//             const profitLoss = cashOut - totalAmount;
+
+//             analytics[gameId].totalProfitLoss += profitLoss;
+//             analytics[gameId].sessionsPlayed += 1;
+//         });
+
+//         // 🔹 Convert to array (simplified fields)
+//         const result = Object.values(analytics).map(a => ({
+//             game: a.gameName,
+//             sessions: a.sessionsPlayed,
+//             room: a.room,
+//             totalProfit: Number(a.totalProfitLoss.toFixed(2)),
+//             avgProfitPerSession: Number((a.totalProfitLoss / (a.sessionsPlayed || 1)).toFixed(2))
+//         }));
+
+
+//         res.status(200).json({
+//             data: result,
+//             message: "Cash Game analytics retrieved successfully",
+//             error: false
+//         });
+
+//     } catch (err) {
+//         console.error("Error in getUserCashGameAnalytics:", err);
+//         res.status(500).json({ message: "Internal Server Error", error: true });
+//     }
+// };
+
+
 
 exports.getUserCashGameAnalytics = async (req, res) => {
     try {
         const userId = req.user.id;
 
-        // 🔹 Fetch all sessions for this user, including Game + GameType
+        // 🔹 Fetch all sessions for this user, including Game + GameType + Room
         const sessions = await db.Sessions.findAll({
             where: { user_id: userId },
             include: [
@@ -695,6 +797,11 @@ exports.getUserCashGameAnalytics = async (req, res) => {
                             attributes: ["id", "name"]
                         }
                     ]
+                },
+                {
+                    model: db.PokerRoom,
+                    as: "room",
+                    attributes: ["id", "name", "address", "city", "state", "country"]
                 }
             ]
         });
@@ -720,19 +827,33 @@ exports.getUserCashGameAnalytics = async (req, res) => {
             });
         }
 
-        // 🔹 Aggregate by game
+        // 🔹 Aggregate by game + room
         const analytics = {};
 
         cashGameSessions.forEach(session => {
             const gameId = session.game.id;
             const gameName = session.game.name;
             const gameTypeName = session.game.game_type?.name || "Unknown";
+            const room = session.room
+                ? {
+                    id: session.room.id,
+                    name: session.room.name,
+                    address: session.room.address,
+                    city: session.room.city,
+                    state: session.room.state,
+                    country: session.room.country
+                }
+                : { id: null, name: "Unknown Room" };
 
-            if (!analytics[gameId]) {
-                analytics[gameId] = {
+            // Unique key = gameId + roomId
+            const key = `${gameId}_${room.id}`;
+
+            if (!analytics[key]) {
+                analytics[key] = {
                     gameId,
                     gameName,
                     gameType: gameTypeName,
+                    room,
                     totalProfitLoss: 0,
                     sessionsPlayed: 0
                 };
@@ -742,13 +863,15 @@ exports.getUserCashGameAnalytics = async (req, res) => {
             const cashOut = Number(session.cash_out) || 0;
             const profitLoss = cashOut - totalAmount;
 
-            analytics[gameId].totalProfitLoss += profitLoss;
-            analytics[gameId].sessionsPlayed += 1;
+            analytics[key].totalProfitLoss += profitLoss;
+            analytics[key].sessionsPlayed += 1;
         });
 
-        // 🔹 Convert to array (simplified fields)
+        // 🔹 Convert to array
         const result = Object.values(analytics).map(a => ({
             game: a.gameName,
+            gameType: a.gameType,
+            room: a.room,
             sessions: a.sessionsPlayed,
             totalProfit: Number(a.totalProfitLoss.toFixed(2)),
             avgProfitPerSession: Number((a.totalProfitLoss / (a.sessionsPlayed || 1)).toFixed(2))
@@ -765,8 +888,6 @@ exports.getUserCashGameAnalytics = async (req, res) => {
         res.status(500).json({ message: "Internal Server Error", error: true });
     }
 };
-
-
 
 
 
