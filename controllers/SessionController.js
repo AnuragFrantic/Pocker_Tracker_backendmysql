@@ -794,59 +794,68 @@ exports.getUserCashGameAnalytics = async (req, res) => {
                         {
                             model: db.GameTypes,
                             as: "game_type",
-                            attributes: ["id", "name"]
-                        }
-                    ]
+                            attributes: ["id", "name"],
+                        },
+                    ],
                 },
                 {
                     model: db.PokerRoom,
                     as: "room",
-                    attributes: ["id", "name", "address", "city", "state", "country"]
-                }
-            ]
+                    attributes: ["id", "name", "address", "city", "state", "country"],
+                    required: false, // Allow null room
+                },
+            ],
         });
 
         if (!sessions || sessions.length === 0) {
             return res.status(200).json({
                 data: [],
                 message: "No sessions found for this user",
-                error: false
+                error: false,
             });
         }
 
         // 🔹 Filter sessions where GameType = "Cash Game"
         const cashGameSessions = sessions.filter(
-            s => s.game && s.game.game_type && s.game.game_type.name === "Cash Game"
+            (s) => s.game && s.game.game_type && s.game.game_type.name === "Cash Game"
         );
 
         if (cashGameSessions.length === 0) {
             return res.status(200).json({
                 data: [],
                 message: "No Cash Game sessions found for this user",
-                error: false
+                error: false,
             });
         }
 
         // 🔹 Aggregate by game + room
         const analytics = {};
 
-        cashGameSessions.forEach(session => {
+        cashGameSessions.forEach((session) => {
             const gameId = session.game.id;
             const gameName = session.game.name;
             const gameTypeName = session.game.game_type?.name || "Unknown";
-            const room = session.room
-                ? {
+
+            // ✅ Handle null room_id → fallback to room_name from session
+            let room;
+            if (session.room) {
+                room = {
                     id: session.room.id,
                     name: session.room.name,
                     address: session.room.address,
                     city: session.room.city,
                     state: session.room.state,
-                    country: session.room.country
-                }
-                : { id: null, name: "Unknown Room" };
+                    country: session.room.country,
+                };
+            } else {
+                room = {
+                    id: null,
+                    name: session.room_name || "Unknown Room",
+                };
+            }
 
-            // Unique key = gameId + roomId
-            const key = `${gameId}_${room.id}`;
+            // Unique key = gameId + roomId (or name if roomId is null)
+            const key = `${gameId}_${room.id || room.name}`;
 
             if (!analytics[key]) {
                 analytics[key] = {
@@ -855,7 +864,7 @@ exports.getUserCashGameAnalytics = async (req, res) => {
                     gameType: gameTypeName,
                     room,
                     totalProfitLoss: 0,
-                    sessionsPlayed: 0
+                    sessionsPlayed: 0,
                 };
             }
 
@@ -868,26 +877,28 @@ exports.getUserCashGameAnalytics = async (req, res) => {
         });
 
         // 🔹 Convert to array
-        const result = Object.values(analytics).map(a => ({
+        const result = Object.values(analytics).map((a) => ({
             game: a.gameName,
             gameType: a.gameType,
             room: a.room,
             sessions: a.sessionsPlayed,
             totalProfit: Number(a.totalProfitLoss.toFixed(2)),
-            avgProfitPerSession: Number((a.totalProfitLoss / (a.sessionsPlayed || 1)).toFixed(2))
+            avgProfitPerSession: Number(
+                (a.totalProfitLoss / (a.sessionsPlayed || 1)).toFixed(2)
+            ),
         }));
 
         res.status(200).json({
             data: result,
             message: "Cash Game analytics retrieved successfully",
-            error: false
+            error: false,
         });
-
     } catch (err) {
         console.error("Error in getUserCashGameAnalytics:", err);
         res.status(500).json({ message: "Internal Server Error", error: true });
     }
 };
+
 
 
 
