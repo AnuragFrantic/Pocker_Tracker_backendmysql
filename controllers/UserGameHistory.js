@@ -288,7 +288,8 @@ exports.getFormattedGameHistory = async (req, res) => {
             stakes: s.stakes,
             game: s.game,
             notes: s.notes,
-        }));
+        })).sort((a, b) => new Date(b.date) - new Date(a.date));
+
 
         const netProfitLoss = totalProfit + totalLoss;
 
