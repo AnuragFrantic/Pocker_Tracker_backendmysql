@@ -9,11 +9,11 @@ const PokerRoom = db.sequelize.define("PokerRoom", {
     },
     lat: {
         type: DataTypes.DOUBLE,
-        allowNull: false,
+        allowNull: true,
     },
     long: {
         type: DataTypes.DOUBLE,
-        allowNull: false,
+        allowNull: true,
     },
     poker_links: {
         type: DataTypes.STRING,
