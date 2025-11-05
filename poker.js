@@ -57,9 +57,9 @@ app.use("/master", masterRoutes);
 
 
 // Sync DB
-db.sequelize.sync().then(() => {
-    console.log(" Database synced");
-});
+// db.sequelize.sync().then(() => {
+//     console.log(" Database synced");
+// });
 // if you want to force update and drop the table
 // db.sequelize.sync({ force: true }).then(() => {
 //     console.log("Database synced (all tables dropped and recreated)");

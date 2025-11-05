@@ -12,6 +12,7 @@ const { GetAllPurchaseSubscriptions, GetOwnPurchaseSubscriptions, CreateStripeCh
 const { getallGameHistory, getFormattedGameHistory, annualreport } = require("../controllers/UserGameHistory");
 const metadataFromSequelizeModel = require("../utils/metadataFromSchema");
 const db = require("../models");
+const { CreateSetting, UpdateSetting, ToggleActive, DeleteSetting, GetSettings } = require("../controllers/SettingController");
 
 const Sessions = db.Sessions;
 const GameTypes = db.GameTypes;
@@ -152,6 +153,16 @@ router.get('/own-purchase-subscription', Auth, GetOwnPurchaseSubscriptions)
 
 router.get('/game-history', Auth, getallGameHistory)
 router.get('/annual-report', Auth, annualreport)
+
+
+// setting
+router.post('/setting', upload.single("image"), CreateSetting)
+
+router.get("/setting", GetSettings);
+
+router.put("/setting/:id", upload.single("image"), UpdateSetting);
+// router.patch("/setting/:id/toggle", ToggleActive);
+router.delete("/setting/:id", DeleteSetting);
 
 
 

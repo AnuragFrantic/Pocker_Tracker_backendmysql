@@ -9,6 +9,7 @@ db.GameTypes = require('./GameTypes');
 db.Games = require('./Games');
 db.Sessions = require('./Sessions');
 db.UserGameHistory = require('./UserGameHistory');
+db.Setting = require("./sett")
 
 
 
