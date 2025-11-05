@@ -1,7 +1,7 @@
 const { DataTypes } = require("sequelize");
 const db = require("../config/db");
 
-const Setting = db.sequelize.define("Setting", {
+const Settings = db.sequelize.define("Settings", {
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -35,4 +35,4 @@ const Setting = db.sequelize.define("Setting", {
     timestamps: true
 });
 
-module.exports = Setting;
+module.exports = Settings;
