@@ -69,9 +69,9 @@ db.sequelize.sync().then(() => {
 
 
 // if you want to  update and dont drop the table
-// db.sequelize.sync({ alter: true }).then(() => {
-//     console.log("Database synced (tables altered if needed)");
-// });
+db.sequelize.sync({ alter: true }).then(() => {
+    console.log("Database synced (tables altered if needed)");
+});
 
 
 
