@@ -594,7 +594,9 @@ exports.getUserGameAnalytics = async (req, res) => {
                         }
                     ]
                 }
-            ]
+            ],
+            order: [["createdAt", "DESC"]]
+
         });
 
         if (!sessions || sessions.length === 0) {
@@ -805,6 +807,7 @@ exports.getUserCashGameAnalytics = async (req, res) => {
                     required: false, // Allow null room
                 },
             ],
+            order: [["createdAt", "DESC"]]
         });
 
         if (!sessions || sessions.length === 0) {
@@ -926,7 +929,9 @@ exports.getUserRoomAnalytics = async (req, res) => {
                     as: "game",
                     attributes: ["id", "name"]
                 }
-            ]
+            ],
+            order: [["createdAt", "DESC"]]
+
         });
 
         if (!sessions || sessions.length === 0) {
