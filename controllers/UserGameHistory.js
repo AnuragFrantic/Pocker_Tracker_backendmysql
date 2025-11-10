@@ -3,7 +3,10 @@ const UserGameHistory = db.UserGameHistory;
 const Games = db.Games;
 const Sessions = db.Sessions
 const PokerRoom = db.PokerRoom
-
+const User = db.User;
+const PDFDocument = require('pdfkit');
+const fs = require('fs');
+const path = require('path');
 
 const { Op } = require("sequelize");
 
@@ -534,6 +537,187 @@ exports.annualreport = async (req, res) => {
         console.error("Annual Report Error:", error);
         res.status(500).json({
             message: "Error generating annual report",
+            error: true,
+            details: error.message,
+        });
+    }
+};
+
+
+
+
+
+
+
+
+
+
+
+// Utility to safely sum numeric values
+const sumAmounts = (arr) => {
+    if (!arr) return 0;
+    if (typeof arr === 'string') {
+        try { arr = JSON.parse(arr); } catch { return 0; }
+    }
+    if (Array.isArray(arr)) return arr.reduce((a, c) => a + (Number(c?.amount) || 0), 0);
+    if (typeof arr === 'object' && arr.amount) return Number(arr.amount);
+    if (typeof arr === 'number') return arr;
+    return 0;
+};
+
+// Format number as USD currency
+const USD = (n) =>
+    new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+    }).format(Number(n || 0));
+
+exports.generateTaxStatementPdf = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const year = Number(req.query.year) || new Date().getFullYear();
+
+        const start = new Date(`${year}-01-01T00:00:00.000Z`);
+        const end = new Date(`${year}-12-31T23:59:59.999Z`);
+
+        const histories = await UserGameHistory.findAll({
+            where: {
+                user_id: userId,
+                createdAt: { [Op.between]: [start, end] },
+            },
+            include: [{ model: Games, as: 'games', attributes: ['id', 'name', 'game_type_id'] }],
+            order: [['createdAt', 'ASC']],
+        });
+
+        if (!histories.length) {
+            return res.status(404).json({ message: `No records found for year ${year}`, error: false });
+        }
+
+        let totalBuyIns = 0;
+        let totalReBuys = 0;
+        let totalAddOns = 0;
+        let dealerTips = 0;
+        let mealsAndOthers = 0;
+        let totalGamblingIncome = 0;
+
+        histories.forEach((h) => {
+            const buyIn = sumAmounts(h.buy_in);
+            const reBuy = sumAmounts(h.re_buys);
+            const addOn = sumAmounts(h.add_on_amount);
+            const tip = sumAmounts(h.dealer_tips);
+            const cashOut = sumAmounts(h.cash_out);
+            const meal = Number(h.meal_exp || 0);
+
+            totalBuyIns += buyIn;
+            totalReBuys += reBuy;
+            totalAddOns += addOn;
+            dealerTips += tip;
+            mealsAndOthers += meal;
+            totalGamblingIncome += cashOut;
+        });
+
+        const totalGamblingExpenditures = totalBuyIns + totalReBuys + totalAddOns;
+        const totalGamblingProfitLoss = totalGamblingIncome - totalGamblingExpenditures;
+
+        // --- PDF setup ---
+        const filename = `tax-statement-${year}.pdf`;
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+
+        const doc = new PDFDocument({ size: 'A4', margin: 50 });
+        doc.pipe(res);
+
+        // --- HEADER BAR with LOGO and BACKGROUND ---
+        const logoPath = path.join(__dirname, '../assets/logo.png');
+        const headerHeight = 70;
+
+        // Background bar
+        doc.rect(0, 0, doc.page.width, headerHeight).fill('#1a73e8');
+
+        // Add logo if available
+        if (fs.existsSync(logoPath)) {
+            doc.image(logoPath, 50, 15, { width: 50 });
+        }
+
+        // Title in header
+        doc.fillColor('#fff').font('Helvetica-Bold').fontSize(20)
+            .text('Year-End Tax Statement', 120, 25, { align: 'left' });
+
+        doc.moveDown(2);
+
+        // Reset fill color for body
+        doc.fillColor('#000');
+
+        // --- Start content immediately below header ---
+        doc.fillColor('#000');
+        doc.y = headerHeight + 18; // slightly below the blue bar
+        doc.font('Helvetica').fontSize(11).fillColor('#333');
+
+        // --- Tax Summary Info (No User Details) ---
+        const generatedAt = new Date().toLocaleString('en-US', { timeZone: 'America/New_York' });
+
+        // Use a custom X coordinate for perfect left alignment (same as blue bar start)
+        const leftEdge = 60; // adjust to 0–25 depending on your logo alignment
+
+        doc.text(`Tax Year: ${year}`, leftEdge, doc.y, { align: 'left' });
+        doc.text(`Generated: ${generatedAt}`, leftEdge, doc.y + 5, { align: 'left' });
+
+        doc.moveDown(1.2);
+
+
+
+
+        // --- Section Helper ---
+        const sectionTitle = (title) => {
+            doc.moveDown(0.8);
+            doc.font('Helvetica-Bold').fontSize(13).fillColor('#1a73e8').text(title);
+            doc.moveDown(0.3);
+            doc.moveTo(50, doc.y).lineTo(550, doc.y).strokeColor('#1a73e8').stroke();
+            doc.moveDown(0.7);
+        };
+
+        // --- Gambling Summary ---
+        sectionTitle('Gambling Summary (Reportable)');
+
+        const tableRow = (label, value, bold = false) => {
+            doc.font(bold ? 'Helvetica-Bold' : 'Helvetica')
+                .fontSize(11)
+                .fillColor('#111')
+                .text(label, 60, doc.y, { continued: true })
+                .text(value, { align: 'right' });
+        };
+
+        tableRow('Total Gambling Expenditures', USD(totalGamblingExpenditures));
+        tableRow('Total Gambling Income', USD(totalGamblingIncome));
+        tableRow('Total Gambling Profit/Loss', USD(totalGamblingProfitLoss), true);
+
+        // --- Other Expenses ---
+        sectionTitle('Other Expenses (Not Included)');
+        tableRow('Dealer Tips', USD(dealerTips));
+        tableRow('Meals & Other Expenses', USD(mealsAndOthers));
+
+        // --- Footer ---
+        doc.moveDown(1.5);
+        doc.fontSize(9).fillColor('#666')
+            .text('Note:', { continued: true })
+            .fillColor('#444')
+            .text(' Gambling Profit/Loss = Cash-Outs − (Buy-Ins + Rebuys + Add-Ons).')
+            .text('Dealer Tips and Meals/Other are shown separately and excluded from Gambling Profit/Loss.')
+            .moveDown(0.8)
+            .text('This document is system-generated for informational and tax reporting purposes only.', { align: 'left' });
+
+        doc.moveDown(1);
+        doc.moveTo(50, doc.y + 5).lineTo(550, doc.y + 5).strokeColor('#cccccc').stroke();
+        doc.fontSize(9).fillColor('#666').text(`© ${year} StackeStats Geo`, 50, doc.y + 10, { align: 'center' });
+
+        doc.end();
+
+    } catch (error) {
+        console.error('Tax Statement PDF Error:', error);
+        res.status(500).json({
+            message: 'Error generating tax statement PDF',
             error: true,
             details: error.message,
         });
