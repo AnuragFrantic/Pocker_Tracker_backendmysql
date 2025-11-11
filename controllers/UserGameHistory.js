@@ -576,7 +576,7 @@ const USD = (n) =>
 
 exports.generateTaxStatementPdf = async (req, res) => {
     try {
-        const userId = req.user.id;
+        const userId = req.params.id;
         const year = Number(req.query.year) || new Date().getFullYear();
 
         const start = new Date(`${year}-01-01T00:00:00.000Z`);

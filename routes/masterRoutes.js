@@ -153,7 +153,7 @@ router.get('/own-purchase-subscription', Auth, GetOwnPurchaseSubscriptions)
 
 router.get('/game-history', Auth, getallGameHistory)
 router.get('/annual-report', Auth, annualreport)
-router.get('/tax-statement', Auth, generateTaxStatementPdf);
+router.get('/tax-statement/:id', generateTaxStatementPdf);
 
 
 // setting
