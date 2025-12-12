@@ -188,7 +188,8 @@ exports.getallGameHistory = async (req, res) => {
 
 
 exports.getFormattedGameHistory = async (req, res) => {
-    const userId = req.user.id;
+    const userId = req.query.id ?? req.user?.id;
+
     const sessionId = req.query.session || req.query["session"];
     const whereCondition = { user_id: userId };
 
@@ -433,7 +434,7 @@ exports.getFormattedGameHistory = async (req, res) => {
 
 exports.annualreport = async (req, res) => {
     try {
-        const userId = req.user.id;
+        const userId = req.query.id ?? req.user.id;
         const year = req.query.year || new Date().getFullYear();
 
         const histories = await UserGameHistory.findAll({
