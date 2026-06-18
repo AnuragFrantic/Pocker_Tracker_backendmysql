@@ -51,6 +51,11 @@ const Subscription = db.sequelize.define("Subscription", {
     },
 
 
+
+    apple_product_id: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+    },
     is_active: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
