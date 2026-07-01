@@ -479,6 +479,8 @@ exports.VerifyPurchase = async (req, res) => {
             paid_at: new Date(),
         }, { transaction: t });
 
+        console.log("Payment created successfully:", payment);
+
         // Create Purchase Subscription
         const purchase = await PurchaseSubscription.create({
             user_id,
@@ -494,6 +496,8 @@ exports.VerifyPurchase = async (req, res) => {
             raw_subscription: subscription.toJSON(),
         }, { transaction: t });
 
+        console.log("Purchase Subscription verified successfully:", purchase);
+
         // Update User
         const user = await User.findByPk(user_id, { transaction: t });
 
@@ -502,6 +506,8 @@ exports.VerifyPurchase = async (req, res) => {
             user.expire_date = endDate;
             await user.save({ transaction: t });
         }
+
+        console.log("User updated successfully:", user);
 
         await t.commit();
 
@@ -516,6 +522,7 @@ exports.VerifyPurchase = async (req, res) => {
 
     } catch (err) {
         await t.rollback();
+        console.error("Error verifying purchase:", err);
 
         return res.status(500).json({
             error: true,
