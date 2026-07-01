@@ -341,6 +341,8 @@ exports.UpdatePurchaseSubscription = async (req, res) => {
             });
         }
 
+        console.log("purchase", purchase)
+
         await purchase.update(req.body);
 
         res.status(200).json({

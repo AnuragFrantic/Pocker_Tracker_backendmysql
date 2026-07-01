@@ -58,7 +58,21 @@ const Payment = db.sequelize.define("Payment", {
     refunded_at: {
         type: DataTypes.DATE,
         allowNull: true
-    }
+    },
+    // ios
+
+    platform: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    product_id: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    verification_data: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
 }, {
     timestamps: true
 });
