@@ -8,7 +8,7 @@ const { getAllSessions, createSession, updateSession, getUserGameAnalytics, getU
 const { getAllUSers, getProfile, getUserProfile, updateUserProfile } = require("../controllers/UserController");
 const { Auth } = require("../middleware/Auth");
 const { CreateSubscription, GetAllSubscriptions, UpdateSubscription, ToggleSubscriptionStatus } = require("../controllers/SubscriptionController");
-const { GetAllPurchaseSubscriptions, GetOwnPurchaseSubscriptions, CreateStripeCheckoutSession, UpdatePurchaseSubscription } = require("../controllers/PurchaseSubsriptionController");
+const { GetAllPurchaseSubscriptions, GetOwnPurchaseSubscriptions, CreateStripeCheckoutSession, UpdatePurchaseSubscription, VerifyPurchase } = require("../controllers/PurchaseSubsriptionController");
 const { getallGameHistory, getFormattedGameHistory, annualreport, generateTaxStatementPdf } = require("../controllers/UserGameHistory");
 const metadataFromSequelizeModel = require("../utils/metadataFromSchema");
 const db = require("../models");
@@ -143,8 +143,8 @@ router.put('/change-status-subscription/:id', Auth, ToggleSubscriptionStatus)
 // router.post('/purchase-subscription', Auth, CreatePurchaseSubscription)
 router.post('/purchase-subscription', Auth, CreateStripeCheckoutSession)
 
-router.put('/verify-purchase/:id', Auth, UpdatePurchaseSubscription);
 
+router.post("/verify-purchase", Auth, VerifyPurchase);
 
 
 

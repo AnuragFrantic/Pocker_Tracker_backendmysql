@@ -152,6 +152,7 @@ exports.CreateStripeCheckoutSession = async (req, res) => {
 
 
 
+
 exports.StripeWebhookHandler = async (req, res) => {
     const sig = req.headers["stripe-signature"];
     let event;
@@ -220,6 +221,9 @@ exports.StripeWebhookHandler = async (req, res) => {
                 raw_subscription: subscription.toJSON(),
             }, { transaction: t });
 
+
+
+
             // Update user
             const user = await User.findByPk(user_id);
             if (user) {
@@ -233,6 +237,27 @@ exports.StripeWebhookHandler = async (req, res) => {
         } catch (err) {
             await t.rollback();
             console.error("❌ Webhook error:", err);
+        }
+    } else if (event.type === "payment_intent.payment_failed") {
+        try {
+            const paymentIntent = event.data.object;
+            const { user_id, subscription_id } = paymentIntent.metadata || {};
+
+            await Payment.create({
+                user_id: user_id || null,
+                subscription_id: subscription_id || null,
+                amount: paymentIntent.amount / 100,
+                currency: paymentIntent.currency,
+                status: "failed",
+                payment_method: "stripe",
+                transaction_id: paymentIntent.id,
+                provider_response: JSON.stringify(paymentIntent),
+                paid_at: null,
+            });
+
+            console.log("❌ Payment failed:", paymentIntent.id);
+        } catch (err) {
+            console.error("Failed to save failed payment:", err);
         }
     }
 
@@ -332,28 +357,40 @@ exports.GetPurchaseSubscriptionById = async (req, res) => {
 // UPDATE
 exports.UpdatePurchaseSubscription = async (req, res) => {
     try {
-        const purchase = await PurchaseSubscription.findByPk(req.params.id);
+        const { id } = req.params;
+
+        const purchase = await PurchaseSubscription.findByPk(id);
 
         if (!purchase) {
             return res.status(404).json({
-                message: "Purchase Subscription not found",
                 error: true,
+                message: "Purchase Subscription not found",
             });
         }
 
-        console.log("purchase", purchase)
+        const {
+            subscription_id,
+            platform,
+            product_id,
+            verification_data,
+        } = req.body;
 
-        await purchase.update(req.body);
+        await purchase.update({
+            subscription_id,
+            platform,
+            product_id,
+            verification_data,
+        });
 
-        res.status(200).json({
+        return res.status(200).json({
+            error: false,
             message: "Purchase Subscription updated successfully",
             data: purchase,
-            error: false,
         });
     } catch (err) {
-        res.status(500).json({
-            message: err.message || "Internal server error",
+        return res.status(500).json({
             error: true,
+            message: err.message || "Internal server error",
         });
     }
 };
@@ -387,3 +424,102 @@ exports.DeletePurchaseSubscription = async (req, res) => {
 
 
 
+
+
+exports.VerifyPurchase = async (req, res) => {
+    const t = await db.sequelize.transaction();
+
+    try {
+        const {
+            subscription_id,
+            platform,
+            product_id,
+            verification_data,
+            transaction_id,
+        } = req.body;
+
+        const user_id = req.user.id;
+
+        const subscription = await Subscription.findByPk(subscription_id);
+
+        if (!subscription) {
+            await t.rollback();
+            return res.status(404).json({
+                error: true,
+                message: "Subscription not found",
+            });
+        }
+
+        // Calculate dates
+        const startDate = new Date();
+        const endDate = new Date(startDate);
+
+        if (subscription.duration_type === "days") {
+            endDate.setDate(endDate.getDate() + subscription.duration_value);
+        } else if (subscription.duration_type === "months") {
+            endDate.setMonth(endDate.getMonth() + subscription.duration_value);
+        } else if (subscription.duration_type === "years") {
+            endDate.setFullYear(endDate.getFullYear() + subscription.duration_value);
+        }
+
+        const sessions = subscription.max_sessions || 0;
+
+        // Create Payment
+        const payment = await Payment.create({
+            user_id,
+            subscription_id,
+            amount: subscription.price,
+            currency: subscription.currency,
+            status: "completed",
+            payment_method: platform,
+            transaction_id,
+            platform,
+            product_id,
+            verification_data,
+            paid_at: new Date(),
+        }, { transaction: t });
+
+        // Create Purchase Subscription
+        const purchase = await PurchaseSubscription.create({
+            user_id,
+            subscription_id,
+            payment_reference: payment.id,
+            amount_paid: subscription.price,
+            currency: subscription.currency,
+            start_date: startDate,
+            end_date: endDate,
+            status: "active",
+            sessions,
+            remaining_sessions: sessions,
+            raw_subscription: subscription.toJSON(),
+        }, { transaction: t });
+
+        // Update User
+        const user = await User.findByPk(user_id, { transaction: t });
+
+        if (user) {
+            user.session_points = (user.session_points || 0) + sessions;
+            user.expire_date = endDate;
+            await user.save({ transaction: t });
+        }
+
+        await t.commit();
+
+        return res.status(201).json({
+            error: false,
+            message: "Purchase verified successfully",
+            data: {
+                payment,
+                purchase,
+            },
+        });
+
+    } catch (err) {
+        await t.rollback();
+
+        return res.status(500).json({
+            error: true,
+            message: err.message,
+        });
+    }
+};
