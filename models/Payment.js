@@ -70,7 +70,7 @@ const Payment = db.sequelize.define("Payment", {
         allowNull: true,
     },
     verification_data: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT("long"),
         allowNull: true,
     },
 }, {
