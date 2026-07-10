@@ -248,3 +248,45 @@ exports.updateUserProfile = async (req, res) => {
         res.status(500).json({ message: "Internal server error", error: true });
     }
 };
+
+
+
+exports.deleteUser = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const user = await User.findByPk(id);
+
+        if (!user) {
+            return res.status(404).json({
+                message: "User not found",
+                error: true
+            });
+        }
+
+        // Check if already deleted
+        if (user.is_deleted) {
+            return res.status(400).json({
+                message: "User is already deleted",
+                error: true
+            });
+        }
+
+        await user.update({
+            is_deleted: true,
+            deleted_at: new Date()
+        });
+
+        return res.status(200).json({
+            message: "User deleted successfully",
+            error: false
+        });
+
+    } catch (err) {
+        console.error("deleteUser Error:", err);
+        return res.status(500).json({
+            message: "Internal server error",
+            error: true
+        });
+    }
+};

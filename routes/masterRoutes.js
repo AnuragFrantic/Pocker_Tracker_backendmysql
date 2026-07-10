@@ -5,7 +5,7 @@ const upload = require("../middleware/upload");
 const { createGameType, getAllGameTypes, updateGameType, deleteGameType } = require("../controllers/GameTypesController");
 const { createGame, getAllGames, getGameById, updateGame, deleteGame } = require("../controllers/GameController");
 const { getAllSessions, createSession, updateSession, getUserGameAnalytics, getUserRoomAnalytics, getUserCashGameAnalytics } = require("../controllers/SessionController");
-const { getAllUSers, getProfile, getUserProfile, updateUserProfile } = require("../controllers/UserController");
+const { getAllUSers, getProfile, getUserProfile, updateUserProfile, deleteUser } = require("../controllers/UserController");
 const { Auth } = require("../middleware/Auth");
 const { CreateSubscription, GetAllSubscriptions, UpdateSubscription, ToggleSubscriptionStatus } = require("../controllers/SubscriptionController");
 const { GetAllPurchaseSubscriptions, GetOwnPurchaseSubscriptions, CreateStripeCheckoutSession, UpdatePurchaseSubscription, VerifyPurchase } = require("../controllers/PurchaseSubsriptionController");
@@ -123,7 +123,7 @@ router.get('/users', Auth, getAllUSers)
 router.get('/profile', Auth, getProfile)
 router.get('/user-detail/:id', Auth, getUserProfile)
 router.put('/update-profile', Auth, updateUserProfile)
-
+router.delete("/user/:id", Auth, deleteUser);
 
 
 

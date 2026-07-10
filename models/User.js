@@ -75,7 +75,16 @@ const User = db.sequelize.define("User", {
     password: {
         type: DataTypes.STRING,
         allowNull: false
-    }
+    },
+    is_deleted: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+    },
+    deleted_at: {
+        type: DataTypes.DATE,
+        allowNull: true,
+    },
 });
 
 module.exports = User;
