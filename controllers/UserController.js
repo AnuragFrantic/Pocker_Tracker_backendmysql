@@ -253,9 +253,11 @@ exports.updateUserProfile = async (req, res) => {
 
 exports.deleteUser = async (req, res) => {
     try {
-        const { id } = req.params;
 
-        const user = await User.findByPk(id);
+        const userId = req.body.id || req.user.id;
+
+
+        const user = await User.findByPk(userId);
 
         if (!user) {
             return res.status(404).json({
@@ -274,7 +276,9 @@ exports.deleteUser = async (req, res) => {
 
         await user.update({
             is_deleted: true,
-            deleted_at: new Date()
+            deleted_at: new Date(),
+            email: `deleted_${timestamp}_${user.email}`,
+            phone: `deleted_${timestamp}_${user.phone}`
         });
 
         return res.status(200).json({

@@ -123,7 +123,7 @@ router.get('/users', Auth, getAllUSers)
 router.get('/profile', Auth, getProfile)
 router.get('/user-detail/:id', Auth, getUserProfile)
 router.put('/update-profile', Auth, updateUserProfile)
-router.delete("/user/:id", Auth, deleteUser);
+router.delete("/delete-user", Auth, deleteUser);
 
 
 
