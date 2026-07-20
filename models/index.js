@@ -3,6 +3,7 @@ db.User = require("./User");
 db.Subscription = require("./Subscription");
 db.Payment = require("./Payment");
 db.PurchaseSubscription = require("./PurchaseSubscription");
+db.AppleNotification = require("./AppleNotification");
 db.SessionTypes = require("./SessionTypes");
 db.PokerRoom = require('./PokerRoom');
 db.GameTypes = require('./GameTypes');

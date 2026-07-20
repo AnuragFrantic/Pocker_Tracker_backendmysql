@@ -5,6 +5,7 @@ const User = db.User;
 const Payment = db.Payment;
 const Stripe = require("stripe");
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+const { verifyReceipt, decodeJws } = require("../utils/apple");
 
 
 // exports.CreatePurchaseSubscription = async (req, res) => {
@@ -464,6 +465,17 @@ exports.VerifyPurchase = async (req, res) => {
 
         const sessions = subscription.max_sessions || 0;
 
+        // If platform is iOS, verify receipt with Apple and use their data
+        let appleInfo = null;
+        if (platform === 'ios') {
+            try {
+                appleInfo = await verifyReceipt(verification_data);
+            } catch (err) {
+                await t.rollback();
+                return res.status(400).json({ error: true, message: 'Apple receipt verification failed', details: err.message });
+            }
+        }
+
         // Create Payment
         const payment = await Payment.create({
             user_id,
@@ -472,16 +484,18 @@ exports.VerifyPurchase = async (req, res) => {
             currency: subscription.currency,
             status: "completed",
             payment_method: platform,
-            transaction_id,
+            transaction_id: appleInfo ? appleInfo.originalTransactionId : transaction_id,
             platform,
-            product_id,
-            verification_data,
+            product_id: appleInfo ? appleInfo.productId : product_id,
+            verification_data: appleInfo ? JSON.stringify(appleInfo.raw) : verification_data,
+            auto_renew_status: appleInfo ? !!appleInfo.autoRenewStatus : null,
             paid_at: new Date(),
         }, { transaction: t });
 
         console.log("Payment created successfully:", payment);
 
-        // Create Purchase Subscription
+        // Create Purchase Subscription. For iOS use Apple expiry if available.
+        const finalEndDate = appleInfo ? appleInfo.expiresDate : endDate;
         const purchase = await PurchaseSubscription.create({
             user_id,
             subscription_id,
@@ -489,7 +503,7 @@ exports.VerifyPurchase = async (req, res) => {
             amount_paid: subscription.price,
             currency: subscription.currency,
             start_date: startDate,
-            end_date: endDate,
+            end_date: finalEndDate,
             status: "active",
             sessions,
             remaining_sessions: sessions,
@@ -528,5 +542,85 @@ exports.VerifyPurchase = async (req, res) => {
             error: true,
             message: err.message,
         });
+    }
+};
+
+
+// Apple Server Notifications V2 handler
+exports.AppleNotifications = async (req, res) => {
+    try {
+        const payload = decodeJws(req.body.signedPayload);
+        const tx = decodeJws(payload && payload.data && payload.data.signedTransaction);
+        const renewal = decodeJws(payload && payload.data && payload.data.signedRenewalInfo);
+
+        const originalTransactionId = (tx && (tx.originalTransactionId || tx.original_transaction_id)) || null;
+        const expiresMs = tx && (tx.expiresDate || tx.expires_date_ms || tx.expiresDateMs || tx.expires_date);
+        const expiresDate = expiresMs ? new Date(Number(expiresMs)) : null;
+        const type = payload && (payload.notificationType || payload.notification_type);
+
+        const active = ['DID_RENEW', 'SUBSCRIBED', 'DID_CHANGE_RENEWAL_STATUS', 'GRACE_PERIOD']
+            .includes(type) && expiresDate && expiresDate > new Date();
+        const revoked = ['EXPIRED', 'REFUND', 'REVOKE'].includes(type);
+
+        if (!originalTransactionId) {
+            console.warn('apple-notifications: missing originalTransactionId');
+            // Still persist notification for debugging
+            try {
+                await db.AppleNotification.create({
+                    original_transaction_id: null,
+                    notification_type: type || null,
+                    environment: payload && payload.environment || null,
+                    auto_renew_status: (renewal && (String(renewal.auto_renew_status) === '1' || renewal.autoRenewStatus === 1)) || null,
+                    expires_date: expiresDate,
+                    payload,
+                });
+            } catch (logErr) {
+                console.error('Failed to persist apple notification:', logErr && logErr.message);
+            }
+            return res.sendStatus(200);
+        }
+        // Persist the raw notification for audit/replay
+        try {
+            await db.AppleNotification.create({
+                original_transaction_id: originalTransactionId,
+                notification_type: type || null,
+                environment: payload && payload.environment || null,
+                auto_renew_status: (renewal && (String(renewal.auto_renew_status) === '1' || renewal.autoRenewStatus === 1)) || null,
+                expires_date: expiresDate,
+                payload,
+            });
+        } catch (logErr) {
+            console.error('Failed to persist apple notification:', logErr && logErr.message);
+        }
+
+        // Find related payment
+        const payment = await Payment.findOne({ where: { transaction_id: originalTransactionId } });
+        if (payment) {
+            await payment.update({
+                provider_response: JSON.stringify(payload),
+                status: revoked ? 'refunded' : 'completed',
+                paid_at: revoked ? payment.paid_at : (expiresDate || payment.paid_at),
+                refunded_at: revoked ? new Date() : payment.refunded_at,
+                auto_renew_status: (renewal && (String(renewal.auto_renew_status) === '1' || renewal.autoRenewStatus === 1)) || null,
+            });
+
+            // Update PurchaseSubscription linked to this payment
+            const purchase = await PurchaseSubscription.findOne({ where: { payment_reference: payment.id } });
+            if (purchase) {
+                await purchase.update({
+                    end_date: expiresDate || purchase.end_date,
+                    status: revoked ? 'expired' : (active ? 'active' : purchase.status),
+                });
+            }
+        } else {
+            // No matching payment found; optionally log for investigation
+            console.warn('apple-notifications: no payment found for originalTransactionId', originalTransactionId);
+        }
+
+        res.sendStatus(200);
+    } catch (e) {
+        console.error('apple-notifications failed:', e && e.message);
+        // Always respond 200 so Apple doesn't keep retrying on transient parsing errors
+        res.sendStatus(200);
     }
 };

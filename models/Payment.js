@@ -59,6 +59,10 @@ const Payment = db.sequelize.define("Payment", {
         type: DataTypes.DATE,
         allowNull: true
     },
+    auto_renew_status: {
+        type: DataTypes.BOOLEAN,
+        allowNull: true,
+    },
     // ios
 
     platform: {

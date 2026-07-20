@@ -145,6 +145,8 @@ router.post('/purchase-subscription', Auth, CreateStripeCheckoutSession)
 
 
 router.post("/verify-purchase", Auth, VerifyPurchase);
+// Apple server notifications (App Store Connect) - no auth required
+router.post('/apple-notifications', require('../controllers/PurchaseSubsriptionController').AppleNotifications);
 
 
 
