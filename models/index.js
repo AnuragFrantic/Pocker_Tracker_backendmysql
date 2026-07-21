@@ -11,6 +11,8 @@ db.Games = require('./Games');
 db.Sessions = require('./Sessions');
 db.UserGameHistory = require('./UserGameHistory');
 db.Setting = require("./Settings")
+db.Reference = require("./Reference");
+db.ReferenceUser = require("./ReferenceUser");
 
 
 
@@ -49,6 +51,13 @@ db.UserGameHistory.belongsTo(db.User, { foreignKey: "user_id", as: "history_user
 db.Sessions.hasMany(db.UserGameHistory, { foreignKey: "session_id", as: "user_game_histories" });
 db.UserGameHistory.belongsTo(db.Sessions, { foreignKey: "session_id", as: "session" });
 db.UserGameHistory.belongsTo(db.Games, { foreignKey: "games_id", as: "games" });
+
+// ---------------- References ----------------
+db.Reference.belongsTo(db.Subscription, { foreignKey: "subscription_id", as: "subscription" });
+db.Reference.hasMany(db.ReferenceUser, { foreignKey: "reference_id", as: "users" });
+db.ReferenceUser.belongsTo(db.Reference, { foreignKey: "reference_id", as: "reference_detail" });
+db.ReferenceUser.belongsTo(db.User, { foreignKey: "user_id", as: "user" });
+db.User.hasOne(db.ReferenceUser, { foreignKey: "user_id", as: "reference_use" });
 
 // db.UserGameHistory.belongsTo(db.GameTypes, { foreignKey: "game_type_id", as: "game_type" });
 

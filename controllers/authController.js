@@ -2,6 +2,7 @@ const db = require("../models");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = db.User;
+const { redeemReference } = require("./ReferenceController");
 
 
 
@@ -80,7 +81,7 @@ const User = db.User;
 exports.register = async (req, res) => {
     try {
         // Destructure required fields and collect any extra fields in `rest`
-        let { first_name, last_name, email, password, phone, session_points = 10, ...rest } = req.body;
+        let { first_name, last_name, email, password, phone, session_points = 10, reference_code, ...rest } = req.body;
 
         // Normalize email to lowercase
         const normalizedEmail = email.toLowerCase();
@@ -116,17 +117,27 @@ exports.register = async (req, res) => {
             imagePath = `/uploads/${req.file.filename}`;
         }
 
-        // Create user, include extra fields from rest
-        const user = await User.create({
-            first_name,
-            last_name,
-            email: normalizedEmail,
-            phone,
-            password: hashedPassword,
-            session_points,
-            image: imagePath,
-            ...rest // ✅ include extra fields like address, state, zipcode, etc.
-        });
+        // Create user and reference redemption as one transaction.
+        const transaction = await db.sequelize.transaction();
+        let user;
+        try {
+            user = await User.create({
+                first_name,
+                last_name,
+                email: normalizedEmail,
+                phone,
+                password: hashedPassword,
+                session_points,
+                image: imagePath,
+                ...rest // ✅ include extra fields like address, state, zipcode, etc.
+            }, { transaction });
+
+            await redeemReference(user.id, reference_code, transaction);
+            await transaction.commit();
+        } catch (error) {
+            await transaction.rollback();
+            throw error;
+        }
 
         // Exclude password from response
         const { password: _, ...userData } = user.toJSON();

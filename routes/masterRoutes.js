@@ -13,6 +13,7 @@ const { getallGameHistory, getFormattedGameHistory, annualreport, generateTaxSta
 const metadataFromSequelizeModel = require("../utils/metadataFromSchema");
 const db = require("../models");
 const { CreateSetting, UpdateSetting, ToggleActive, DeleteSetting, GetSettings } = require("../controllers/SettingController");
+const { createReference, getReferences, updateReference } = require("../controllers/ReferenceController");
 
 const Sessions = db.Sessions;
 const GameTypes = db.GameTypes;
@@ -135,6 +136,11 @@ router.post('/subscription', upload.single("image"), Auth, CreateSubscription)
 router.get('/subscription', Auth, GetAllSubscriptions)
 router.put('/update-subscription/:id', upload.single("image"), Auth, UpdateSubscription)
 router.put('/change-status-subscription/:id', Auth, ToggleSubscriptionStatus)
+
+// A reference contains its text/code, complimentary subscription, and users who redeemed it.
+router.post('/reference', Auth, createReference);
+router.get('/reference', Auth, getReferences);
+router.put('/reference/:id', Auth, updateReference);
 
 
 
