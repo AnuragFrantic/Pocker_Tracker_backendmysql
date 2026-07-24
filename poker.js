@@ -88,6 +88,7 @@ db.sequelize.sync().then(() => {
 //     key: pvtkey,
 //     cert: certificate,
 // };
+
 const options = {
     cert: fs.readFileSync('/etc/letsencrypt/live/rinsezone.com/fullchain.pem', 'utf-8'),
     key: fs.readFileSync('/etc/letsencrypt/live/rinsezone.com/privkey.pem', 'utf-8'),
