@@ -13,7 +13,7 @@ const { getallGameHistory, getFormattedGameHistory, annualreport, generateTaxSta
 const metadataFromSequelizeModel = require("../utils/metadataFromSchema");
 const db = require("../models");
 const { CreateSetting, UpdateSetting, ToggleActive, DeleteSetting, GetSettings } = require("../controllers/SettingController");
-const { createReference, getReferences, updateReference } = require("../controllers/ReferenceController");
+const { createReference, getReferences, updateReference, getReferenceUsers } = require("../controllers/ReferenceController");
 
 const Sessions = db.Sessions;
 const GameTypes = db.GameTypes;
@@ -141,6 +141,7 @@ router.put('/change-status-subscription/:id', Auth, ToggleSubscriptionStatus)
 router.post('/reference', Auth, createReference);
 router.get('/reference', Auth, getReferences);
 router.put('/reference/:id', Auth, updateReference);
+router.get("/reference/:id/users", getReferenceUsers);
 
 
 

@@ -25,6 +25,9 @@ exports.createReference = async (req, res) => {
 exports.getReferences = async (req, res) => {
     try {
         const data = await db.Reference.findAll({
+            where: {
+                is_active: false,
+            },
             include: [
                 { model: db.Subscription, as: "subscription" },
                 { model: db.ReferenceUser, as: "users", include: [{ model: db.User, as: "user", attributes: { exclude: ["password"] } }] },
@@ -80,3 +83,53 @@ exports.redeemReference = async (userId, referenceText, transaction) => {
     if (user) await user.update({ session_points: (user.session_points || 0) + (sessions || 0), expire_date: endDate }, { transaction });
     return purchase;
 };
+
+
+
+
+exports.getReferenceUsers = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const reference = await db.Reference.findByPk(id, {
+            include: [
+                {
+                    model: db.Subscription,
+                    as: "subscription",
+                },
+                {
+                    model: db.ReferenceUser,
+                    as: "users",
+                    include: [
+                        {
+                            model: db.User,
+                            as: "user",
+                            attributes: {
+                                exclude: ["password"],
+                            },
+                        },
+                    ],
+                },
+            ],
+        });
+
+        if (!reference) {
+            return res.status(404).json({
+                message: "Reference not found",
+                error: true,
+            });
+        }
+
+        res.status(200).json({
+            message: "Reference users fetched successfully",
+            data: reference,
+            error: false,
+        });
+    } catch (err) {
+        res.status(500).json({
+            message: err.message || "Internal server error",
+            error: true,
+        });
+    }
+};
+
