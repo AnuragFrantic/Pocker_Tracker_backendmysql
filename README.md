@@ -102,6 +102,53 @@ Uses **JWT tokens**. Users must send the token in the `Authorization` header as:
 Authorization: Bearer <token>
 ```
 
+## 🍎 Apple Subscriptions (iOS auto-renew / "autopay")
+
+iOS uses Apple **auto-renewable subscriptions** (StoreKit 2). Android continues
+to use Stripe. The flow:
+
+1. The app buys via StoreKit and sends the **signed transaction (JWS)** to
+   `POST /master/verify-purchase`.
+2. `utils/apple.js` verifies the JWS locally — full `x5c` certificate-chain
+   validation pinned to **Apple Root CA - G3**, plus an ES256 signature check
+   (no external calls, no extra npm packages). The verified
+   `original_transaction_id`, product, expiry and auto-renew flag are stored on
+   the `Payments` row.
+3. When Apple auto-renews each period it POSTs an **App Store Server
+   Notification V2** to `POST /master/apple-notifications`. The handler verifies
+   the signature, then extends the user's `PurchaseSubscriptions.end_date` (and
+   `Users.expire_date`) so access continues. Access is gated by an active,
+   non-expired `PurchaseSubscription` (see `getProfile`'s `unlimited_session`).
+
+### Required setup
+
+* **App Store Connect → your app → App Information → App Store Server
+  Notifications (Version 2)** — set the URL for **both** Production and Sandbox:
+
+  ```
+  https://rinsezone.com:3420/master/apple-notifications
+  ```
+
+* **Product IDs** must match the `apple_product_id` column on `Subscriptions`:
+  `stackstatsgeo_premium_monthly`, `stackstatsgeo_premium_annual`.
+
+### Environment variables (optional)
+
+| Variable                 | Default                 | Purpose                                            |
+| ------------------------ | ----------------------- | -------------------------------------------------- |
+| `APPLE_BUNDLE_ID`        | `com.stackstatsgeo.app` | Rejects transactions/notifications for other apps. |
+| `APPLE_JWS_SKIP_VERIFY`  | `false`                 | Dev only — skips signature verification. **Never set to `true` in production.** |
+
+### One-time backfill
+
+Older iOS `Payments` rows were saved with `transaction_id = NULL` (the previous
+code couldn't parse the StoreKit 2 JWS), so their renewals can't be matched.
+Run once to decode the stored receipts and populate the id:
+
+```bash
+node scripts/backfill_apple_transaction_ids.js
+```
+
 ## 📌 License
 
 MIT License. See [LICENSE](LICENSE) for details.

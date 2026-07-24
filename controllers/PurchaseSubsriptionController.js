@@ -5,7 +5,7 @@ const User = db.User;
 const Payment = db.Payment;
 const Stripe = require("stripe");
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-const { verifyReceipt, decodeJws } = require("../utils/apple");
+const { verifyIosPurchase, verifyNotification } = require("../utils/apple");
 
 
 // exports.CreatePurchaseSubscription = async (req, res) => {
@@ -465,14 +465,15 @@ exports.VerifyPurchase = async (req, res) => {
 
         const sessions = subscription.max_sessions || 0;
 
-        // If platform is iOS, verify receipt with Apple and use their data
+        // If platform is iOS, verify the StoreKit 2 signed transaction (or a
+        // legacy StoreKit 1 receipt) with Apple's crypto and use their data.
         let appleInfo = null;
         if (platform === 'ios') {
             try {
-                appleInfo = await verifyReceipt(verification_data);
+                appleInfo = await verifyIosPurchase(verification_data);
             } catch (err) {
                 await t.rollback();
-                return res.status(400).json({ error: true, message: 'Apple receipt verification failed', details: err.message });
+                return res.status(400).json({ error: true, message: 'Apple purchase verification failed', details: err.message });
             }
         }
 
@@ -495,7 +496,7 @@ exports.VerifyPurchase = async (req, res) => {
         console.log("Payment created successfully:", payment);
 
         // Create Purchase Subscription. For iOS use Apple expiry if available.
-        const finalEndDate = appleInfo ? appleInfo.expiresDate : endDate;
+        const finalEndDate = (appleInfo && appleInfo.expiresDate) ? appleInfo.expiresDate : endDate;
         const purchase = await PurchaseSubscription.create({
             user_id,
             subscription_id,
@@ -517,7 +518,10 @@ exports.VerifyPurchase = async (req, res) => {
 
         if (user) {
             user.session_points = (user.session_points || 0) + sessions;
-            user.expire_date = endDate;
+            // Keep the user's expiry aligned with the purchase's end date — for
+            // iOS this is Apple's authoritative expiry, not the locally
+            // computed one.
+            user.expire_date = finalEndDate;
             await user.save({ transaction: t });
         }
 
@@ -546,46 +550,47 @@ exports.VerifyPurchase = async (req, res) => {
 };
 
 
-// Apple Server Notifications V2 handler
+// Apple Server Notifications V2 handler.
+//
+// This is what makes auto-renew ("autopay") actually work: when Apple renews a
+// subscription each period it POSTs a signed notification here, and we extend
+// the user's PurchaseSubscription so their access keeps flowing. Access is
+// gated by an active, non-expired PurchaseSubscription (see getProfile), so the
+// key job is keeping `end_date` in sync with Apple's expiry.
 exports.AppleNotifications = async (req, res) => {
     try {
-        const payload = decodeJws(req.body.signedPayload);
-        const tx = decodeJws(payload && payload.data && payload.data.signedTransaction);
-        const renewal = decodeJws(payload && payload.data && payload.data.signedRenewalInfo);
-
-        const originalTransactionId = (tx && (tx.originalTransactionId || tx.original_transaction_id)) || null;
-        const expiresMs = tx && (tx.expiresDate || tx.expires_date_ms || tx.expiresDateMs || tx.expires_date);
-        const expiresDate = expiresMs ? new Date(Number(expiresMs)) : null;
-        const type = payload && (payload.notificationType || payload.notification_type);
-
-        const active = ['DID_RENEW', 'SUBSCRIBED', 'DID_CHANGE_RENEWAL_STATUS', 'GRACE_PERIOD']
-            .includes(type) && expiresDate && expiresDate > new Date();
-        const revoked = ['EXPIRED', 'REFUND', 'REVOKE'].includes(type);
-
-        if (!originalTransactionId) {
-            console.warn('apple-notifications: missing originalTransactionId');
-            // Still persist notification for debugging
-            try {
-                await db.AppleNotification.create({
-                    original_transaction_id: null,
-                    notification_type: type || null,
-                    environment: payload && payload.environment || null,
-                    auto_renew_status: (renewal && (String(renewal.auto_renew_status) === '1' || renewal.autoRenewStatus === 1)) || null,
-                    expires_date: expiresDate,
-                    payload,
-                });
-            } catch (logErr) {
-                console.error('Failed to persist apple notification:', logErr && logErr.message);
-            }
-            return res.sendStatus(200);
+        let info;
+        try {
+            info = verifyNotification(req.body && req.body.signedPayload);
+        } catch (verifyErr) {
+            console.error('apple-notifications: verification failed:', verifyErr && verifyErr.message);
+            // Reject unverified payloads outright — don't act on unsigned data.
+            return res.sendStatus(400);
         }
-        // Persist the raw notification for audit/replay
+
+        const {
+            notificationType: type,
+            subtype,
+            originalTransactionId,
+            expiresDate,
+            autoRenewStatus,
+            environment,
+            payload,
+        } = info;
+
+        // Lifecycle classification.
+        const revoked = ['EXPIRED', 'REFUND', 'REVOKE'].includes(type);
+        const active =
+            ['DID_RENEW', 'SUBSCRIBED', 'DID_RECOVER', 'GRACE_PERIOD', 'OFFER_REDEEMED'].includes(type) &&
+            expiresDate && expiresDate > new Date();
+
+        // Persist the raw notification for audit/replay.
         try {
             await db.AppleNotification.create({
                 original_transaction_id: originalTransactionId,
-                notification_type: type || null,
-                environment: payload && payload.environment || null,
-                auto_renew_status: (renewal && (String(renewal.auto_renew_status) === '1' || renewal.autoRenewStatus === 1)) || null,
+                notification_type: subtype ? `${type}.${subtype}` : (type || null),
+                environment: environment || null,
+                auto_renew_status: autoRenewStatus,
                 expires_date: expiresDate,
                 payload,
             });
@@ -593,34 +598,56 @@ exports.AppleNotifications = async (req, res) => {
             console.error('Failed to persist apple notification:', logErr && logErr.message);
         }
 
-        // Find related payment
-        const payment = await Payment.findOne({ where: { transaction_id: originalTransactionId } });
-        if (payment) {
-            await payment.update({
-                provider_response: JSON.stringify(payload),
-                status: revoked ? 'refunded' : 'completed',
-                paid_at: revoked ? payment.paid_at : (expiresDate || payment.paid_at),
-                refunded_at: revoked ? new Date() : payment.refunded_at,
-                auto_renew_status: (renewal && (String(renewal.auto_renew_status) === '1' || renewal.autoRenewStatus === 1)) || null,
+        if (!originalTransactionId) {
+            console.warn('apple-notifications: missing originalTransactionId, type=', type);
+            return res.sendStatus(200);
+        }
+
+        // Find the most recent payment for this Apple subscription.
+        const payment = await Payment.findOne({
+            where: { transaction_id: originalTransactionId },
+            order: [['createdAt', 'DESC']],
+        });
+
+        if (!payment) {
+            console.warn('apple-notifications: no payment found for originalTransactionId', originalTransactionId);
+            return res.sendStatus(200);
+        }
+
+        await payment.update({
+            provider_response: JSON.stringify(payload),
+            status: revoked ? 'refunded' : 'completed',
+            refunded_at: revoked ? new Date() : payment.refunded_at,
+            auto_renew_status: autoRenewStatus,
+        });
+
+        // Update the PurchaseSubscription this payment granted, and keep the
+        // user's expiry in step so access is extended on renewal / cut on revoke.
+        const purchase = await PurchaseSubscription.findOne({ where: { payment_reference: payment.id } });
+        if (purchase) {
+            await purchase.update({
+                end_date: expiresDate || purchase.end_date,
+                status: revoked ? 'expired' : (active ? 'active' : purchase.status),
             });
 
-            // Update PurchaseSubscription linked to this payment
-            const purchase = await PurchaseSubscription.findOne({ where: { payment_reference: payment.id } });
-            if (purchase) {
-                await purchase.update({
-                    end_date: expiresDate || purchase.end_date,
-                    status: revoked ? 'expired' : (active ? 'active' : purchase.status),
-                });
+            // On renewal, push the user's expiry forward. We never move it
+            // backward here: revocation is enforced by the PurchaseSubscription
+            // status flipping to 'expired' (which drives unlimited_session in
+            // getProfile), and the user may hold another active subscription.
+            if (!revoked && expiresDate) {
+                const user = await User.findByPk(purchase.user_id);
+                if (user && (!user.expire_date || expiresDate > user.expire_date)) {
+                    user.expire_date = expiresDate;
+                    await user.save();
+                }
             }
-        } else {
-            // No matching payment found; optionally log for investigation
-            console.warn('apple-notifications: no payment found for originalTransactionId', originalTransactionId);
         }
 
         res.sendStatus(200);
     } catch (e) {
         console.error('apple-notifications failed:', e && e.message);
-        // Always respond 200 so Apple doesn't keep retrying on transient parsing errors
+        // Respond 200 on unexpected internal errors so Apple doesn't hammer
+        // retries for a bug on our side; verification failures already 400 above.
         res.sendStatus(200);
     }
 };
