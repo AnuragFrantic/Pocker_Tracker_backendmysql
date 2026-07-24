@@ -86,24 +86,31 @@ exports.register = async (req, res) => {
         // Normalize email to lowercase
         const normalizedEmail = email.toLowerCase();
 
-        // Check if email or phone already exists (case-insensitive for email)
+        // Phone is optional. Treat a blank/missing value as "not provided" and
+        // store it as an empty string (the column is NOT NULL). Users who skip
+        // it must not collide with each other on the duplicate check.
+        const normalizedPhone = phone && String(phone).trim() !== '' ? String(phone).trim() : '';
+
+        // Check if email (always) or phone (only when provided) already exists.
+        const orConditions = [
+            db.Sequelize.where(
+                db.Sequelize.fn('lower', db.Sequelize.col('email')),
+                normalizedEmail
+            ),
+        ];
+        if (normalizedPhone !== '') {
+            orConditions.push({ phone: normalizedPhone });
+        }
+
         const existingUser = await User.findOne({
-            where: {
-                [db.Sequelize.Op.or]: [
-                    db.Sequelize.where(
-                        db.Sequelize.fn('lower', db.Sequelize.col('email')),
-                        normalizedEmail
-                    ),
-                    { phone }
-                ]
-            }
+            where: { [db.Sequelize.Op.or]: orConditions }
         });
 
         if (existingUser) {
             let msg = "User already registered.";
             if (existingUser.email.toLowerCase() === normalizedEmail) {
                 msg = "Email already registered.";
-            } else if (existingUser.phone === phone) {
+            } else if (normalizedPhone !== '' && existingUser.phone === normalizedPhone) {
                 msg = "Phone number already registered.";
             }
             return res.status(400).json({ message: msg, error: true });
@@ -125,7 +132,7 @@ exports.register = async (req, res) => {
                 first_name,
                 last_name,
                 email: normalizedEmail,
-                phone,
+                phone: normalizedPhone,
                 password: hashedPassword,
                 session_points,
                 image: imagePath,

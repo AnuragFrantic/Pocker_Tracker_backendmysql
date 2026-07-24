@@ -28,7 +28,7 @@ const User = db.sequelize.define("User", {
     // },
     phone: {
         type: DataTypes.STRING,           // phone numbers better as STRING
-        allowNull: false
+        allowNull: true                    // optional — not required to register
     },
     address: {
         type: DataTypes.STRING,
