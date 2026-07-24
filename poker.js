@@ -50,6 +50,15 @@ app.get('/', (req, res) => {
     res.send("Welcome to Pocker Tracker");
 })
 
+// Legal pages required by Apple for auto-renewable subscriptions. These must be
+// functional, publicly reachable links surfaced inside the app (Guideline 3.1.2).
+app.get('/terms', (req, res) => {
+    res.sendFile(path.join(__dirname, 'legal', 'terms.html'));
+});
+app.get('/privacy', (req, res) => {
+    res.sendFile(path.join(__dirname, 'legal', 'privacy.html'));
+});
+
 app.use("/auth", authRoutes);
 app.use("/master", masterRoutes);
 
